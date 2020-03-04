@@ -84,21 +84,23 @@ def next_move(data):
     q3 = quadrant(data, 0, Xcenter, Ycenter, Ymax)
     q4 = quadrant(data, Xcenter, Xmax, Ycenter, Ymax)
     
-    ordered = [q1, q2, q3, q4]  # randomize the one it picks if [0]==[1]  or [0]==[1]==[2]
-    ordered.sort()              # then focus on pathing through the safest quadrant    
-    target = ordered[0] 
-    
-    right_block = {"x": head["x"]+1, "y": head["y"]}    
-    left_block = {"x": head["x"]-1, "y": head["y"]}      
-    down_block = {"x": head["x"], "y": head["y"]+1}   
-    up_block = {"x": head["x"], "y": head["y"]-1}  
+    ordered = [q1, q2, q3, q4]  
+    ordered.sort()                  
     
     location = head_location(head, Xcenter, Ycenter) # need to pick the quickest path depending on location
 
     directions = available_directions(head, data["board"]["snakes"], Xmax+1, Ymax+1)
-    # make it avoid food until a certain health
+    
+    if (data["you"]["health"] > 20):
+        return healthy(q1, q2, q3, q4, ordered, head, directions, Xcenter, Ycenter)
+    return hungry(directions, data["board"]["food"], head)
 
-    # this is just to test if it is going to the correct quadrant
+
+    
+    # it seems like the chase and kill method is pretty good, do that after tho
+    
+def healthy(q1, q2, q3, q4, ordered, head, directions, Xcenter, Ycenter):
+    target = ordered[0]
     if (target == q1):
         if (head["x"] < Xcenter and "right" in directions):
             return "right"
@@ -138,11 +140,36 @@ def next_move(data):
             return random.choice(directions)
         print("uh oh...")
         return "up"
-        
-        
-    # now we want to avoid walls while pathing to the safest quadrant
-    # and avoid self collision
-    # it seems like the chase and kill method is pretty good, do that after tho
+
+# list, list, dict -> string
+# takes a list of possible directions and 
+# picks a direction that will goes towards food
+def hungry(directions, food, head):
+    path = 100   
+    nearest = {}
+    
+    for item in food: 
+        x = abs(item["x"] - head["x"])
+        y = abs(item["y"] - head["y"])
+        distance = x + y 
+        if (distance < path):
+            path = distance
+            nearest = item
+            
+
+    if (head["x"] < nearest["x"] and "right" in directions):
+            return "right"
+    if (head["x"] > nearest["x"] and "left" in directions):
+            return "left"
+    if (head["y"] < nearest["y"] and "down" in directions):
+            return "down"
+    if (head["y"] < nearest["y"] and "up" in directions):
+            return "down"
+    if (len(directions) != 0):
+        return random.choice(directions)
+    print("Uh oh...")
+    return "up"    
+    
     
 # dict , int, int-> list
 # takes a list representing a block on the map and 
