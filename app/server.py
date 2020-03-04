@@ -271,9 +271,9 @@ def danger_level(heads, bodies, food, Xstart, Xfinish, Ystart, Yfinish):
         for y in range(Ystart, Yfinish+1):
             block = {"x": x, "y": y}
             if (block in heads):
-                danger += 3
+                danger += 5
             if (block in bodies):
-                danger += 2
+                danger += 3
             if (block in food):
                 danger += 1
     return danger
