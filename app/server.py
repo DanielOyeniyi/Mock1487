@@ -28,7 +28,7 @@ def start():
     data = bottle.request.json
     print("START:", json.dumps(data))
 
-    response = {"color": "#00FF00", "headType": "regular", "tailType": "regular"}
+    response = {"color": "#FF00FF", "headType": "sand-worm", "tailType": "sharp"}
     return HTTPResponse(
         status=200,
         headers={"Content-Type": "application/json"},
@@ -93,42 +93,101 @@ def next_move(data):
     down_block = {"x": head["x"], "y": head["y"]+1}   
     up_block = {"x": head["x"], "y": head["y"]-1}  
     
-    
+    location = head_location(head, Xcenter, Ycenter) # need to pick the quickest path depending on location
+
+    directions = available_directions(head, data["board"]["snakes"], Xmax+1, Ymax+1)
+    # make it avoid food until a certain health
+
     # this is just to test if it is going to the correct quadrant
     if (target == q1):
-        if (head["x"] < Xcenter and right_block != data["you"]["body"][1]):
+        if (head["x"] < Xcenter and "right" in directions):
             return "right"
-        if (head["y"] > Ycenter and up_block != data["you"]["body"][1]):
+        if (head["y"] > Ycenter and "up" in directions):
             return "up"
-        return random.choice(["left", "down"])
+        if (len(directions) != 0):
+            return random.choice(directions)
+        print("uh oh...")
+        return "up"
 
     elif (target == q2): 
-        if (head["x"] > Xcenter and left_block != data["you"]["body"][1]):
+        if (head["x"] > Xcenter and "left" in directions):
             return "left"
-        if (head["y"] > Ycenter and up_block != data["you"]["body"][1]):
+        if (head["y"] > Ycenter and "up" in directions):
             return "up"
-        return random.choice(["right", "down"])
+        if (len(directions) != 0):
+            return random.choice(directions)
+        print("uh oh...")
+        return "up"
             
     elif (target == q3):
-        if (head["x"] > Xcenter and left_block != data["you"]["body"][1]):
+        if (head["x"] > Xcenter and "left" in directions):
             return "left"
-        if (head["y"] < Ycenter and down_block != data["you"]["body"][1]):
+        if (head["y"] < Ycenter and "down" in directions):
             return "down"
-        return random.choice(["right", "up"])
+        if (len(directions) != 0):
+            return random.choice(directions)
+        print("uh oh...")
+        return "up"
         
     else:
-        if (head["x"] < Xcenter and right_block != data["you"]["body"][1]):
+        if (head["x"] < Xcenter and "right" in directions):
             return "right"
-        if (head["y"] < Ycenter and down_block != data["you"]["body"][1]): 
+        if (head["y"] < Ycenter and "down" in directions): 
             return "down"
-        return random.choice(["left", "up"])
-    
-    
-    location = head_location(head, Xcenter, Ycenter) 
+        if (len(directions) != 0):
+            return random.choice(directions)
+        print("uh oh...")
+        return "up"
+        
+        
     # now we want to avoid walls while pathing to the safest quadrant
+    # and avoid self collision
+    # it seems like the chase and kill method is pretty good, do that after tho
     
+# dict , int, int-> list
+# takes a list representing a block on the map and 
+# returns a list of available directions
+def available_directions(block, snakes, Xmax, Ymax):
+    right_block = {"x": block["x"]+1, "y": block["y"]}
+    left_block = {"x": block["x"]-1, "y": block["y"]}
+    down_block = {"x": block["x"], "y": block["y"]+1}
+    up_block = {"x": block["x"], "y": block["y"]-1}
     
-
+    directions = ["right", "left", "down", "up"]
+    
+    if (right_block["x"] == Xmax):
+        directions.remove("right") 
+    if (left_block["x"] == -1):
+        directions.remove("left")
+    if (down_block["y"] == Ymax):
+        directions.remove("down")
+    if (up_block["y"] == -1):
+        directions.remove("up")
+    if (right_block in snakes and "right" in directions):
+        directions.remove("right")
+    if (left_block in snakes and "left" in directions):
+        directions.remove("left")
+    if (down_block in snakes and "down" in directions):
+        directions.remove("down")
+    if (up_block in snakes and "up" in directions):
+        directions.remove("up")
+    
+    tails = make_tails(snakes)
+    
+    # you can make it not include the tail if and only if the body is not next to food
+    if (len(directions)==0): # should now check for tails
+        if (right_block in tails):
+            directions.append("right") 
+        if (left_block in tails):
+            directions.append("left")
+        if (down_block in tails):
+            directions.append("down")
+        if (up_block in tails):
+            directions.append("up")
+        return directions
+    return directions
+        
+        
 # dict, int, int -> String
 # takes a dict representing the ehad location and returns
 # a string representing the quadrant it is in
@@ -182,7 +241,7 @@ def make_heads(snakes, own_head):
     return heads
     
 # list, list, dict -> list 
-# makes a llist of bodies
+# makes a list of bodies
 def make_bodies(snakes, heads, own_head):    
     bodies = []
     for snake in snakes:
@@ -190,6 +249,14 @@ def make_bodies(snakes, heads, own_head):
             if (part not in heads and part != own_head):
                 bodies.append(part)
     return bodies
+        
+# list -> list
+# makes a list of tails
+def make_tails(snakes):
+    tails = []
+    for snake in snakes: 
+        tails.append(snake["body"][-1])
+    return tails
     
 # list, list, list, int, int, int, int -> int
 # takes list containing board info and numbers 
