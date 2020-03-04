@@ -163,14 +163,17 @@ def available_directions(block, snakes, Xmax, Ymax):
         directions.remove("down")
     if (up_block["y"] == -1):
         directions.remove("up")
-    if (right_block in snakes and "right" in directions):
-        directions.remove("right")
-    if (left_block in snakes and "left" in directions):
-        directions.remove("left")
-    if (down_block in snakes and "down" in directions):
-        directions.remove("down")
-    if (up_block in snakes and "up" in directions):
-        directions.remove("up")
+        
+    for snake in snakes:
+        for part in snake["body"]:
+            if (right_block == part and "right" in directions):
+                directions.remove("right")
+            if (left_block == part and "left" in directions):
+                directions.remove("left")
+            if (down_block == part and "down" in directions):
+                directions.remove("down")
+            if (up_block == part and "up" in directions):
+                directions.remove("up")
     
     tails = make_tails(snakes)
     
