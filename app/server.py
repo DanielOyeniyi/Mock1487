@@ -208,6 +208,7 @@ def next_move_intense(data):
     # it seems like the chase and kill method is pretty good, do that after tho
     # we need head sensors, attack and destroy or beta ###
     # don't go in the same direction as most of your body!
+    # make it go through the  second afest quadrant to get to the safest
  
 def healthy_intense(qa, qb, qc, qd, safest, head, directions, Xcenter, Ycenter):
     if (safest == qa):
