@@ -115,6 +115,7 @@ def next_move_intense(data):
     directions = available_directions(head, data["board"]["snakes"], Xmax+1, Ymax+1)
     location = head_location(head, Xcenter, Ycenter) # need to pick the quickest path depending on location
     
+    
     # (0, 0)
     # quadrant 2 | quadrant 1
     # -----------------------
@@ -164,7 +165,6 @@ def next_move_intense(data):
     ordered = [q1, q2, q3, q4]  
     ordered.sort()       
    
-    print([q1, q2, q3, q4])
     
     if (ordered[0] == q1):
         sorted = [q1a, q1b, q1c, q1d]
@@ -207,11 +207,6 @@ def next_move_intense(data):
     # we need head sensors, attack and destroy or beta ###
  
 def healthy_intense(qa, qb, qc, qd, safest, head, directions, Xcenter, Ycenter):
-    print(head["x"])
-    print(Xcenter)
-    print()
-    print(head["y"])
-    print(Ycenter)
     if (safest == qa):
         if (head["x"] <= Xcenter + 1 and "right" in directions):
             return "right"
@@ -379,17 +374,17 @@ def available_directions(head, snakes, Xmax, Ymax):
         if (up_block in tails):
             directions.append("up")
             
-            if (len(directions)==0):
-                if (check_around(right_block, heads) != True):
-                    directions.append("right")
-                if (check_around(left_block, heads) != True):
-                    directions.append("left")
-                if (check_around(down_block, heads) != True):
-                    directions.append("down")
-                if (check_around(up_block, heads) != True):
-                    directions.append("up")
-                return directions
+        if (len(directions)==0):
+            if (check_around(right_block, heads) != True):
+                directions.append("right")
+            if (check_around(left_block, heads) != True):
+                directions.append("left")
+            if (check_around(down_block, heads) != True):
+                directions.append("down")
+            if (check_around(up_block, heads) != True):
+                directions.append("up")
             return directions
+        return directions
     return directions
     
 # dict, list -> bool
