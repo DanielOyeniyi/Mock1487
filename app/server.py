@@ -48,12 +48,13 @@ def move():
     print()
 
     directions = ["right", "left", "down", "up"]
-    move = next_move(data)
+    move = next_move_intense(data)
 
     # Shouts are messages sent to all the other snakes in the game.
     # Shouts are not displayed on the game board.
     shout = "I am a python snake!"
     
+    #next_move_intense(data)
 
     response = {"move": move, "shout": shout}
     return HTTPResponse(
@@ -77,8 +78,12 @@ def next_move(data):
     #                      (Xmax, Ymax)
     
     
+    
+    
+    
     # theory: if q1 is safest, path directly there if you are in q2, or q4 
     # if you are in q3, path through the safest between q2 and q4
+    # more quadrants? 
     q1 = quadrant(data, Xcenter, Xmax, 0, Ycenter)
     q2 = quadrant(data, 0, Xcenter, 0, Ycenter)
     q3 = quadrant(data, 0, Xcenter, Ycenter, Ymax)
@@ -95,10 +100,147 @@ def next_move(data):
         return healthy(q1, q2, q3, q4, ordered, head, directions, Xcenter, Ycenter)
     return hungry(directions, data["board"]["food"], head)
 
+def next_move_intense(data):
+    Xmax = data["board"]["height"] - 1
+    Ymax = data["board"]["width"] - 1
+    Xcenter = Xmax // 2
+    Ycenter = Ymax // 2
+    Xcenter1 = Xcenter // 2
+    Ycenter1 = Ycenter // 2 
+    
+    Xcenter2 = Xcenter + Xcenter1 + 1   # middle of quadrant 1
+    Ycenter2 = Ycenter + Xcenter1 + 1
+    
 
+    head = data["you"]["body"][0]
+    directions = available_directions(head, data["board"]["snakes"], Xmax+1, Ymax+1)
     
+    # location = head_location(head, Xcenter, Ycenter) # need to pick the quickest path depending on location
+    
+    # (0, 0)
+    # quadrant 2 | quadrant 1
+    # -----------------------
+    # quadrant 3 | quadrant 4
+    #                      (Xmax, Ymax)
+    
+    # if snake in bottom half, and top 2 quandrants are most dangerous
+    # make the snake avoid going up
+    
+    
+    # qb  |  qa
+    # ---------
+    # qc  | qd
+    
+    # theory: if q1 is safest, path directly there if you are in q2, or q4 
+    # if you are in q3, path through the safest between q2 and q4
+    # more quadrants? 
+    
+    q1 = quadrant(data, Xcenter, Xmax, 0, Ycenter)
+    q2 = quadrant(data, 0, Xcenter, 0, Ycenter)
+    q3 = quadrant(data, 0, Xcenter, Ycenter, Ymax)
+    q4 = quadrant(data, Xcenter, Xmax, Ycenter, Ymax)
+    
+    
+    q1a = quadrant(data, Xcenter2, Xmax, 0, Ycenter1)
+    q1b = quadrant(data, Xcenter, Xcenter2 - 1, 0, Ycenter1)
+    q1c = quadrant(data, Xcenter, Xcenter2 - 1, Ycenter1 + 1, Ycenter)
+    q1d = quadrant(data, Xcenter2, Xmax, Ycenter1 + 1, Ycenter)
+    
+    q2a = quadrant(data, Xcenter1 + 1, Xcenter, 0, Ycenter1)
+    q2b = quadrant(data, 0, Xcenter1, 0, Ycenter1)
+    q2c = quadrant(data, 0, Xcenter1, Ycenter1 + 1, Ycenter)
+    q2d = quadrant(data, Xcenter1 + 1, Xcenter, Ycenter1 + 1, Ycenter)
+    
+    q3a = quadrant(data, Xcenter1 + 1, Xcenter, Ycenter + 1, Ycenter2)
+    q3b = quadrant(data, 0, Xcenter1, Ycenter + 1, Ycenter2)
+    q3c = quadrant(data, 0, Xcenter1, Ycenter2, Ymax)
+    q3d = quadrant(data, Xcenter1 + 1, Xcenter, Ycenter2, Ymax)
+    
+    q4a = quadrant(data, Xcenter2, Xmax, Ycenter, Ycenter2 - 1)
+    q4b = quadrant(data, Xcenter, Xcenter2 - 1, Ycenter, Ycenter2 - 1)
+    q4c = quadrant(data, Xcenter, Xcenter2 - 1, Ycenter2, Ymax)
+    q4d = quadrant(data, Xcenter2, Xmax, Ycenter2, Ymax)
+    
+    ordered = [q1, q2, q3, q4]  
+    ordered.sort()       
+    print(ordered)
+   
+    
+    if (ordered[0]== q1):
+        ordered1 = [q1a, q1b, q1c, q1d]
+        ordered1.sort()
+        if (data["you"]["health"] > 20):
+            return healthy_intense(q1a, q1b, q1c, q1d, ordered1[0], head, directions, Xcenter2, Ycenter1)
+        return hungry(directions, data["board"]["food"], head)
+        
+    if (ordered[0] == q2):
+        ordered1 = [q2a, q2b, q2c, q2d]
+        ordered1.sort()
+        if (data["you"]["health"] > 20):
+            return healthy_intense(q2a, q2b, q2c, q2d, ordered1[0], head, directions, Xcenter1, Ycenter1)
+        return hungry(directions, data["board"]["food"], head)
+        
+    if (ordered[0] == q3):
+        ordered1 = [q3a, q3b, q3c, q3d]
+        ordered1.sort()
+        print(ordered1)
+        if (data["you"]["health"] > 20):
+            return healthy_intense(q3a, q3b, q3c, q3d, ordered1[0], head, directions, Xcenter1, Ycenter2)
+        return hungry(directions, data["board"]["food"], head)
+        
+    else:
+        ordered1 = [q4a, q4b, q4c, q4d]
+        ordered1.sort()
+        if (data["you"]["health"] > 20):
+            return healthy_intense(q4a, q4b, q4c, q4d, ordered1[0], head, directions, Xcenter2, Ycenter2)
+        return hungry(directions, data["board"]["food"], head)
+
+   
     # it seems like the chase and kill method is pretty good, do that after tho
-    
+ 
+def healthy_intense(q1, q2, q3, q4, biggest, head, directions, Xcenter, Ycenter):
+    if (biggest == q1):
+        if (head["x"] < Xcenter and "right" in directions):
+            return "right"
+        if (head["y"] > Ycenter and "up" in directions):
+            return "up"
+        if (len(directions) != 0):
+            return random.choice(directions)
+        print("uh oh...")
+        return "up"
+
+    elif (biggest == q2): 
+        if (head["x"] > Xcenter and "left" in directions):
+            return "left"
+        if (head["y"] > Ycenter and "up" in directions):
+            return "up"
+        if (len(directions) != 0):
+            return random.choice(directions)
+        print("uh oh...")
+        return "up"
+            
+    elif (biggest == q3):
+        if (head["x"] > Xcenter and "left" in directions):
+            return "left"
+        if (head["y"] < Ycenter and "down" in directions):
+            return "down"
+        if (len(directions) != 0):
+            return random.choice(directions)
+        print("uh oh...")
+        return "up"
+        
+    else:
+        if (head["x"] < Xcenter and "right" in directions):
+            return "right"
+        if (head["y"] < Ycenter and "down" in directions): 
+            return "down"
+        if (len(directions) != 0):
+            return random.choice(directions)
+        print("uh oh...")
+        return "up"
+
+
+
 def healthy(q1, q2, q3, q4, ordered, head, directions, Xcenter, Ycenter):
     target = ordered[0]
     if (target == q1):
@@ -156,7 +298,6 @@ def hungry(directions, food, head):
             path = distance
             nearest = item
             
-    print(directions)
     if (head["x"] < nearest["x"] and "right" in directions):
             return "right"
     if (head["x"] > nearest["x"] and "left" in directions):
@@ -182,6 +323,10 @@ def available_directions(block, snakes, Xmax, Ymax):
     
     directions = ["right", "left", "down", "up"]
     
+    # rather than checking all the blocks around head(in advanced) why not just 
+    # check the next two blocks adjacent e.g. (up -> up)
+    ###### TRY IT!!!! ######
+    
     if (right_block["x"] == Xmax):
         directions.remove("right") 
     if (left_block["x"] == -1):
@@ -202,6 +347,7 @@ def available_directions(block, snakes, Xmax, Ymax):
             if (up_block == part and "up" in directions):
                 directions.remove("up")
     
+    
     tails = make_tails(snakes)
     
     # you can make it not include the tail if and only if the body is not next to food
@@ -216,8 +362,8 @@ def available_directions(block, snakes, Xmax, Ymax):
             directions.append("up")
         return directions
     return directions
-        
-        
+    
+
 # dict, int, int -> String
 # takes a dict representing the ehad location and returns
 # a string representing the quadrant it is in
