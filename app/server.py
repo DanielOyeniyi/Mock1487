@@ -137,6 +137,7 @@ def next_move_intense(data):
     q2 = quadrant(data, 0, Xcenter, 0, Ycenter)
     q3 = quadrant(data, 0, Xcenter, Ycenter, Ymax)
     q4 = quadrant(data, Xcenter, Xmax, Ycenter, Ymax)
+
     
     
     q1a = quadrant(data, Xcenter2, Xmax, 0, Ycenter1)
@@ -153,6 +154,7 @@ def next_move_intense(data):
     q3b = quadrant(data, 0, Xcenter1, Ycenter + 1, Ycenter2)
     q3c = quadrant(data, 0, Xcenter1, Ycenter2, Ymax)
     q3d = quadrant(data, Xcenter1 + 1, Xcenter, Ycenter2, Ymax)
+    
     
     q4a = quadrant(data, Xcenter2, Xmax, Ycenter, Ycenter2 - 1)
     q4b = quadrant(data, Xcenter, Xcenter2 - 1, Ycenter, Ycenter2 - 1)
@@ -203,28 +205,33 @@ def next_move_intense(data):
     # it seems like the chase and kill method is pretty good, do that after tho
     # we need head sensors, attack and destroy or beta
  
-def healthy_intense(qa, qb, qc, qd, biggest, head, directions, Xcenter, Ycenter):
-    if (biggest == qa):
-        if (head["x"] <= Xcenter and "right" in directions):
+def healthy_intense(qa, qb, qc, qd, safest, head, directions, Xcenter, Ycenter):
+    print(head["x"])
+    print(Xcenter)
+    print()
+    print(head["y"])
+    print(Ycenter)
+    if (safest == qa):
+        if (head["x"] <= Xcenter + 1 and "right" in directions):
             return "right"
-        if (head["y"] >= Ycenter and "up" in directions):
+        if (head["y"] >= Ycenter - 1 and "up" in directions):
             return "up"
         if (len(directions) != 0):
             return random.choice(directions)
         print("uh oh...")
         return "up"
 
-    elif (biggest == qb): 
+    elif (safest == qb): 
         if (head["x"] >= Xcenter and "left" in directions):
             return "left"
-        if (head["y"] >= Ycenter and "up" in directions):
+        if (head["y"] >= Ycenter - 1 and "up" in directions):
             return "up"
         if (len(directions) != 0):
             return random.choice(directions)
         print("uh oh...")
         return "up"
             
-    elif (biggest == qc):
+    elif (safest == qc):
         if (head["x"] >= Xcenter and "left" in directions):
             return "left"
         if (head["y"] <= Ycenter and "down" in directions):
@@ -235,7 +242,7 @@ def healthy_intense(qa, qb, qc, qd, biggest, head, directions, Xcenter, Ycenter)
         return "up"
         
     else:
-        if (head["x"] <= Xcenter and "right" in directions):
+        if (head["x"] <= Xcenter + 1 and "right" in directions):
             return "right"
         if (head["y"] <= Ycenter and "down" in directions): 
             return "down"
@@ -246,8 +253,8 @@ def healthy_intense(qa, qb, qc, qd, biggest, head, directions, Xcenter, Ycenter)
 
 
 
-def healthy(q1, q2, q3, q4, biggest, head, directions, Xcenter, Ycenter):
-    if (biggest == q1):
+def healthy(q1, q2, q3, q4, safest, head, directions, Xcenter, Ycenter):
+    if (safest == q1):
         if (head["x"] <= Xcenter and "right" in directions):
             return "right"
         if (head["y"] >= Ycenter and "up" in directions):
@@ -257,7 +264,7 @@ def healthy(q1, q2, q3, q4, biggest, head, directions, Xcenter, Ycenter):
         print("uh oh...")
         return "up"
 
-    elif (biggest == q2): 
+    elif (safest == q2): 
         if (head["x"] >= Xcenter and "left" in directions):
             return "left"
         if (head["y"] >= Ycenter and "up" in directions):
@@ -267,7 +274,7 @@ def healthy(q1, q2, q3, q4, biggest, head, directions, Xcenter, Ycenter):
         print("uh oh...")
         return "up"
             
-    elif (biggest == q3):
+    elif (safest == q3):
         if (head["x"] >= Xcenter and "left" in directions):
             return "left"
         if (head["y"] <= Ycenter and "down" in directions):
