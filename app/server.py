@@ -378,6 +378,7 @@ def available_directions(head, snakes, Xmax, Ymax):
             directions.append("down")
         if (up_block in tails):
             directions.append("up")
+            
             if (len(directions)==0):
                 if (check_around(right_block, heads) != True):
                     directions.append("right")
@@ -388,6 +389,7 @@ def available_directions(head, snakes, Xmax, Ymax):
                 if (check_around(up_block, heads) != True):
                     directions.append("up")
                 return directions
+            return directions
     return directions
     
 # dict, list -> bool
