@@ -203,7 +203,7 @@ def next_move_intense(data):
 
    
     # it seems like the chase and kill method is pretty good, do that after tho
-    # we need head sensors, attack and destroy or beta
+    # we need head sensors, attack and destroy or beta ###
  
 def healthy_intense(qa, qb, qc, qd, safest, head, directions, Xcenter, Ycenter):
     print(head["x"])
@@ -326,27 +326,36 @@ def hungry(directions, food, head):
 # dict , int, int-> list
 # takes a list representing a block on the map and 
 # returns a list of available directions
-def available_directions(block, snakes, Xmax, Ymax):
-    right_block = {"x": block["x"]+1, "y": block["y"]}
-    left_block = {"x": block["x"]-1, "y": block["y"]}
-    down_block = {"x": block["x"], "y": block["y"]+1}
-    up_block = {"x": block["x"], "y": block["y"]-1}
+def available_directions(head, snakes, Xmax, Ymax):
+    right_block = {"x": head["x"] + 1, "y": head["y"]}
+    left_block = {"x": head["x"] - 1, "y": head["y"]}
+    down_block = {"x": head["x"], "y": head["y"] + 1}
+    up_block = {"x": head["x"], "y": head["y"] - 1}
     
     directions = ["right", "left", "down", "up"]
+    tails = make_tails(snakes)
+    heads = make_heads(snakes, head)
     
-    # rather than checking all the blocks around head(in advanced) why not just 
-    # check the next two blocks adjacent e.g. (up -> up)
-    ###### TRY IT!!!! ######
+    
     
     if (right_block["x"] == Xmax):
         directions.remove("right") 
-    if (left_block["x"] == -1):
+    if (left_block["x"] == - 1):
         directions.remove("left")
     if (down_block["y"] == Ymax):
         directions.remove("down")
-    if (up_block["y"] == -1):
+    if (up_block["y"] == - 1):
         directions.remove("up")
-        
+    
+    if (check_around(right_block, heads) != True and "right" in directions):
+        directions.remove("right")
+    if (check_around(left_block, heads) != True and "left" in directions):
+        directions.remove("left")
+    if (check_around(down_block, heads) != True and "down" in directions):
+        directions.remove("down")
+    if (check_around(up_block, heads) != True and "up" in directions):
+        directions.remove("up")
+    
     for snake in snakes:
         for part in snake["body"]:
             if (right_block == part and "right" in directions):
@@ -357,9 +366,6 @@ def available_directions(block, snakes, Xmax, Ymax):
                 directions.remove("down")
             if (up_block == part and "up" in directions):
                 directions.remove("up")
-    
-    
-    tails = make_tails(snakes)
     
     # you can make it not include the tail if and only if the body is not next to food
     if (len(directions)==0): # should now check for tails
@@ -374,6 +380,27 @@ def available_directions(block, snakes, Xmax, Ymax):
         return directions
     return directions
     
+# dict, list -> bool
+# takes a dicts and returns true if the block is safe
+# returns false if the block is dangerous
+def check_around(block, heads):
+    right_block = {"x": block["x"]+1, "y": block["y"]}
+    left_block = {"x": block["x"]-1, "y": block["y"]}
+    down_block = {"x": block["x"], "y": block["y"]+1}
+    up_block = {"x": block["x"], "y": block["y"]-1}
+    
+    safe = True 
+    
+    if (right_block in heads):
+        safe = False
+    if (left_block in heads):
+        safe = False
+    if (down_block in heads):
+        safe = False
+    if (up_block in heads):
+        Safe = False
+    return safe
+
 
 # dict, int, int -> String
 # takes a dict representing the ehad location and returns
