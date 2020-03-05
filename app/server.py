@@ -48,7 +48,7 @@ def move():
     print()
 
     directions = ["right", "left", "down", "up"]
-    move = next_move_intense(data)
+    move = next_move(data)
 
     # Shouts are messages sent to all the other snakes in the game.
     # Shouts are not displayed on the game board.
@@ -63,43 +63,6 @@ def move():
     )
 
 def next_move(data):
-    Xmax = data["board"]["height"] - 1
-    Ymax = data["board"]["width"] - 1
-    Xcenter = Xmax // 2
-    Ycenter = Ymax // 2
-    
-    head = data["you"]["body"][0]
-    
-    # (0, 0)
-    # quadrant 2 | quadrant 1
-    # -----------------------
-    # quadrant 3 | quadrant 4
-    #                      (Xmax, Ymax)
-    
-    
-    
-    
-    
-    # theory: if q1 is safest, path directly there if you are in q2, or q4 
-    # if you are in q3, path through the safest between q2 and q4
-    # more quadrants? 
-    q1 = quadrant(data, Xcenter, Xmax, 0, Ycenter)
-    q2 = quadrant(data, 0, Xcenter, 0, Ycenter)
-    q3 = quadrant(data, 0, Xcenter, Ycenter, Ymax)
-    q4 = quadrant(data, Xcenter, Xmax, Ycenter, Ymax)
-    
-    ordered = [q1, q2, q3, q4]  
-    ordered.sort()                  
-    
-    location = head_location(head, Xcenter, Ycenter) # need to pick the quickest path depending on location
-
-    directions = available_directions(head, data["board"]["snakes"], Xmax+1, Ymax+1)
-    
-    if (data["you"]["health"] > 20):
-        return healthy(q1, q2, q3, q4, ordered, head, directions, Xcenter, Ycenter)
-    return hungry(directions, data["board"]["food"], head)
-
-def next_move_intense(data):
     Xmax = data["board"]["height"] - 1
     Ymax = data["board"]["width"] - 1
     Xcenter = Xmax // 2
@@ -348,7 +311,6 @@ def available_directions(head, snakes, Xmax, Ymax):
         directions.remove("up")
     
     
-    # incorporate sizing decisions pls
     if (check_around(right_block, heads) != True and "right" in directions):
         directions.remove("right")
     if (check_around(left_block, heads) != True and "left" in directions):
@@ -356,6 +318,16 @@ def available_directions(head, snakes, Xmax, Ymax):
     if (check_around(down_block, heads) != True and "down" in directions):
         directions.remove("down")
     if (check_around(up_block, heads) != True and "up" in directions):
+        directions.remove("up")
+
+
+    if (check_around_intense(right_block, heads, snakes, "right") != True and "right" in directions):
+        directions.remove("right")
+    if (check_around_intense(left_block, heads, snakes, "left") != True and "left" in directions):
+        directions.remove("left")
+    if (check_around_intense(down_block, heads, snakes, "down") != True and "down" in directions):
+        directions.remove("down")
+    if (check_around_intense(up_block, heads, snakes, "up") != True and "up" in directions):
         directions.remove("up")
     
     for snake in snakes:
@@ -381,16 +353,24 @@ def available_directions(head, snakes, Xmax, Ymax):
             directions.append("up")
             
         if (len(directions)==0):
-            if (check_around(right_block, heads) != True):
+            if (check_around_intense(right_block, heads, snakes, "right") != True):
                 directions.append("right")
-            if (check_around(left_block, heads) != True):
+            if (check_around_intense(left_block, heads, snakes, "left") != True):
                 directions.append("left")
-            if (check_around(down_block, heads) != True):
+            if (check_around_intense(down_block, heads, snakes, "down") != True):
                 directions.append("down")
-            if (check_around(up_block, heads) != True):
+            if (check_around_intense(up_block, heads, snakes, "up") != True):
                 directions.append("up")
-            return directions
-        return directions
+                
+            if (len(directions)==0):
+                if (check_around(right_block, heads) != True):
+                    directions.append("right")
+                if (check_around(left_block, heads) != True):
+                    directions.append("left")
+                if (check_around(down_block, heads) != True):
+                    directions.append("down")
+                if (check_around(up_block, heads) != True):
+                    directions.append("up")
     return directions
     
 # dict, list -> bool
@@ -412,6 +392,30 @@ def check_around(block, heads):
         safe = False
     if (up_block in heads):
         safe = False
+    return safe
+    
+    
+# try this or try that path through the best quadrant
+# then try pathing to the emptiest space on the board? 
+# that might be questiionable, but there is only one way to 
+# find out
+def check_around_intense(block, heads, snakes, direction):
+    right_block = {"x": block["x"]+1, "y": block["y"]}
+    left_block = {"x": block["x"]-1, "y": block["y"]}
+    down_block = {"x": block["x"], "y": block["y"]+1}
+    up_block = {"x": block["x"], "y": block["y"]-1}
+    
+    safe = True 
+    
+    for snake in snakes:
+        if (right_block in snake["body"] and direction == "right"):
+            safe = False
+        if (left_block in snake["body"] and direction == "left"):
+            safe = False
+        if (down_block in snake["body"] and direction == "down"):
+            safe = False
+        if (up_block in snake["body"] and direction == "up"):
+            safe = False
     return safe
 
 
