@@ -156,7 +156,7 @@ def hungry(directions, food, head):
             path = distance
             nearest = item
             
-
+    print(directions)
     if (head["x"] < nearest["x"] and "right" in directions):
             return "right"
     if (head["x"] > nearest["x"] and "left" in directions):
@@ -164,7 +164,7 @@ def hungry(directions, food, head):
     if (head["y"] < nearest["y"] and "down" in directions):
             return "down"
     if (head["y"] < nearest["y"] and "up" in directions):
-            return "down"
+            return "up"
     if (len(directions) != 0):
         return random.choice(directions)
     print("Uh oh...")
