@@ -54,7 +54,6 @@ def move():
     # Shouts are not displayed on the game board.
     shout = "I am a python snake!"
     
-    #next_move_intense(data)
 
     response = {"move": move, "shout": shout}
     return HTTPResponse(
@@ -114,8 +113,7 @@ def next_move_intense(data):
 
     head = data["you"]["body"][0]
     directions = available_directions(head, data["board"]["snakes"], Xmax+1, Ymax+1)
-    
-    # location = head_location(head, Xcenter, Ycenter) # need to pick the quickest path depending on location
+    location = head_location(head, Xcenter, Ycenter) # need to pick the quickest path depending on location
     
     # (0, 0)
     # quadrant 2 | quadrant 1
@@ -163,46 +161,96 @@ def next_move_intense(data):
     
     ordered = [q1, q2, q3, q4]  
     ordered.sort()       
-    print(ordered)
    
     
-    if (ordered[0]== q1):
-        ordered1 = [q1a, q1b, q1c, q1d]
-        ordered1.sort()
+    if (ordered[0] == q1):
+        sorted = [q1a, q1b, q1c, q1d]
+        sorted.sort()
         if (data["you"]["health"] > 20):
-            return healthy_intense(q1a, q1b, q1c, q1d, ordered1[0], head, directions, Xcenter2, Ycenter1)
+            if (location != "q1" and location != "q1 & q2" and location != "q1 & q4" and location != "q1 & q2 & q3 & q4"):
+                return healthy(q1, q2, q3, q4, ordered[0], head, directions, Xcenter, Ycenter) 
+            return healthy_intense(q1a, q1b, q1c, q1d, sorted[0], head, directions, Xcenter2, Ycenter1)
         return hungry(directions, data["board"]["food"], head)
         
     if (ordered[0] == q2):
-        ordered1 = [q2a, q2b, q2c, q2d]
-        ordered1.sort()
+        sorted = [q2a, q2b, q2c, q2d]
+        sorted.sort()
         if (data["you"]["health"] > 20):
-            return healthy_intense(q2a, q2b, q2c, q2d, ordered1[0], head, directions, Xcenter1, Ycenter1)
+            if (location != "q2" and location != "q2 & q3" and location != "q1 & q2" and location != "q1 & q2 & q3 & q4"):
+                return healthy(q1, q2, q3, q4, ordered[0], head, directions, Xcenter, Ycenter) 
+            return healthy_intense(q2a, q2b, q2c, q2d, sorted[0], head, directions, Xcenter1, Ycenter1)
         return hungry(directions, data["board"]["food"], head)
         
     if (ordered[0] == q3):
-        ordered1 = [q3a, q3b, q3c, q3d]
-        ordered1.sort()
-        print(ordered1)
+        sorted = [q3a, q3b, q3c, q3d]
+        sorted.sort()
         if (data["you"]["health"] > 20):
-            return healthy_intense(q3a, q3b, q3c, q3d, ordered1[0], head, directions, Xcenter1, Ycenter2)
+            if (location != "q3" and location != "q2 & q3" and location != "q3 & q4" and location != "q1 & q2 & q3 & q4"):
+                return healthy(q1, q2, q3, q4, ordered[0], head, directions, Xcenter, Ycenter) 
+            return healthy_intense(q3a, q3b, q3c, q3d, sorted[0], head, directions, Xcenter1, Ycenter2)
         return hungry(directions, data["board"]["food"], head)
         
     else:
-        ordered1 = [q4a, q4b, q4c, q4d]
-        ordered1.sort()
+        sorted = [q4a, q4b, q4c, q4d]
+        sorted.sort()
         if (data["you"]["health"] > 20):
-            return healthy_intense(q4a, q4b, q4c, q4d, ordered1[0], head, directions, Xcenter2, Ycenter2)
+            if (location != "q4" and location != "q1 & q4" and location != "q3 & q4" and location != "q1 & q2 & q3 & q4"):
+                return healthy(q1, q2, q3, q4, ordered[0], head, directions, Xcenter, Ycenter) 
+            return healthy_intense(q4a, q4b, q4c, q4d, sorted[0], head, directions, Xcenter2, Ycenter2)
         return hungry(directions, data["board"]["food"], head)
 
    
     # it seems like the chase and kill method is pretty good, do that after tho
+    # we need head sensors, attack and destroy or beta
  
-def healthy_intense(q1, q2, q3, q4, biggest, head, directions, Xcenter, Ycenter):
-    if (biggest == q1):
-        if (head["x"] < Xcenter and "right" in directions):
+def healthy_intense(qa, qb, qc, qd, biggest, head, directions, Xcenter, Ycenter):
+    if (biggest == qa):
+        if (head["x"] <= Xcenter and "right" in directions):
             return "right"
-        if (head["y"] > Ycenter and "up" in directions):
+        if (head["y"] >= Ycenter and "up" in directions):
+            return "up"
+        if (len(directions) != 0):
+            return random.choice(directions)
+        print("uh oh...")
+        return "up"
+
+    elif (biggest == qb): 
+        if (head["x"] >= Xcenter and "left" in directions):
+            return "left"
+        if (head["y"] >= Ycenter and "up" in directions):
+            return "up"
+        if (len(directions) != 0):
+            return random.choice(directions)
+        print("uh oh...")
+        return "up"
+            
+    elif (biggest == qc):
+        if (head["x"] >= Xcenter and "left" in directions):
+            return "left"
+        if (head["y"] <= Ycenter and "down" in directions):
+            return "down"
+        if (len(directions) != 0):
+            return random.choice(directions)
+        print("uh oh...")
+        return "up"
+        
+    else:
+        if (head["x"] <= Xcenter and "right" in directions):
+            return "right"
+        if (head["y"] <= Ycenter and "down" in directions): 
+            return "down"
+        if (len(directions) != 0):
+            return random.choice(directions)
+        print("uh oh...")
+        return "up"
+
+
+
+def healthy(q1, q2, q3, q4, biggest, head, directions, Xcenter, Ycenter):
+    if (biggest == q1):
+        if (head["x"] <= Xcenter and "right" in directions):
+            return "right"
+        if (head["y"] >= Ycenter and "up" in directions):
             return "up"
         if (len(directions) != 0):
             return random.choice(directions)
@@ -210,9 +258,9 @@ def healthy_intense(q1, q2, q3, q4, biggest, head, directions, Xcenter, Ycenter)
         return "up"
 
     elif (biggest == q2): 
-        if (head["x"] > Xcenter and "left" in directions):
+        if (head["x"] >= Xcenter and "left" in directions):
             return "left"
-        if (head["y"] > Ycenter and "up" in directions):
+        if (head["y"] >= Ycenter and "up" in directions):
             return "up"
         if (len(directions) != 0):
             return random.choice(directions)
@@ -220,9 +268,9 @@ def healthy_intense(q1, q2, q3, q4, biggest, head, directions, Xcenter, Ycenter)
         return "up"
             
     elif (biggest == q3):
-        if (head["x"] > Xcenter and "left" in directions):
+        if (head["x"] >= Xcenter and "left" in directions):
             return "left"
-        if (head["y"] < Ycenter and "down" in directions):
+        if (head["y"] <= Ycenter and "down" in directions):
             return "down"
         if (len(directions) != 0):
             return random.choice(directions)
@@ -230,53 +278,9 @@ def healthy_intense(q1, q2, q3, q4, biggest, head, directions, Xcenter, Ycenter)
         return "up"
         
     else:
-        if (head["x"] < Xcenter and "right" in directions):
+        if (head["x"] <= Xcenter and "right" in directions):
             return "right"
-        if (head["y"] < Ycenter and "down" in directions): 
-            return "down"
-        if (len(directions) != 0):
-            return random.choice(directions)
-        print("uh oh...")
-        return "up"
-
-
-
-def healthy(q1, q2, q3, q4, ordered, head, directions, Xcenter, Ycenter):
-    target = ordered[0]
-    if (target == q1):
-        if (head["x"] < Xcenter and "right" in directions):
-            return "right"
-        if (head["y"] > Ycenter and "up" in directions):
-            return "up"
-        if (len(directions) != 0):
-            return random.choice(directions)
-        print("uh oh...")
-        return "up"
-
-    elif (target == q2): 
-        if (head["x"] > Xcenter and "left" in directions):
-            return "left"
-        if (head["y"] > Ycenter and "up" in directions):
-            return "up"
-        if (len(directions) != 0):
-            return random.choice(directions)
-        print("uh oh...")
-        return "up"
-            
-    elif (target == q3):
-        if (head["x"] > Xcenter and "left" in directions):
-            return "left"
-        if (head["y"] < Ycenter and "down" in directions):
-            return "down"
-        if (len(directions) != 0):
-            return random.choice(directions)
-        print("uh oh...")
-        return "up"
-        
-    else:
-        if (head["x"] < Xcenter and "right" in directions):
-            return "right"
-        if (head["y"] < Ycenter and "down" in directions): 
+        if (head["y"] <= Ycenter and "down" in directions): 
             return "down"
         if (len(directions) != 0):
             return random.choice(directions)
