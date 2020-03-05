@@ -398,7 +398,7 @@ def check_around(block, heads):
     if (down_block in heads):
         safe = False
     if (up_block in heads):
-        Safe = False
+        safe = False
     return safe
 
 
