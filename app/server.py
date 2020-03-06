@@ -172,6 +172,8 @@ def next_move(data):
     # we need head sensors, attack and destroy or beta ###
     # don't go in the same direction as most of your body!
     # make it go through the  second afest quadrant to get to the safest
+    # if mulptiple quadrants are equal then go to the one farthest away from 
+    # snakes or danger
  
 def healthy_intense(qa, qb, qc, qd, safest, head, directions, Xcenter, Ycenter):
     if (safest == qa):
@@ -353,14 +355,15 @@ def available_directions(head, snakes, Xmax, Ymax):
             directions.append("up")
             
         if (len(directions)==0):
-            if (check_around_intense(right_block, heads, snakes, "right") != True):
+            if (check_around_intense_smarter(right_block, heads, snakes, tails, "right") != True):
                 directions.append("right")
-            if (check_around_intense(left_block, heads, snakes, "left") != True):
+            if (check_around_intense_smarter(left_block, heads, snakes, tails, "left") != True):
                 directions.append("left")
-            if (check_around_intense(down_block, heads, snakes, "down") != True):
+            if (check_around_intense_smarter(down_block, heads, snakes, tails, "down") != True):
                 directions.append("down")
-            if (check_around_intense(up_block, heads, snakes, "up") != True):
+            if (check_around_intense_smarter(up_block, heads, snakes, tails, "up") != True):
                 directions.append("up")
+
             
             for snake in snakes:
                 for part in snake["body"]:
@@ -372,16 +375,35 @@ def available_directions(head, snakes, Xmax, Ymax):
                         directions.remove("down")
                     if (up_block == part and "up" in directions):
                         directions.remove("up")
-                
+            
             if (len(directions)==0):
-                if (check_around(right_block, heads) != True):
+                if (check_around_intense(right_block, heads, snakes, "right") != True):
                     directions.append("right")
-                if (check_around(left_block, heads) != True):
+                if (check_around_intense(left_block, heads, snakes, "left") != True):
                     directions.append("left")
-                if (check_around(down_block, heads) != True):
+                if (check_around_intense(down_block, heads, snakes, "down") != True):
                     directions.append("down")
-                if (check_around(up_block, heads) != True):
+                if (check_around_intense(up_block, heads, snakes, "up") != True):
                     directions.append("up")
+                
+                if (check_around(right_block, heads) != True and "right" in directions):
+                    directions.remove("right")
+                if (check_around(left_block, heads) != True and "left" in directions):
+                    directions.remove("left")
+                if (check_around(down_block, heads) != True and "down" in directions):
+                    directions.remove("down")
+                if (check_around(up_block, heads) != True and "up" in directions):
+                    directions.remove("up")
+        
+                if (len(directions)==0):
+                    if (check_around(right_block, heads) != True):
+                        directions.append("right")
+                    if (check_around(left_block, heads) != True):
+                        directions.append("left")
+                    if (check_around(down_block, heads) != True):
+                        directions.append("down")
+                    if (check_around(up_block, heads) != True):
+                        directions.append("up")
     return directions
     
 # dict, list -> bool
@@ -427,6 +449,26 @@ def check_around_intense(block, heads, snakes, direction):
             safe = False
         if (up_block in snake["body"] and direction == "up"):
             safe = False
+    return safe
+    
+def check_around_intense_smarter(block, heads, snakes, tails, direction):
+    right_block = {"x": block["x"]+1, "y": block["y"]}
+    left_block = {"x": block["x"]-1, "y": block["y"]}
+    down_block = {"x": block["x"], "y": block["y"]+1}
+    up_block = {"x": block["x"], "y": block["y"]-1}
+    
+    safe = True 
+    
+    for snake in snakes:
+        if (right_block in snake["body"] and direction == "right" and right_block in tails):
+            safe = False
+        if (left_block in snake["body"] and direction == "left" and left_block in tails):
+            safe = False
+        if (down_block in snake["body"] and direction == "down" and down_block in tails):
+            safe = False
+        if (up_block in snake["body"] and direction == "up" and up_block in tails):
+            safe = False
+    print(safe)
     return safe
 
 
