@@ -394,6 +394,17 @@ def available_directions(head, snakes, Xmax, Ymax):
                     directions.remove("down")
                 if (check_around(up_block, heads) != True and "up" in directions):
                     directions.remove("up")
+                    
+                for snake in snakes:
+                    for part in snake["body"]:
+                        if (right_block == part and "right" in directions):
+                            directions.remove("right")
+                        if (left_block == part and "left" in directions):
+                            directions.remove("left")
+                        if (down_block == part and "down" in directions):
+                            directions.remove("down")
+                        if (up_block == part and "up" in directions):
+                            directions.remove("up")
         
                 if (len(directions)==0):
                     if (check_around(right_block, heads) != True):
