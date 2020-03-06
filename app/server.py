@@ -132,7 +132,7 @@ def next_move(data):
     if (ordered[0] == q1):
         sorted = [q1a, q1b, q1c, q1d]
         sorted.sort()
-        if (data["you"]["health"] > 60):
+        if (data["you"]["health"] > 40):
             if (location != "q1" and location != "q1 & q2" and location != "q1 & q4" and location != "q1 & q2 & q3 & q4"):
                 return healthy(q1, q2, q3, q4, ordered[0], head, directions, Xcenter, Ycenter) 
             return healthy_intense(q1a, q1b, q1c, q1d, sorted[0], head, directions, Xcenter2, Ycenter1)
@@ -143,7 +143,7 @@ def next_move(data):
     if (ordered[0] == q2):
         sorted = [q2a, q2b, q2c, q2d]
         sorted.sort()
-        if (data["you"]["health"] > 60):
+        if (data["you"]["health"] > 40):
             if (location != "q2" and location != "q2 & q3" and location != "q1 & q2" and location != "q1 & q2 & q3 & q4"):
                 return healthy(q1, q2, q3, q4, ordered[0], head, directions, Xcenter, Ycenter) 
             return healthy_intense(q2a, q2b, q2c, q2d, sorted[0], head, directions, Xcenter1, Ycenter1)
@@ -152,7 +152,7 @@ def next_move(data):
     if (ordered[0] == q3):
         sorted = [q3a, q3b, q3c, q3d]
         sorted.sort()
-        if (data["you"]["health"] > 60):
+        if (data["you"]["health"] > 40):
             if (location != "q3" and location != "q2 & q3" and location != "q3 & q4" and location != "q1 & q2 & q3 & q4"):
                 return healthy(q1, q2, q3, q4, ordered[0], head, directions, Xcenter, Ycenter) 
             return healthy_intense(q3a, q3b, q3c, q3d, sorted[0], head, directions, Xcenter1, Ycenter2)
@@ -161,7 +161,7 @@ def next_move(data):
     else:
         sorted = [q4a, q4b, q4c, q4d]
         sorted.sort()
-        if (data["you"]["health"] > 60):
+        if (data["you"]["health"] > 40):
             if (location != "q4" and location != "q1 & q4" and location != "q3 & q4" and location != "q1 & q2 & q3 & q4"):
                 return healthy(q1, q2, q3, q4, ordered[0], head, directions, Xcenter, Ycenter) 
             return healthy_intense(q4a, q4b, q4c, q4d, sorted[0], head, directions, Xcenter2, Ycenter2)
