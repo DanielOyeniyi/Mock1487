@@ -76,7 +76,6 @@ checked = []
 # dict -> list
 # return directions that don't result in instant death
 def not_instant_death(data, block):
-    directions = []
     snakes = make_snakes_no_tail(data)
     
     checked.clear()
@@ -88,15 +87,28 @@ def not_instant_death(data, block):
     checked.clear()
     up = links(data, block, snakes, "up")
     
-    if (right != 0):
-        directions.append("right")
-    if (left != 0):
-        directions.append("left")
-    if (down != 0):
-        directions.append("down")
-    if (up != 0):
-        directions.append("up")
-    return directions
+    values = [right, left, down, up]
+    values.sort(reverse=True)
+    directions = []
+    
+    for num in range(4):
+        if (values[num] == right and "right" not in directions):
+            directions.append("right")
+        if (values[num] == left and "left" not in directions):
+            directions.append("left")
+        if (values[num] == down and "down" not in directions):
+            directions.append("down")
+        if (values[num] == up and "up" not in directions):
+            directions.append("up")
+    
+    
+    if (values[0] > values[1]):
+        return [directions[0]]
+    if (values[0] > values[2]):
+        return [directions[0], directions[1]]
+    if (values[0] > values[3]):
+        return [directions[0], directions[1], directions[2]]
+    return directions  
     
 
 # dict, list -> string
