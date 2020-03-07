@@ -123,7 +123,7 @@ def chase_tail(data, directions):
 # dict, list -> string
 # takes all possible directions and chases the target
 def chase_head(data, directions):
-    head = data["you"]["body"]
+    head = data["you"]["body"][0]
     heads = make_enemy_heads(data)
     sizes = make_sizes(data)
     own_size = len(data["you"]["body"])
