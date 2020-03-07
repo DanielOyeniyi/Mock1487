@@ -208,7 +208,7 @@ def hungry(data, directions, food, head):
             pathX = x
             pathY = y
             target = item
-    return pathing(data, head, target, direction, pathX, pathY)
+    return pathing(data, head, target, directions, pathX, pathY)
 
 def pathing(data, head, target, directions, pathX, pathY): 
     if (head["x"] <= target["x"] and head["y"] <= target["y"]):
