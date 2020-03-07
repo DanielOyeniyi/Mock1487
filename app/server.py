@@ -76,7 +76,7 @@ checked = []
 # dict -> list
 # return directions that don't result in instant death
 def not_instant_death(data, block):
-    snakes = make_snakes_no_tail(data)
+    snakes = make_snakes_free_tails(data)
     
     checked.clear()
     right = links(data, block, snakes, "right")
@@ -241,7 +241,7 @@ checked1 = []
 # number of block linked to a block, each index is 
 # a direction
 def paths(data, block):
-    snakes = make_snakes_no_tail(data)
+    snakes = make_snakes_free_tails(data)
     
     checked1.clear()
     right = links(data, block, snakes, "right")
@@ -311,12 +311,12 @@ def links_helper(data, block, snakes, direction, count):
 # dict -> list 
 # returns a list of dicts representing snake bodies 
 # without tails if the tail won't grow next turn
-def make_snakes_no_tail(data):
+def make_snakes_free_tails(data):
     snakes = []
     growing = make_growing_tails(data)
     for snake in data["board"]["snakes"]:
         for part in snake["body"]:
-            if (part != snake["body"][-1] and part not in growing):
+            if (part != snake["body"][-1] or part in growing):
                 snakes.append(part)
     return snakes
     
@@ -326,15 +326,25 @@ def make_snakes_no_tail(data):
 def make_growing_tails(data):
     growing = []
     food = make_food(data)
+    tails = make_tails(data)
     for snake in data["board"]["snakes"]:
         part = snake["body"][0]
         Rblock = {"x": part["x"] + 1, "y": part["y"]}
         Lblock = {"x": part["x"] - 1, "y": part["y"]}
         Dblock = {"x": part["x"], "y": part["y"] + 1}
         Ublock = {"x": part["x"], "y": part["y"] - 1}
-        if (Rblock in food or Lblock in food or Dblock in food or Ublock in food):
+        
+        if (Rblock in food or Lblock in food or Dblock in food or Ublock in food or snake["body"][-1] == snake["body"][-2]):
             growing.append(snake["body"][-1])
     return growing
+
+# list -> list
+# makes a list of tails
+def make_tails(data):
+    tails = []
+    for snake in data["board"]["snakes"]: 
+        tails.append(snake["body"][-1])
+    return tails
 
 # dict -> list
 # returns a list of dicts representing food location
