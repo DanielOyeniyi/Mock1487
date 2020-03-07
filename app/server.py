@@ -84,11 +84,6 @@ def next_move(data):
     
     Xcenter6 = Xcenter2 + Ycenter3
     Ycenter6 = Ycenter2 + Ycenter3
-
-    head = data["you"]["body"][0]
-    location = head_location(head, Xcenter, Ycenter) # need to pick the quickest path depending on location
-    directions = optimal_directions(data)
-    directions = avoid_heads(data, head, directions)
     
     q1 = quadrant(data, Xcenter, Xmax, 0, Ycenter)
     q2 = quadrant(data, 0, Xcenter, 0, Ycenter)
@@ -114,6 +109,11 @@ def next_move(data):
     q4b = quadrant(data, Xcenter, Xcenter2 - 1, Ycenter, Ycenter2 - 1)
     q4c = quadrant(data, Xcenter, Xcenter2 - 1, Ycenter2, Ymax)
     q4d = quadrant(data, Xcenter2, Xmax, Ycenter2, Ymax)
+    
+    head = data["you"]["body"][0]
+    location = head_location(head, Xcenter, Ycenter) # need to pick the quickest path depending on location
+    directions = optimal_directions(data)
+    directions = avoid_heads(data, head, directions)
   
     ordered = [q1, q2, q3, q4] 
     if (ordered[0] == q1):
@@ -122,13 +122,24 @@ def next_move(data):
         if (data["you"]["health"] > 80):
             if (location != "q1" and location != "q1 & q2" and location != "q1 & q4" and location != "q1 & q2 & q3 & q4"):
                 return healthy(data, head, directions, Xcenter, Ycenter1)
+                
             if (sorted[0] == q1a):
+                if (circle(data) != True):
+                    return chase_tail(data, head, directions)
                 return healthy(data, head, directions, Xcenter6, Ycenter3)
+                
             if (sorted[0] == q1b):
+                if (circle(data) != True):
+                    return chase_tail(data, head, directions)
                 return healthy(data, head, directions, Xcenter5, Ycenter3)
             if (sorted[0] == q1c):
+                if (circle(data) != True):
+                    return chase_tail(data, head, directions)
                 return healthy(data, head, directions, Xcenter5, Ycenter4)
+                
             if (sorted[0] == q1d):
+                if (circle(data) != True):
+                    return chase_tail(data, head, directions)
                 return healthy(data, head, directions, Xcenter6, Ycenter4)
         return hungry(data, directions, data["board"]["food"], head)
        
@@ -139,13 +150,25 @@ def next_move(data):
         if (data["you"]["health"] > 80):
             if (location != "q2" and location != "q2 & q3" and location != "q1 & q2" and location != "q1 & q2 & q3 & q4"):
                 return healthy(data, head, directions, Xcenter1, Ycenter1)
+                
             if (sorted[0] == q2a):
+                if (circle(data) != True):
+                    return chase_tail(data, head, directions)
                 return healthy(data, head, directions, Xcenter4, Ycenter3)
+                
             if (sorted[0] == q2b):
+                if (circle(data) != True):
+                    return chase_tail(data, head, directions)
                 return healthy(data, head, directions, Xcenter3, Ycenter3)
+                
             if (sorted[0] == q2c):
+                if (circle(data) != True):
+                    return chase_tail(data, head, directions)
                 return healthy(data, head, directions, Xcenter3, Ycenter4)
+                
             if (sorted[0] == q2d):
+                if (circle(data) != True):
+                    return chase_tail(data, head, directions)
                 return healthy(data, head, directions, Xcenter4, Ycenter4)          
         return hungry(data, directions, data["board"]["food"], head)
         
@@ -158,12 +181,23 @@ def next_move(data):
                 return healthy(data, head, directions, Xcenter1, Ycenter2)
                 
             if (sorted[0] == q3a):
+                if (circle(data) != True):
+                    return chase_tail(data, head, directions)
                 return healthy(data, head, directions, Xcenter4, Ycenter5)
+                
             if (sorted[0] == q3b):
+                if (circle(data) != True):
+                    return chase_tail(data, head, directions)
                 return healthy(data, head, directions, Xcenter3, Ycenter5)
+                
             if (sorted[0] == q3c):
+                if (circle(data) != True):
+                    return chase_tail(data, head, directions)
                 return healthy(data, head, directions, Xcenter3, Ycenter6)
+                
             if (sorted[0] == q3d):
+                if (circle(data) != True):
+                    return chase_tail(data, head, directions)
                 return healthy(data, head, directions, Xcenter4, Ycenter6)
         return hungry(data, directions, data["board"]["food"], head)
         
@@ -175,20 +209,64 @@ def next_move(data):
                 return healthy(data, head, directions, Xcenter2, Ycenter2)
                 
             if (sorted[0] == q4a):
+                if (circle(data) != True):
+                    return chase_tail(data, head, directions)
                 return healthy(data, head, directions, Xcenter6, Ycenter5)
+                
             if (sorted[0] == q4b):
+                if (circle(data) != True):
+                    return chase_tail(data, head, directions)
                 return healthy(data, head, directions, Xcenter5, Ycenter5)
+                
             if (sorted[0] == q4c):
+                if (circle(data) != True):
+                    return chase_tail(data, head, directions)
                 return healthy(data, head, directions, Xcenter5, Ycenter6)
+                
             if (sorted[0] == q4d):
+                if (circle(data) != True):
+                    return chase_tail(data, head, directions)
                 return healthy(data, head, directions, Xcenter6, Ycenter6)
         return hungry(data, directions, data["board"]["food"], head)
+
+## chase tail if only x amount of block are available
 
 def healthy(data, head, directions, Xcenter, Ycenter):
     target = {"x": Xcenter, "y": Ycenter}
     pathX = abs(target["x"] - head["x"])
     pathY = abs(target["y"] - head["y"])
     return pathing(data, head, target, directions, pathX, pathY)
+    
+def circle(data):
+    snakes = make_snakes(data)
+    head = data["you"]["body"][0]
+    
+    checked.clear()
+    right = links(data, head, snakes, "right")
+    checked.clear()
+    left = links(data, head, snakes, "left")
+    checked.clear()
+    down = links(data, head, snakes, "down")
+    checked.clear()
+    up = links(data, head, snakes, "up")
+    
+    checked.clear()
+    right_tail = links(data, tail, snakes, "right")
+    checked.clear()
+    left_tail = links(data, tail, snakes, "left")
+    checked.clear()
+    down_tail = links(data, tail, snakes, "down")
+    checked.clear()
+    up_tail = links(data, tail, snakes, "up")
+    
+    head_paths = [right, left, down, up]
+    tail_paths = [right_tail, left_tail, down_tail, up_tail]
+    head_paths.sort(reverse=True)
+    tail_paths.sort(reverse=True)
+    
+    if (head_paths[0] < tail_paths[0]):
+        return False
+    return True
     
 # list, list, dict -> string
 # takes a list of possible directions and 
@@ -209,6 +287,20 @@ def hungry(data, directions, food, head):
             pathY = y
             target = item
     return pathing(data, head, target, directions, pathX, pathY)
+
+# keep track of the # of block to the tail
+# then cricles your own body
+def chase_tail(data, head, directions):  
+    pathx = 100
+    pathy = 100
+    target = data["you"]["body"][-1]
+    
+    pathX = abs(target["x"] - head["x"])
+    pathY = abs(target["y"] - head["y"])
+    
+    if (len(directions) != 0):
+        return pathing(data, head, target, directions, pathX, pathY)
+    return "up"
 
 def pathing(data, head, target, directions, pathX, pathY): 
     if (head["x"] <= target["x"] and head["y"] <= target["y"]):
@@ -429,13 +521,9 @@ def check_around_surrounded(data, block, heads):
     
 checked = []
 def optimal_directions(data):
-    head = data["you"]["body"][0]
     snakes = make_snakes(data)
-    
-    right_block = {"x": head["x"] + 1, "y": head["y"]}
-    left_block = {"x": head["x"] - 1, "y": head["y"]}
-    down_block = {"x": head["x"], "y": head["y"] + 1}
-    up_block = {"x": head["x"], "y": head["y"] - 1}
+    head = data["you"]["body"][0]
+    tail = data["you"]["body"][-1]
     
     checked.clear()
     right = links(data, head, snakes, "right")
