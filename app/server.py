@@ -138,7 +138,7 @@ def chase_tail(data, directions, enemy):
         if (len(directions) == 0):
             directions.append("left")
             
-    if (head["y"] < enemy["y"] and "down" in directions and Dblok not in snakes and Dblock["x"] != data["board"]["length"]):
+    if (head["y"] < enemy["y"] and "down" in directions and Dblock not in snakes and Dblock["x"] != data["board"]["length"]):
         directions.remove("down")
         if (len(directions) == 0):
             directions.append("down")
