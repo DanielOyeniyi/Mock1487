@@ -130,6 +130,7 @@ def avoid_head(data, directions):
     heads = make_enemy_heads(data)
     sizes = make_sizes(data)
     own_size = len(data["you"]["body"])
+    snakes = make_snakes_free_tails(data)
     
     
     target = {}
@@ -151,20 +152,28 @@ def avoid_head(data, directions):
         tail = data["you"]["body"][-1]
         TpathX = abs(tail["x"] - head["x"])
         TpathY = abs(tail["y"] - head["y"])
-        Rblock = {"x": head["x"] + 1, "y": head["y"]}
-        Lblock = {"x": head["x"] - 1, "y": head["y"]}
-        Dblock = {"x": head["x"], "y": head["y"] + 1}
-        Ublock = {"x": head["x"], "y": head["y"] - 1}
-        snakes = make_snakes_free_tails(data)
-        if (TpathX == 1 and TpathY == 1):
-            if (head["x"] < tail["x"] and Rblock not in snakes):
-                return "right"
-            if (head["x"] > tail["x"] and Lblock not in snakes):
-                return "left"
-            if (head["y"] < tail["y"] and Dblock not in snakes):
-                return "down"
-            if (head["y"] > tail["y"] and Ublock not in snakes): 
-                return "up"
+        if (TpathX <= 3 and TpathY <= 3):
+            checked.clear()
+            right = links_tail(data, head, snakes, "right")
+            checked.clear()
+            left = links_tail(data, head, snakes, "left")
+            checked.clear()
+            down = links_tail(data, head, snakes, "down")
+            checked.clear()
+            up = links_tail(data, head, snakes, "up")
+            
+            new_directions = []
+            if (right == True):
+                new_directions.append("right")
+            if (left == True):
+                new_directions.append("left")
+            if (down == True):
+                new_directions.append("down")
+            if (up == True):
+                new_directions.append("up")
+                
+            if (len(new_directions) != 0):
+                return chase_tail(data, new_directions)
         return path_away(data, target, directions, pathX, pathY) 
     return chase_head(data, directions)
 
@@ -390,36 +399,95 @@ def links(data, block, snakes, direction):
 # returns a count of all the blocks that 
 # the input block is linked with
 def links_helper(data, block, snakes, direction, count):
-    right_block = {"x": block["x"] + 1, "y": block["y"]}
-    left_block = {"x": block["x"] - 1, "y": block["y"]}
-    down_block = {"x": block["x"], "y": block["y"] + 1}
-    up_block = {"x": block["x"], "y": block["y"] - 1}
+    Rblock = {"x": block["x"] + 1, "y": block["y"]}
+    Lblock = {"x": block["x"] - 1, "y": block["y"]}
+    Dblock = {"x": block["x"], "y": block["y"] + 1}
+    Ublock = {"x": block["x"], "y": block["y"] - 1}
     
     
     if (direction == "right"):
-        if (right_block in snakes or right_block["x"] == data["board"]["width"] or right_block in checked):
+        if (Rblock in snakes or Rblock["x"] == data["board"]["width"] or Rblock in checked):
             return count
-        checked.append(right_block)
-        return links_helper(data, right_block, snakes, direction, count + 1) + links(data, right_block, snakes, "down") + links(data, right_block, snakes, "up")
+        checked.append(Rblock)
+        return links_helper(data, Rblock, snakes, direction, count + 1) + links(data, Rblock, snakes, "down") + links(data, Rblock, snakes, "up")
         
     if (direction == "left"):
-        if (left_block in snakes or left_block["x"] == -1 or left_block in checked):
+        if (Lblock in snakes or Lblock["x"] == -1 or Lblock in checked):
             return count
-        checked.append(left_block)
-        return links_helper(data, left_block, snakes, direction, count + 1) + links(data, left_block, snakes, "down") + links(data, left_block, snakes, "up")
+        checked.append(Lblock)
+        return links_helper(data, Lblock, snakes, direction, count + 1) + links(data, Lblock, snakes, "down") + links(data, Lblock, snakes, "up")
         
     if (direction == "down"):
-        if (down_block in snakes or down_block["y"] == data["board"]["height"] or down_block in checked):
+        if (Dblock in snakes or Dblock["y"] == data["board"]["height"] or Dblock in checked):
             return count
-        checked.append(down_block)
-        return links_helper(data, down_block, snakes, direction, count + 1)  + links(data, down_block, snakes, "right") + links(data, down_block, snakes, "left")
+        checked.append(Dblock)
+        return links_helper(data, Dblock, snakes, direction, count + 1)  + links(data, Dblock, snakes, "right") + links(data, Dblock, snakes, "left")
         
     if (direction == "up"):
-        if (up_block in snakes or up_block["y"] == -1 or up_block in checked):
+        if (Ublock in snakes or Ublock["y"] == -1 or Ublock in checked):
             return count
-        checked.append(up_block)
-        return links_helper(data, up_block, snakes, direction, count + 1) + links(data, up_block, snakes, "right") + links(data, up_block, snakes, "left")
+        checked.append(Ublock)
+        return links_helper(data, Ublock, snakes, direction, count + 1) + links(data, Ublock, snakes, "right") + links(data, Ublock, snakes, "left")
 
+# dict, dict, list, string -> bool
+# returns True if direction is linked to tail 
+# False if otherwise
+def links_tail(data, block, snakes, direction):
+    state = 0
+    if (direction == "right"):
+        state += links_helper_tail(data, block, snakes, "right")
+        
+    if (direction == "left"):
+        state += links_helper_tail(data, block, snakes, "left")
+    
+    if (direction == "down"):
+       state += links_helper_tail(data, block, snakes, "down")
+    
+    if (direction == "up"):
+        state += links_helper_tail(data, block, snakes, "up")
+    if (state > 0):
+        return True
+    return False
+    
+# dict, dict, list, string, int -> int 
+# returns a count of all the blocks that 
+# the input block is linked with
+def links_helper_tail(data, block, snakes, direction):
+    Rblock = {"x": block["x"] + 1, "y": block["y"]}
+    Lblock = {"x": block["x"] - 1, "y": block["y"]}
+    Dblock = {"x": block["x"], "y": block["y"] + 1}
+    Ublock = {"x": block["x"], "y": block["y"] - 1}
+    
+    state = 0
+    tail = data["you"]["body"][-1]
+    if (Rblock == tail or Lblock == tail or Dblock == tail or Ublock == tail):
+        return 1
+    
+    if (direction == "right"):
+        if (Rblock in snakes or Rblock["x"] == data["board"]["width"] or Rblock in checked):
+            return 0
+        checked.append(Rblock)
+        state += links_helper_tail(data, Rblock, snakes, direction) + links_tail(data, Rblock, snakes, "down") + links_tail(data, Rblock, snakes, "up")
+        
+    if (direction == "left"):
+        if (Lblock in snakes or Lblock["x"] == -1 or Lblock in checked):
+            return 0
+        checked.append(Lblock)
+        state += links_helper_tail(data, Lblock, snakes, direction) + links_tail(data, Lblock, snakes, "down") + links_tail(data, Lblock, snakes, "up")
+        
+    if (direction == "down"):
+        if (Dblock in snakes or Dblock["y"] == data["board"]["height"] or Dblock in checked):
+            return 0
+        checked.append(Dblock)
+        state += links_helper_tail(data, Dblock, snakes, direction)  + links_tail(data, Dblock, snakes, "right") + links_tail(data, Dblock, snakes, "left")
+        
+    if (direction == "up"):
+        if (Ublock in snakes or Ublock["y"] == -1 or Ublock in checked):
+            return 0
+        checked.append(Ublock)
+        state += links_helper_tail(data, Ublock, snakes, direction) + links_tail(data, Ublock, snakes, "right") + links_tail(data, Ublock, snakes, "left")
+    return state    
+    
 # dict -> list 
 # returns a list of dicts representing snake bodies 
 # without tails if the tail won't grow next turn
