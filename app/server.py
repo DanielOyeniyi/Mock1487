@@ -63,9 +63,9 @@ def move():
 
 
 ######
-    # if head is right next to you and your tail is also rigth next to you 
-    # then chase your tail 
-    # also just make your snake chase your tail if it is x meters away and small
+      #### make it recognize that your path is not block off if the tail is 
+      #### going to be gone in x amount of block 
+      #### if you are on a wall just chase your tail 
 ######
 
 # dict -> string
@@ -163,13 +163,15 @@ def avoid_head(data, directions):
     target = {}
     pathX = 3
     pathY = 3
+    distance = 6
     
     counter = 0
     for bad_head in heads: 
         if (own_size <= sizes[counter]):
             x = abs(bad_head["x"] - head["x"])
             y = abs(bad_head["y"] - head["y"])
-            if (x <= pathX and y <= pathY):
+            tmp = x + y
+            if ((x <= 3 and y <= 3) and tmp < distance):
                 target = bad_head
                 pathX = x
                 pathY = y
