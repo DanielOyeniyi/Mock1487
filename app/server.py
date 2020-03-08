@@ -128,6 +128,7 @@ def chase_tail(data, directions, enemy):
     Dblock = {"x": head["x"], "y": head["y"] + 1}
     Ublock = {"x": head["x"], "y": head["y"] - 1}
     
+    
     if (head["x"] < enemy["x"] and "right" in directions and Rblock not in snakes and Rblock["x"] != data["board"]["width"]):
         directions.remove("right")
         if (len(directions) == 0):
@@ -138,12 +139,12 @@ def chase_tail(data, directions, enemy):
         if (len(directions) == 0):
             directions.append("left")
             
-    if (head["y"] < enemy["y"] and "down" in directions and Dblock not in snakes and Dblock["x"] != data["board"]["height"]):
+    if (head["y"] < enemy["y"] and "down" in directions and Dblock not in snakes and Dblock["y"] != data["board"]["height"]):
         directions.remove("down")
         if (len(directions) == 0):
             directions.append("down")
             
-    if (head["y"] > enemy["y"] and "up" in directions and Ublock not in snakes and Ublock["x"] != -1):
+    if (head["y"] > enemy["y"] and "up" in directions and Ublock not in snakes and Ublock["y"] != -1):
         directions.remove("up")
         if (len(directions) == 0):
             directions.append("up")
@@ -192,6 +193,7 @@ def avoid_head(data, directions):
             if (right == True):
                 new_directions.append("right")
             if (left == True):
+                print("here")
                 new_directions.append("left")
             if (down == True):
                 new_directions.append("down")
@@ -486,7 +488,7 @@ def links_helper_tail(data, block, snakes, direction):
     
     state = 0
     tail = data["you"]["body"][-1]
-    if (Rblock == tail or Lblock == tail or Dblock == tail or Ublock == tail):
+    if ((Rblock == tail or Lblock == tail or Dblock == tail or Ublock == tail) and block not in snakes):
         if (data["you"]["body"][-2] != tail):
             return 1
     
