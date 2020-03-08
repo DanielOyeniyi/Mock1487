@@ -153,7 +153,7 @@ def avoid_head(data, directions):
         tail = data["you"]["body"][-1]
         TpathX = abs(target["x"] - head["x"])
         TpathY = abs(target["y"] - head["y"])
-        if (TpathX == 1 or TpathY == 1):
+        if (TpathX == 1 and TpathY == 1):
             if (head["x"] < tail["x"]):
                 return "right"
             elif (head["x"] > tail["x"]):
