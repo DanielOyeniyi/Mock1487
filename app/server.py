@@ -121,22 +121,29 @@ def chase_tail(data, directions, enemy):
     target = data["you"]["body"][-1]  
     pathX = abs(target["x"] - head["x"])
     pathY = abs(target["y"] - head["y"])
-    if (head["x"] < enemy["x"] and "right" in directions):
+    snakes = make_snakes_free_tails(data)
+    
+    Rblock = {"x": head["x"] + 1, "y": head["y"]}
+    Lblock = {"x": head["x"] - 1, "y": head["y"]}
+    Dblock = {"x": head["x"], "y": head["y"] + 1}
+    Ublock = {"x": head["x"], "y": head["y"] - 1}
+    
+    if (head["x"] < enemy["x"] and "right" in directions and Rblock not in snakes and Rblock["x"] != data["board"]["width"]):
         directions.remove("right")
         if (len(directions) == 0):
             directions.append("right")
             
-    if (head["x"] > enemy["x"] and "left" in directions):
+    if (head["x"] > enemy["x"] and "left" in directions and Lblock not in snakes and Lblock["x"] != -1):
         directions.remove("left")
         if (len(directions) == 0):
             directions.append("left")
             
-    if (head["y"] < enemy["y"] and "down" in directions):
+    if (head["y"] < enemy["y"] and "down" in directions and Dblok not in snakes and Dblock["x"] != data["board"]["length"]):
         directions.remove("down")
         if (len(directions) == 0):
             directions.append("down")
             
-    if (head["y"] > enemy["y"] and "up" in directions):
+    if (head["y"] > enemy["y"] and "up" in directions and Ublock not in snakes and Ublock["x"] != -1):
         directions.remove("up")
         if (len(directions) == 0):
             directions.append("up")
