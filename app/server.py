@@ -461,7 +461,8 @@ def links_helper_tail(data, block, snakes, direction):
     state = 0
     tail = data["you"]["body"][-1]
     if (Rblock == tail or Lblock == tail or Dblock == tail or Ublock == tail):
-        return 1
+        if (data["you"]["body"][-2] != tail):
+            return 1
     
     if (direction == "right"):
         if (Rblock in snakes or Rblock["x"] == data["board"]["width"] or Rblock in checked):
