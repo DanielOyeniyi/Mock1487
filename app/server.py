@@ -297,8 +297,9 @@ def path_away(data, target, directions, pathX, pathY):
         if ("right" in directions):
             return "right"
             
-        if ("up" in directions):  
+        if ("up" in directions):
             return "up"
+           
             
     if (head["x"] <= target["x"] and head["y"] >= target["y"]):
         if ("left" in directions and "down" in directions):
@@ -327,14 +328,11 @@ def path_away(data, target, directions, pathX, pathY):
 
         if ("up" in directions):  
             return "up"
-        
-
             
     if (len(directions) != 0):
         return random.choice(directions)
     return "up"
 
-checked1 = []
 # dict, dict -> list 
 # returns a list of values that coresponds to the 
 # number of block linked to a block, each index is 
@@ -342,13 +340,13 @@ checked1 = []
 def paths(data, block):
     snakes = make_snakes_free_tails(data)
     
-    checked1.clear()
+    checked.clear()
     right = links(data, block, snakes, "right")
-    checked1.clear()
+    checked.clear()
     left = links(data, block, snakes, "left")
-    checked1.clear()
+    checked.clear()
     down = links(data, block, snakes, "down")
-    checked1.clear()
+    checked.clear()
     up = links(data, block, snakes, "up")
     
     path_list = [right, left, down, up]
