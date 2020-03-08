@@ -271,32 +271,19 @@ def path_towards(data, target, directions, pathX, pathY):
 # takes target location and pick the most optimal path to run away from it
 def path_away(data, target, directions, pathX, pathY): 
     head = data["you"]["body"][0]
-    if (head["x"] <= target["x"] and head["y"] <= target["y"]):
-        if ("left" in directions and "down" in directions):
+    
+    if (head["x"] >= target["x"] and head["y"] >= target["y"]):
+        if ("right" in directions and "down" in directions):
             if (pathX < pathY):
-                return "left"
+                return "right"
             if (pathX > pathY):
-                return "up" 
-            return random.choice(["left", "up"])
+                return "down" 
+            return random.choice(["right", "down"])
             
-        if ("left" in directions):
-            return "left"            
-
-        if ("up" in directions):  
-            return "up"
-        
-    if (head["x"] <= target["x"] and head["y"] >= target["y"]):
-        if ("left" in directions and "down" in directions):
-            if (pathX < pathY):
-                return "left"
-            if (pathX > pathY):
-                return "left" 
-            return random.choice(["left", "down"])
+        if ("right" in directions):  
+            return "right"
             
-        if ("left" in directions):
-            return "left"
-            
-        if ("down" in directions):  
+        if ("down" in directions):
             return "down"
             
     if (head["x"] >= target["x"] and head["y"] <= target["y"]):
@@ -313,19 +300,35 @@ def path_away(data, target, directions, pathX, pathY):
         if ("up" in directions):  
             return "up"
             
-    if (head["x"] >= target["x"] and head["y"] >= target["y"]):
-        if ("right" in directions and "down" in directions):
+    if (head["x"] <= target["x"] and head["y"] >= target["y"]):
+        if ("left" in directions and "down" in directions):
             if (pathX < pathY):
-                return "right"
+                return "left"
             if (pathX > pathY):
-                return "down" 
-            return random.choice(["right", "down"])
+                return "left" 
+            return random.choice(["left", "down"])
             
-        if ("right" in directions):  
-            return "right"
+        if ("left" in directions):
+            return "left"
             
-        if ("down" in directions):
+        if ("down" in directions):  
             return "down"
+    
+    if (head["x"] <= target["x"] and head["y"] <= target["y"]):
+        if ("left" in directions and "up" in directions):
+            if (pathX < pathY):
+                return "left"
+            if (pathX > pathY):
+                return "up" 
+            return random.choice(["left", "up"])
+            
+        if ("left" in directions):
+            return "left"            
+
+        if ("up" in directions):  
+            return "up"
+        
+
             
     if (len(directions) != 0):
         return random.choice(directions)
