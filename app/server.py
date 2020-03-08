@@ -116,11 +116,19 @@ def not_instant_death(data, block):
     
 # dict, list -> string
 # takes all possible directions and chases the target
-def chase_tail(data, directions):  
+def chase_tail(data, directions, enemy):  
     head = data["you"]["body"][0]
     target = data["you"]["body"][-1]  
     pathX = abs(target["x"] - head["x"])
     pathY = abs(target["y"] - head["y"])
+    if (head["x"] < enemy["x"] and "right" in directions):
+        directions.remove("right")
+    if (head["x"] > enemy["x"] and "left" in directions):
+        directions.remove("left")
+    if (head["y"] < enemy["y"] and "down" in directions):
+        directions.remove("down")
+    if (head["y"] > enemy["y"] and "up" in directions):
+        directions.remove("up")
     return path_towards(data, target, directions, pathX, pathY)
 
 # dict, list -> string
@@ -173,7 +181,7 @@ def avoid_head(data, directions):
                 new_directions.append("up")
                 
             if (len(new_directions) != 0):
-                return chase_tail(data, new_directions)
+                return chase_tail(data, new_directions, target)
         return path_away(data, target, directions, pathX, pathY) 
     return chase_head(data, directions)
 
