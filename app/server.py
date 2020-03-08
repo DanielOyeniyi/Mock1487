@@ -153,14 +153,19 @@ def avoid_head(data, directions):
         tail = data["you"]["body"][-1]
         TpathX = abs(tail["x"] - head["x"])
         TpathY = abs(tail["y"] - head["y"])
+        Rblock = {"x": head["x"] + 1, "y": head["y"]}
+        Lblock = {"x": head["x"] - 1, "y": head["y"]}
+        Dblock = {"x": head["x"], "y": head["y"] + 1}
+        Ublock = {"x": head["x"], "y": head["y"] - 1}
+        snakes = make_snakes_free_tails(data)
         if (TpathX == 1 and TpathY == 1):
-            if (head["x"] < tail["x"]):
+            if (head["x"] < tail["x"] and Rblock not in snakes):
                 return "right"
-            if (head["x"] > tail["x"]):
+            if (head["x"] > tail["x"] and Lblock not in snakes):
                 return "left"
-            if (head["y"] < tail["y"]):
+            if (head["y"] < tail["y"] and Dblock not in snakes):
                 return "down"
-            if (head["y"] > tail["y"]): 
+            if (head["y"] > tail["y"] and Ublock not in snakes): 
                 return "up"
         return path_away(data, target, directions, pathX, pathY) 
     return chase_head(data, directions)
