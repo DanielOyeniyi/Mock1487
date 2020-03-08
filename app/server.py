@@ -61,6 +61,12 @@ def move():
         body=json.dumps(response),
     )
 
+
+######
+    # make it so that it only chases if there is an open path 
+    # to the target
+######
+
 # dict -> string
 # returns the next move the snake should make
 def next_move(data):
@@ -70,7 +76,7 @@ def next_move(data):
     
     if (max(head_list) < max(tail_list)):
         return chase_tail(data, directions)
-    return chase_head(data, directions)
+    return avoid_head(data, directions)
     
 checked = []
 # dict -> list
@@ -110,7 +116,6 @@ def not_instant_death(data, block):
         return [directions[0], directions[1], directions[2]]
     return directions  
     
-
 # dict, list -> string
 # takes all possible directions and chases the target
 def chase_tail(data, directions):  
@@ -118,7 +123,34 @@ def chase_tail(data, directions):
     target = data["you"]["body"][-1]  
     pathX = abs(target["x"] - head["x"])
     pathY = abs(target["y"] - head["y"])
-    return pathing(data, target, directions, pathX, pathY)
+    return path_towards(data, target, directions, pathX, pathY)
+
+# dict, list -> string
+# takes all possible directions and avoids the target
+def avoid_head(data, directions):
+    head = data["you"]["body"][0]
+    heads = make_enemy_heads(data)
+    sizes = make_sizes(data)
+    own_size = len(data["you"]["body"])
+    
+    target = {}
+    pathX = 3
+    pathY = 3
+    
+    counter = 0
+    for bad_head in heads: 
+        if (own_size <= sizes[counter]):
+            x = abs(bad_head["x"] - head["x"])
+            y = abs(bad_head["y"] - head["y"])
+            if (x <= pathX and y <= pathY):
+                target = bad_head
+                pathX = x
+                pathY = y
+                
+                
+    if (len(target) != 0):
+        return path_away(data, target, directions, pathX, pathY) 
+    return chase_head(data, directions)
 
 # dict, list -> string
 # takes all possible directions and chases the target
@@ -146,7 +178,7 @@ def chase_head(data, directions):
                 pathY = y
     
     if (len(target) != 0):
-        return pathing(data, target, directions, pathX, pathY) 
+        return path_towards(data, target, directions, pathX, pathY) 
     return chase_food(data, directions)
     
 # list, list, dict -> string
@@ -169,11 +201,11 @@ def chase_food(data, directions):
             pathY = y
             target = item
             
-    return pathing(data, target, directions, pathX, pathY)
+    return path_towards(data, target, directions, pathX, pathY)
 
 # dict, dict, list, int, int -> string
 # takes target location and pick the most optimal path to get there
-def pathing(data, target, directions, pathX, pathY): 
+def path_towards(data, target, directions, pathX, pathY): 
     head = data["you"]["body"][0]
     if (head["x"] <= target["x"] and head["y"] <= target["y"]):
         if ("right" in directions and "down" in directions):
@@ -230,6 +262,70 @@ def pathing(data, target, directions, pathX, pathY):
             
         if ("left" in directions):
             return "left"
+            
+    if (len(directions) != 0):
+        return random.choice(directions)
+    return "up"
+
+# dict, dict, list, int, int -> string
+# takes target location and pick the most optimal path to run away from it
+def path_away(data, target, directions, pathX, pathY): 
+    head = data["you"]["body"][0]
+    if (head["x"] <= target["x"] and head["y"] <= target["y"]):
+        if ("left" in directions and "down" in directions):
+            if (pathX < pathY):
+                return "left"
+            if (pathX > pathY):
+                return "up" 
+            return random.choice(["left", "up"])
+            
+        if ("left" in directions):
+            return "left"            
+
+        if ("up" in directions):  
+            return "up"
+        
+    if (head["x"] <= target["x"] and head["y"] >= target["y"]):
+        if ("left" in directions and "down" in directions):
+            if (pathX < pathY):
+                return "left"
+            if (pathX > pathY):
+                return "left" 
+            return random.choice(["left", "down"])
+            
+        if ("left" in directions):
+            return "left"
+            
+        if ("down" in directions):  
+            return "down"
+            
+    if (head["x"] >= target["x"] and head["y"] <= target["y"]):
+        if ("right" in directions and "up" in directions):
+            if (pathX < pathY):
+                return "right"
+            if (pathX > pathY):
+                return "up" 
+            return random.choice(["right", "up"])
+            
+        if ("right" in directions):
+            return "right"
+            
+        if ("up" in directions):  
+            return "up"
+            
+    if (head["x"] >= target["x"] and head["y"] >= target["y"]):
+        if ("right" in directions and "down" in directions):
+            if (pathX < pathY):
+                return "right"
+            if (pathX > pathY):
+                return "down" 
+            return random.choice(["right", "down"])
+            
+        if ("right" in directions):  
+            return "right"
+            
+        if ("down" in directions):
+            return "down"
             
     if (len(directions) != 0):
         return random.choice(directions)
