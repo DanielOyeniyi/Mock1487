@@ -151,16 +151,16 @@ def avoid_head(data, directions):
                 
     if (len(target) != 0):
         tail = data["you"]["body"][-1]
-        TpathX = abs(target["x"] - head["x"])
-        TpathY = abs(target["y"] - head["y"])
+        TpathX = abs(tail["x"] - head["x"])
+        TpathY = abs(tail["y"] - head["y"])
         if (TpathX == 1 and TpathY == 1):
             if (head["x"] < tail["x"]):
                 return "right"
-            elif (head["x"] > tail["x"]):
+            if (head["x"] > tail["x"]):
                 return "left"
-            elif (head["y"] < tail["y"]):
+            if (head["y"] < tail["y"]):
                 return "down"
-            else: 
+            if (head["y"] > tail["y"]): 
                 return "up"
         return path_away(data, target, directions, pathX, pathY) 
     return chase_head(data, directions)
