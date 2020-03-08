@@ -173,6 +173,7 @@ def avoid_head(data, directions):
                 target = bad_head
                 pathX = x
                 pathY = y
+        counter += 1
                 
                 
     if (len(target) != 0):
@@ -202,7 +203,7 @@ def avoid_head(data, directions):
                 
             if (len(new_directions) != 0):
                 return chase_tail(data, new_directions, target)
-        return path_away(data, target, directions, pathX, pathY) 
+        return path_away(data, target, directions, pathX, pathY)
     return chase_head(data, directions)
 
 # dict, list -> string
@@ -229,6 +230,7 @@ def chase_head(data, directions):
                 target = bad_head
                 pathX = x
                 pathY = y
+        counter += 1
     
     if (len(target) != 0):
         return path_towards(data, target, directions, pathX, pathY) 
