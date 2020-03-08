@@ -65,6 +65,7 @@ def move():
 ######
     # if head is right next to you and your tail is also rigth next to you 
     # then chase your tail 
+    # also just make your snake chase your tail if it is x meters away and small
 ######
 
 # dict -> string
@@ -73,9 +74,6 @@ def next_move(data):
     head_list = paths(data, data["you"]["body"][0])
     tail_list = paths(data, data["you"]["body"][-1])
     directions = not_instant_death(data, data["you"]["body"][0])
-    
-    if (max(head_list) < max(tail_list)):
-        return chase_tail(data, directions)
     return avoid_head(data, directions)
     
 checked = []
@@ -289,7 +287,6 @@ def path_towards(data, target, directions, pathX, pathY):
 # takes target location and pick the most optimal path to run away from it
 def path_away(data, target, directions, pathX, pathY): 
     head = data["you"]["body"][0]
-    
     if (head["x"] >= target["x"] and head["y"] >= target["y"]):
         if ("right" in directions and "down" in directions):
             if (pathX < pathY):
