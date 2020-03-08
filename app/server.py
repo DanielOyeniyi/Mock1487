@@ -123,12 +123,23 @@ def chase_tail(data, directions, enemy):
     pathY = abs(target["y"] - head["y"])
     if (head["x"] < enemy["x"] and "right" in directions):
         directions.remove("right")
+        if (len(directions) == 0):
+            directions.append("right")
+            
     if (head["x"] > enemy["x"] and "left" in directions):
         directions.remove("left")
+        if (len(directions) == 0):
+            directions.append("left")
+            
     if (head["y"] < enemy["y"] and "down" in directions):
         directions.remove("down")
+        if (len(directions) == 0):
+            directions.append("down")
+            
     if (head["y"] > enemy["y"] and "up" in directions):
         directions.remove("up")
+        if (len(directions) == 0):
+            directions.append("up")
     return path_towards(data, target, directions, pathX, pathY)
 
 # dict, list -> string
