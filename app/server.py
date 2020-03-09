@@ -168,7 +168,7 @@ def avoid_head(data, directions):
     
     counter = 0
     for bad_head in heads: 
-        if (own_size < sizes[counter]):
+        if (own_size <= sizes[counter]):
             x = abs(bad_head["x"] - head["x"])
             y = abs(bad_head["y"] - head["y"])
             tmp = x + y
