@@ -66,6 +66,7 @@ def move():
       #### make it recognize that your path is not block off if the tail is 
       #### going to be gone in x amount of block 
       #### if you are on a wall just chase your tail 
+      #### make snake go towards middle of board if head on with other sanke and close to wall
 ######
 
 # dict -> string
@@ -167,7 +168,7 @@ def avoid_head(data, directions):
     
     counter = 0
     for bad_head in heads: 
-        if (own_size <= sizes[counter]):
+        if (own_size < sizes[counter]):
             x = abs(bad_head["x"] - head["x"])
             y = abs(bad_head["y"] - head["y"])
             tmp = x + y
