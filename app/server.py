@@ -75,7 +75,6 @@ def next_move(data):
     head_list = paths(data, data["you"]["body"][0])
     tail_list = paths(data, data["you"]["body"][-1])
     directions = not_instant_death(data, data["you"]["body"][0])
-    print(directions)
     return avoid_head(data, directions)
     
 checked = []
@@ -206,6 +205,8 @@ def avoid_head(data, directions):
                 
             if (len(new_directions) != 0):
                 return chase_tail(data, new_directions, target)
+                
+        directions = head_quadrants(data, directions, target)
         return path_away(data, target, directions, pathX, pathY)
     return chase_head(data, directions)
 
@@ -324,6 +325,86 @@ def path_towards(data, target, directions, pathX, pathY):
     if (len(directions) != 0):
         return random.choice(directions)
     return "up"
+
+# dict, list, dict -> list
+# returns the safest directions to go to avoid snake heads
+def head_quadrants(data, directions, target):
+    head = data["you"]["body"][0]
+    Xcenter = head["x"]
+    Ycenter = head["y"]
+    new_directions = []
+    if (target["x"] > head["x"] and target["y"] < head["y"]):
+        if ("left" in directions):
+            new_directions.append("left")
+        if ("down" in directions):
+            new_directions.append("down")
+        if (len(new_directions) != 0):
+            return new_directions
+        
+    if (target["x"] < head["x"] and target["y"] < head["y"]):
+        if ("right" in directions):
+            new_directions.append("right")
+        if ("down" in directions):
+            new_directions.append("down")
+        if (len(new_directions) != 0):
+            return new_directions
+        
+    if (target["x"] < head["x"] and target["y"] > head["y"]):
+        if ("right" in directions):
+            new_directions.append("right")
+        if ("up" in directions):
+            new_directions.append("up")
+        if (len(new_directions) != 0):
+            return new_directions
+        
+    if (target["x"] > head["x"] and target["y"] > head["y"]):
+        if ("left" in directions):
+            new_directions.append("left")
+        if ("up" in directions):
+            new_directions.append("up")
+        if (len(new_directions) != 0):
+            return new_directions
+        
+    if (target["x"] > head["x"]):
+        if ("left" in directions):
+            new_directions.append("left")
+        if ("down" in directions):
+            new_directions.append("down")
+        if ("up" in directions):
+            new_directions.append("up")
+        if (len(new_directions) != 0):
+            return new_directions
+        
+    if (target["x"] < head["x"]):
+        if ("right" in directions):
+            new_directions.append("left")
+        if ("down" in directions):
+            new_directions.append("down")
+        if ("up" in directions):
+            new_directions.append("up")
+        if (len(new_directions) != 0):
+            return new_directions
+    
+    if (target["y"] > head["y"]):
+        if ("right" in directions):
+            new_directions.append("right")
+        if ("left" in directions):
+            new_directions.append("left")
+        if ("up" in directions):
+            new_directions.append("up")
+        if (len(new_directions) != 0):
+            return new_directions
+        
+    if (target["y"] < head["y"]):
+        if ("right" in directions):
+            new_directions.append("right")
+        if ("left" in directions):
+            new_directions.append("left")
+        if ("down" in directions):
+            new_directions.append("down")
+        if (len(new_directions) != 0):
+            return new_directions
+
 
 # dict, dict, list, int, int -> string
 # takes target location and pick the most optimal path to run away from it
