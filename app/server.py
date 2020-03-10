@@ -130,25 +130,25 @@ def chase_tail(data, directions, enemy):
     Ublock = {"x": head["x"], "y": head["y"] - 1}
     
     
-    if (head["x"] < enemy["x"] and "right" in directions and Rblock not in snakes and Rblock["x"] != data["board"]["width"]):
-        directions.remove("right")
-        if (len(directions) == 0):
-            directions.append("right")
+    # if (head["x"] < enemy["x"] and "right" in directions and Rblock not in snakes and Rblock["x"] != data["board"]["width"]):
+        # directions.remove("right")
+        # if (len(directions) == 0):
+            # directions.append("right")
             
-    if (head["x"] > enemy["x"] and "left" in directions and Lblock not in snakes and Lblock["x"] != -1):
-        directions.remove("left")
-        if (len(directions) == 0):
-            directions.append("left")
+    # if (head["x"] > enemy["x"] and "left" in directions and Lblock not in snakes and Lblock["x"] != -1):
+        # directions.remove("left")
+        # if (len(directions) == 0):
+            # directions.append("left")
             
-    if (head["y"] < enemy["y"] and "down" in directions and Dblock not in snakes and Dblock["y"] != data["board"]["height"]):
-        directions.remove("down")
-        if (len(directions) == 0):
-            directions.append("down")
+    # if (head["y"] < enemy["y"] and "down" in directions and Dblock not in snakes and Dblock["y"] != data["board"]["height"]):
+        # directions.remove("down")
+        # if (len(directions) == 0):
+            # directions.append("down")
             
-    if (head["y"] > enemy["y"] and "up" in directions and Ublock not in snakes and Ublock["y"] != -1):
-        directions.remove("up")
-        if (len(directions) == 0):
-            directions.append("up")
+    # if (head["y"] > enemy["y"] and "up" in directions and Ublock not in snakes and Ublock["y"] != -1):
+        # directions.remove("up")
+        # if (len(directions) == 0):
+            # directions.append("up")
     return path_towards(data, target, directions, pathX, pathY)
 
 # dict, list -> string
@@ -183,7 +183,7 @@ def avoid_head(data, directions):
         tail = data["you"]["body"][-1]
         TpathX = abs(tail["x"] - head["x"])
         TpathY = abs(tail["y"] - head["y"])
-        if (TpathX <= 3 and TpathY <= 3):
+        if (TpathX <= 5 and TpathY <= 5):
             checked.clear()
             right = links_tail(data, head, snakes, "right")
             checked.clear()
@@ -202,10 +202,9 @@ def avoid_head(data, directions):
                 new_directions.append("down")
             if (up == True):
                 new_directions.append("up")
-                
             if (len(new_directions) != 0):
-                return chase_tail(data, new_directions, target)
-                
+                print(new_directions)
+                return chase_tail(data, new_directions, target)    
         directions = head_zone(data, directions, target)
         return path_away(data, target, directions, pathX, pathY)
     return chase_head(data, directions)
