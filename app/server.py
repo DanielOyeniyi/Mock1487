@@ -206,7 +206,7 @@ def avoid_head(data, directions):
             if (len(new_directions) != 0):
                 return chase_tail(data, new_directions, target)
                 
-        directions = head_quadrants(data, directions, target)
+        directions = head_zone(data, directions, target)
         return path_away(data, target, directions, pathX, pathY)
     return chase_head(data, directions)
 
@@ -328,7 +328,7 @@ def path_towards(data, target, directions, pathX, pathY):
 
 # dict, list, dict -> list
 # returns the safest directions to go to avoid snake heads
-def head_quadrants(data, directions, target):
+def head_zone(data, directions, target):
     head = data["you"]["body"][0]
     Xcenter = head["x"]
     Ycenter = head["y"]
@@ -404,6 +404,7 @@ def head_quadrants(data, directions, target):
             new_directions.append("down")
         if (len(new_directions) != 0):
             return new_directions
+    return directions
 
 
 # dict, dict, list, int, int -> string
