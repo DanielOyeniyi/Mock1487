@@ -65,8 +65,8 @@ def move():
 ######
       #### make it recognize that your path is not block off if the tail is 
       #### going to be gone in x amount of block 
-      #### if you are on a wall just chase your tail 
       #### make snake go towards middle of board if head on with other sanke and close to wall
+      #### if tail is next to head then you can turn into it, regardless of food situation
 ######
 
 # dict -> string
@@ -75,6 +75,7 @@ def next_move(data):
     head_list = paths(data, data["you"]["body"][0])
     tail_list = paths(data, data["you"]["body"][-1])
     directions = not_instant_death(data, data["you"]["body"][0])
+    print(directions)
     return avoid_head(data, directions)
     
 checked = []
@@ -197,7 +198,6 @@ def avoid_head(data, directions):
             if (right == True):
                 new_directions.append("right")
             if (left == True):
-                print("here")
                 new_directions.append("left")
             if (down == True):
                 new_directions.append("down")
@@ -550,6 +550,16 @@ def make_growing_tails(data):
         
         if (Rblock in food or Lblock in food or Dblock in food or Ublock in food or snake["body"][-1] == snake["body"][-2]):
             growing.append(snake["body"][-1])
+            
+    head = data["you"]["body"][0]
+    tail = data["you"]["body"][-1]
+    if (tail in growing):
+        Rblock = {"x": head["x"] + 1, "y": head["y"]}
+        Lblock = {"x": head["x"] - 1, "y": head["y"]}
+        Dblock = {"x": head["x"], "y": head["y"] + 1}
+        Ublock = {"x": head["x"], "y": head["y"] - 1}
+        if ((tail == Rblock or tail == Lblock or tail == Dblock or tail == Ublock) and tail != data["you"]["body"][-2]):
+            growing.remove(tail)
     return growing
 
 # list -> list
