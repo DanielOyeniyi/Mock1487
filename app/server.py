@@ -122,20 +122,7 @@ def next_move(data):
             return path_towards(data, eat, path_away(data, avoid, new_directions))
         return random.choice(path_away(data, avoid, new_directions))
         
-    if (len(kill) != 0):
-        kill_directions = directions_to_target(data, kill)
-        tail_directions = directions_to_target(data,tail)
-        new_directions = []
-        if ("right" in kill_directions and "right" in tail_directions):
-            new_directions.append("right")
-        if ("left" in kill_directions and "left" in tail_directions):
-            new_directions.append("left")
-        if ("down" in kill_directions and "down" in tail_directions):
-            new_directions.append("down")
-        if ("up" in kill_directions and "up" in tail_directions):
-            new_directions.append("up")
-        return path_towards(data, kill, new_directions)
-        
+        ## we switched this with kill to make it eat first
     if (len(eat) != 0):
         eat_directions = directions_to_target(data, eat)
         tail_directions = directions_to_target(data,tail)
@@ -151,6 +138,20 @@ def next_move(data):
         if (len(new_directions) == 0):
             return path_towards(data, eat, directions)
         return path_towards(data, eat, new_directions)
+        
+    if (len(kill) != 0):
+        kill_directions = directions_to_target(data, kill)
+        tail_directions = directions_to_target(data,tail)
+        new_directions = []
+        if ("right" in kill_directions and "right" in tail_directions):
+            new_directions.append("right")
+        if ("left" in kill_directions and "left" in tail_directions):
+            new_directions.append("left")
+        if ("down" in kill_directions and "down" in tail_directions):
+            new_directions.append("down")
+        if ("up" in kill_directions and "up" in tail_directions):
+            new_directions.append("up")
+        return path_towards(data, kill, new_directions)
         
     if (len(directions_to_target(data, tail)) != 0):
         tail_directions = directions_to_target(data, tail)
