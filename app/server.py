@@ -126,7 +126,21 @@ def next_move(data):
             return path_towards(data, eat, path_away(data, avoid, new_directions))
         return random.choice(path_away(data, avoid, new_directions))
         
-        ## we switched this with kill to make it eat first
+        
+    if (len(kill) != 0):
+        kill_directions = directions_to_target(data, kill)
+        tail_directions = directions_to_target(data,tail)
+        new_directions = []
+        if ("right" in kill_directions and "right" in tail_directions):
+            new_directions.append("right")
+        if ("left" in kill_directions and "left" in tail_directions):
+            new_directions.append("left")
+        if ("down" in kill_directions and "down" in tail_directions):
+            new_directions.append("down")
+        if ("up" in kill_directions and "up" in tail_directions):
+            new_directions.append("up")
+        return path_towards(data, kill, new_directions)
+        
     if (len(eat) != 0):
         eat_directions = directions_to_target(data, eat)
         tail_directions = directions_to_target(data,tail)
@@ -142,20 +156,6 @@ def next_move(data):
         if (len(new_directions) == 0):
             return path_towards(data, eat, directions)
         return path_towards(data, eat, new_directions)
-        
-    if (len(kill) != 0):
-        kill_directions = directions_to_target(data, kill)
-        tail_directions = directions_to_target(data,tail)
-        new_directions = []
-        if ("right" in kill_directions and "right" in tail_directions):
-            new_directions.append("right")
-        if ("left" in kill_directions and "left" in tail_directions):
-            new_directions.append("left")
-        if ("down" in kill_directions and "down" in tail_directions):
-            new_directions.append("down")
-        if ("up" in kill_directions and "up" in tail_directions):
-            new_directions.append("up")
-        return path_towards(data, kill, new_directions)
         
     if (len(directions_to_target(data, tail)) != 0):
         tail_directions = directions_to_target(data, tail)
@@ -232,9 +232,11 @@ def head_to_chase(data):
     pathY = 100
     sizing = 0
     
+    bigger = 0
     counter = 0
     for bad_head in heads: 
         if (own_size > sizes[counter]):
+            bigger += 1
             difference = own_size - sizes[counter]
             x = abs(bad_head["x"] - head["x"])
             y = abs(bad_head["y"] - head["y"])
@@ -242,7 +244,9 @@ def head_to_chase(data):
                 sizing = difference
                 target = bad_head
         counter += 1
-    return target
+    if (bigger == len(sizes)):
+        return target
+    return {}
     
 # dict -> dict
 # returs the closest targetable food
