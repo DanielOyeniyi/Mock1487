@@ -205,6 +205,12 @@ def head_to_avoid(data):
             tmp = x + y
             if ((x <= 3 and y <= 3) and tmp < distance):
                 target = bad_head
+        if (own_size <= sizes[counter]):
+            x = abs(bad_head["x"] - head["x"])
+            y = abs(bad_head["y"] - head["y"])
+            tmp = x + y
+            if ((x <= 2 and y <= 2) and tmp < distance):
+                target = bad_head
         counter += 1
     return target
     
