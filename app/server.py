@@ -104,6 +104,10 @@ def next_move(data):
     eat = food_to_eat(data)
     tail = data["you"]["body"][-1]
     
+    
+    # this is th emain difference between 1488 and 1487, 1487 should chase food while avoiding
+    # path away also avoid the blocks next to the wall
+    
     if (len(avoid) != 0):
         avoid_directions = head_zone(data, directions, avoid)
         tail_directions = directions_to_target(data,tail)
@@ -511,8 +515,8 @@ def path_away(data, target, directions):
             return ["right"]
             
     if (len(directions) != 0):
-        return random.choice(directions)
-    return "up"
+        return [random.choice(directions)]
+    return ["up"]
 
 # dict, list, dict -> list
 # returns the safest directions to go to avoid snake heads
