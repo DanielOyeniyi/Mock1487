@@ -337,10 +337,21 @@ def links_helper(data, block, target, distance, direction):
 # takes target location and pick the most optimal path to get there
 def path_towards(data, target, directions): 
     head = data["you"]["body"][0]
+    
+    Rblock = {"x": head["x"] + 1, "y": head["y"]}
+    Lblock = {"x": head["x"] - 1, "y": head["y"]}
+    Dblock = {"x": head["x"], "y": head["y"] + 1}
+    Ublock = {"x": head["x"], "y": head["y"] - 1}
+    
     pathX = abs(head["x"] - target["x"])
     pathY = abs(head["y"] - target["y"])
     if (head["x"] <= target["x"] and head["y"] <= target["y"]):
         if ("right" in directions and "down" in directions):
+            if (Rblock["x"] == data["board"]["width"]-1 ):
+                return "down"
+            if (Dblock["y"] == data["board"]["height"]-1):
+                return "right"
+                
             if (pathX > pathY):
                 return "right"
             if (pathX < pathY):
@@ -355,6 +366,11 @@ def path_towards(data, target, directions):
         
     if (head["x"] <= target["x"] and head["y"] >= target["y"]):
         if ("right" in directions and "up" in directions):
+            if (Rblock["x"] == data["board"]["width"]-1 ):
+                return "up"
+            if (Ublock["y"] == 0):
+                return "right"
+                
             if (pathX > pathY):
                 return "right"
             if (pathX < pathY):
@@ -369,6 +385,11 @@ def path_towards(data, target, directions):
             
     if (head["x"] >= target["x"] and head["y"] <= target["y"]):
         if ("left" in directions and "down" in directions):
+            if (Lblock["x"] == 0):
+                return "down"
+            if (Dblock["y"] == data["board"]["height"]-1):
+                return "left"
+                
             if (pathX > pathY):
                 return "left"
             if (pathX < pathY):
@@ -383,6 +404,11 @@ def path_towards(data, target, directions):
             
     if (head["x"] >= target["x"] and head["y"] >= target["y"]):
         if ("left" in directions and "up" in directions):
+            if (Lblock["x"] == 0):
+                return "up"
+            if (Ublock["y"] == 0):
+                return "left"
+                
             if (pathX > pathY):
                 return "left"
             if (pathX < pathY):
@@ -403,9 +429,17 @@ def path_towards(data, target, directions):
 # takes target location and pick the most optimal directions to run away from it
 def path_away(data, target, directions): 
     head = data["you"]["body"][0]
-
+    Rblock = {"x": head["x"] + 1, "y": head["y"]}
+    Lblock = {"x": head["x"] - 1, "y": head["y"]}
+    Dblock = {"x": head["x"], "y": head["y"] + 1}
+    Ublock = {"x": head["x"], "y": head["y"] - 1}
+    
     if (head["x"] <= target["x"] and head["y"] >= target["y"]): # target in q1
         if ("left" in directions and "down" in directions):
+            if (Lblock["x"] == 0):
+                return ["down"]
+            if (Dblock["y"] == data["board"]["height"]-1):
+                return ["left"]
             return ["left", "down"]
             
         if ("left" in directions):
@@ -419,6 +453,10 @@ def path_away(data, target, directions):
             
     if (head["x"] >= target["x"] and head["y"] <= target["y"]): # target in q2
         if ("right" in directions and "up" in directions):
+            if (Rblock["x"] == data["board"]["width"]-1 ):
+                return ["up"]
+            if (Ublock["y"] == 0):
+                return ["right"]
             return ["right", "up"]
             
         if ("right" in directions):
@@ -432,6 +470,10 @@ def path_away(data, target, directions):
     
     if (head["x"] >= target["x"] and head["y"] >= target["y"]): # target in q3
         if ("right" in directions and "down" in directions):
+            if (Rblock["x"] == data["board"]["width"]-1 ):
+                return ["down"]
+            if (Dblock["y"] == data["board"]["height"]-1):
+                return ["right"]
             return ["right", "down"]
             
         if ("right" in directions):  
@@ -446,6 +488,10 @@ def path_away(data, target, directions):
     
     if (head["x"] <= target["x"] and head["y"] <= target["y"]):  # target in q4
         if ("left" in directions and "up" in directions):
+            if (Lblock["x"] == 0):
+                return ["up"]
+            if (Ublock["y"] == 0):
+                return ["left"]
             return ["left", "up"]
             
         if ("left" in directions):
