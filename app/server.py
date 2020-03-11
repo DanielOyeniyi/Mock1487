@@ -178,7 +178,7 @@ def avoid_head(data, directions):
                 pathY = y
         counter += 1
                 
-                
+    directions = head_zone(data, directions, target)
     if (len(target) != 0):
         tail = data["you"]["body"][-1]
         TpathX = abs(tail["x"] - head["x"])
@@ -203,9 +203,7 @@ def avoid_head(data, directions):
             if (up == True):
                 new_directions.append("up")
             if (len(new_directions) != 0):
-                print(new_directions)
-                return chase_tail(data, new_directions, target)    
-        directions = head_zone(data, directions, target)
+                return chase_tail(data, new_directions, target) 
         return path_away(data, target, directions, pathX, pathY)
     return chase_head(data, directions)
 
@@ -376,7 +374,7 @@ def head_zone(data, directions, target):
         
     if (target["x"] < head["x"]):
         if ("right" in directions):
-            new_directions.append("left")
+            new_directions.append("right")
         if ("down" in directions):
             new_directions.append("down")
         if ("up" in directions):
@@ -672,10 +670,12 @@ def make_snakes(data):
 # makes a list of all the snakes sizes
 def make_sizes(data): 
     sizes = []
+    you = data["you"]
     for snake in data["board"]["snakes"]: 
-        body = snake["body"]
-        size = len(body)
-        sizes.append(size)
+        if (snake != you):
+            body = snake["body"]
+            size = len(body)
+            sizes.append(size)
     return sizes
 
 # list, list -> list
