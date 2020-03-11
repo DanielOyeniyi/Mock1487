@@ -177,8 +177,8 @@ def avoid_head(data, directions):
                 pathX = x
                 pathY = y
         counter += 1
-                
-    directions = head_zone(data, directions, target)
+    if (target != 0):            
+        directions = head_zone(data, directions, target)
     if (len(target) != 0):
         tail = data["you"]["body"][-1]
         TpathX = abs(tail["x"] - head["x"])
