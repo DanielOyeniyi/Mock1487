@@ -238,7 +238,7 @@ def avoid_target(data, directions, target):
     if (len(new_directions) != 0):
         return random.choice(new_directions)
     else: 
-        return to_target(data, value(data), closest_food(data))
+        return to_target(data, directions, closest_food(data))
 
 # dict -> dict
 # returns closest enemy head to own head
