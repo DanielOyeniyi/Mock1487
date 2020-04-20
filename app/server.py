@@ -145,7 +145,8 @@ def value_helper(data, snakes, body, depth, block):
     tmp_body = body.copy()
     tmp_body.insert(0, block)  
     tail = tmp_body.pop()
-    tmp_snakes.remove(tail)
+    if (tmp_body[0] not in data["board"]["food"]):
+        tmp_snakes.remove(tail)
     
     if (depth == 3 or not is_free(data, tmp_snakes, block)):
         return 0
@@ -250,11 +251,7 @@ def avoid_target(data, directions, target):
         
     print(directions)
     print(new_directions)
-    """
-    need to work on the case where an enemy snake is on a y axis
-    and the up and down block is available. one goes to a tight closed
-    off space while the other goes into the 
-    
+    """    
     or predict the next possible moves of the snakes. maybe once we
     have our next possible direcions we run another version of 
     value(data) where it plays out all the next x moves of the other
@@ -264,8 +261,6 @@ def avoid_target(data, directions, target):
     to eleminate the moves they can't make for sure. So if you are running 
     away and the snake can't go right but right is available to you then 
     turn right rather than left
-    
-    Also we need to be able to know our tail will be gone next turn
     """
         
         
