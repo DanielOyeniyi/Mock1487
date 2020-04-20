@@ -141,19 +141,17 @@ def value(data):
 
 
 def value_helper(data, snakes, body, depth, block):
-    if (depth == 3 or not is_free(data, snakes, block)):
+    tmp_snakes = snakes.copy()
+    tmp_body = body.copy()
+    tmp_body.insert(0, block)  
+    tail = tmp_body.pop()
+    tmp_snakes.remove(tail)
+    
+    if (depth == 3 or not is_free(data, tmp_snakes, block)):
         return 0
     else:
-        tmp_snakes = snakes.copy()
-        tmp_snakes.insert(0, block)
-        
-        tmp_body = body.copy()
-        tmp_body.insert(0, block)
-        
-        tail = tmp_body.pop()
-        tmp_snakes.remove(tail)
-        
-        
+        tmp_snakes.insert(0, block)  
+
         right_block = {"x": block["x"] + 1, "y": block["y"]}
         left_block = {"x": block["x"] - 1, "y": block["y"]}
         down_block = {"x": block["x"], "y": block["y"] + 1}
@@ -213,6 +211,9 @@ def to_target(data, directions, target):
     if (target["y"] < head["y"] and "up" in directions):
         new_directions.append("up")
         
+    print(new_directions)
+    print(directions)
+        
     if (len(new_directions) != 0):
         return random.choice(new_directions)
     else: 
@@ -258,6 +259,13 @@ def avoid_target(data, directions, target):
     have our next possible direcions we run another version of 
     value(data) where it plays out all the next x moves of the other
     snakes and the algorithm picks the safest move.
+    
+    we can predict enemy moves by simply doing a surrounding block check 
+    to eleminate the moves they can't make for sure. So if you are running 
+    away and the snake can't go right but right is available to you then 
+    turn right rather than left
+    
+    Also we need to be able to know our tail will be gone next turn
     """
         
         
