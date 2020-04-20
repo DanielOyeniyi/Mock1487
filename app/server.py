@@ -235,6 +235,32 @@ def avoid_target(data, directions, target):
     if (target["y"] < head["y"] and abs(target["y"] - head["y"]) <= 2 and "down" in directions):
         new_directions.append("down")
         
+    if (target["x"] == head["x"] and abs(target["y"] - head["y"]) <= 2):
+        if ("right" in directions and "right" not in new_directions):
+            new_directions.append("right")
+        if ("left" in directions and "left" not in new_directions):
+            new_directions.append("left")
+        
+    if (target["y"] == head["y"] and abs(target["x"] - head["x"]) <= 2):
+        if ("down" in directions and "down" not in new_directions):
+            new_directions.append("down")
+        if ("up" in directions and "up" not in new_directions):
+            new_directions.append("up")
+        
+    print(directions)
+    print(new_directions)
+    """
+    need to work on the case where an enemy snake is on a y axis
+    and the up and down block is available. one goes to a tight closed
+    off space while the other goes into the 
+    
+    or predict the next possible moves of the snakes. maybe once we
+    have our next possible direcions we run another version of 
+    value(data) where it plays out all the next x moves of the other
+    snakes and the algorithm picks the safest move.
+    """
+        
+        
     if (len(new_directions) != 0):
         return random.choice(new_directions)
     else: 
