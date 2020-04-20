@@ -214,7 +214,7 @@ def to_target(data, directions, target):
     
     if (target["x"] > head["x"] and "right" in directions):
         new_directions.append("right")
-    if (target["x"] < head["y"] and "left" in directions):
+    if (target["x"] < head["x"] and "left" in directions):
         new_directions.append("left")
     if (target["y"] > head["y"] and "down" in directions):
         new_directions.append("down")
