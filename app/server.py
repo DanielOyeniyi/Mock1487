@@ -5,7 +5,7 @@ import random
 import bottle
 from bottle import HTTPResponse
 
-
+turn = 0
 @bottle.route("/")
 def index():
     return "Your Battlesnake is alive!"
@@ -45,7 +45,9 @@ def move():
     """
     data = bottle.request.json
     print("MOVE:", json.dumps(data))
-
+    global turn 
+    turn += 1
+    print(turn)
     move = next_move(data)
     num_loops = 0
     
@@ -99,6 +101,11 @@ also be a good concept to branch off from. Making it efficient is the
 protruding challenge but it does not need to check all the block as 
 it does not work on our algorithm. We just need to check it's next x moves
 and put danger values or something if they collide with our snakes next x moves
+
+Again if we restricted the search requirements for the value function to 
+just areas that can fit your own body + x more blocks then we would be able
+to have an even greater depth and maybe even predict the next moves of 
+other snakes. 
 """
 
 # dict -> string
@@ -218,6 +225,20 @@ def to_target(data, directions, target):
     else: 
         return random.choice(directions)
 
+'''
+- attack stratagies
+- algorithm balance between efficiency and complexity 
+  (rather than calculating the highest blocks, why not pick a 
+   direction that will give you access to all the blocks? it 
+   enables you to have more and better moves if there is an enemy 
+   head or food in range) (or forcing snakes into corners and or 
+   tight spaces)
+
+- we haven't really gone into more complex attack strats other 
+  than just chasing the head if bigger. It may be more intersting
+  and you might learn more by focusing on this.
+'''
+
 # dict, list, dict -> directions
 # given a list of available directions and a target
 # it returns a direction that will bring the snake
@@ -278,6 +299,14 @@ def avoid_target(data, directions, target):
     complete the predicting moves and use it to avoid snakes first 
     then consider starting on another snake/working on more efficient 
     versions of algorithms with simmilar goals
+    
+    if target is 2 blocks to a wall and you are in line with it go
+    towards the wall to block it off
+    
+    we need a smarter chasing algorithm. one that won't chase along
+    a wall or into a tight space. maybe chasing it's tail or something 
+    
+    make snake avoid making moves that can result in it being blocked off
     """
         
         
