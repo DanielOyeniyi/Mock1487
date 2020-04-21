@@ -211,9 +211,7 @@ def to_target(data, directions, target):
         new_directions.append("down")
     if (target["y"] < head["y"] and "up" in directions):
         new_directions.append("up")
-        
-    print(new_directions)
-    print(directions)
+     
         
     if (len(new_directions) != 0):
         return random.choice(new_directions)
@@ -227,6 +225,7 @@ def to_target(data, directions, target):
 def avoid_target(data, directions, target):
     head = data["you"]["body"][0]
     new_directions = []
+    targets_directions = targets_moves(data, target)
     
     if (target["x"] > head["x"] and abs(target["x"] - head["x"]) <= 2 and "left" in directions):
         new_directions.append("left")
@@ -238,19 +237,25 @@ def avoid_target(data, directions, target):
         new_directions.append("down")
         
     if (target["x"] == head["x"] and abs(target["y"] - head["y"]) <= 2):
+        if ("right" in directions and "right" not in targets_directions):
+            return "right"
+        if ("left" in directions and "left" not in targets_directions):
+            return "left"
         if ("right" in directions and "right" not in new_directions):
             new_directions.append("right")
         if ("left" in directions and "left" not in new_directions):
             new_directions.append("left")
         
     if (target["y"] == head["y"] and abs(target["x"] - head["x"]) <= 2):
+        if ("down" in directions and "down" not in targets_directions):
+            return "down"
+        if ("up" in directions and "up" not in targets_directions):
+            return "up"
         if ("down" in directions and "down" not in new_directions):
             new_directions.append("down")
         if ("up" in directions and "up" not in new_directions):
             new_directions.append("up")
-        
-    print(directions)
-    print(new_directions)
+       
     """    
     or predict the next possible moves of the snakes. maybe once we
     have our next possible direcions we run another version of 
@@ -261,6 +266,18 @@ def avoid_target(data, directions, target):
     to eleminate the moves they can't make for sure. So if you are running 
     away and the snake can't go right but right is available to you then 
     turn right rather than left
+    
+    could increase the range of chasing snakes
+    
+    we could instead make our value function recognize if a space
+    is big enough to not die rather than just picking the path with 
+    the most blocks. This way it saves computing power if the condition 
+    is met and we can instead use that computing power to predict the 
+    other moves of snakes.
+    
+    complete the predicting moves and use it to avoid snakes first 
+    then consider starting on another snake/working on more efficient 
+    versions of algorithms with simmilar goals
     """
         
         
@@ -268,6 +285,29 @@ def avoid_target(data, directions, target):
         return random.choice(new_directions)
     else: 
         return to_target(data, directions, closest_food(data))
+
+# dict, dict -> list
+# takes a dict representing the game board and a dict
+# representing an enemy head and returns its available moves
+def targets_moves(data, target):
+    directions = []
+    snakes = make_snakes(data)
+    
+    right_block = {"x": target["x"] + 1, "y": target["y"]}
+    left_block = {"x": target["x"] - 1, "y": target["y"]}
+    down_block = {"x": target["x"], "y": target["y"] + 1}
+    up_block = {"x": target["x"], "y": target["y"] - 1}
+    
+    if (is_free(data, snakes, right_block)):
+        directions.append("right")
+    if (is_free(data, snakes, left_block)):
+        directions.append("left")
+    if (is_free(data, snakes, down_block)):
+        directions.append("down")
+    if (is_free(data, snakes, up_block)):
+        directions.append("up")
+        
+    return directions   
 
 # dict -> dict
 # returns closest enemy head to own head
