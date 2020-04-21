@@ -5,7 +5,8 @@ import random
 import bottle
 from bottle import HTTPResponse
 
-turn = 0
+import Game as g
+
 @bottle.route("/")
 def index():
     return "Your Battlesnake is alive!"
@@ -45,9 +46,10 @@ def move():
     """
     data = bottle.request.json
     print("MOVE:", json.dumps(data))
-    global turn 
-    turn += 1
-    print(turn)
+    
+    object = g.Game(data["game"]["id"])
+    object.print_gameID()
+    
     move = next_move(data)
     num_loops = 0
     
@@ -106,6 +108,9 @@ Again if we restricted the search requirements for the value function to
 just areas that can fit your own body + x more blocks then we would be able
 to have an even greater depth and maybe even predict the next moves of 
 other snakes. 
+
+here is a very big issue. We can't run more than 2 snakes at the same time
+which is horrible. we need a much faster program... period
 """
 
 # dict -> string
