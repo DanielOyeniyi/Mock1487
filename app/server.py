@@ -365,7 +365,7 @@ def to_target(data, directions, target):
     if (len(new_directions) != 0):
         return random.choice(new_directions)
     else: 
-        return random.choice(directions)
+        return sensor_move(data)
     
     
 # dict -> dict
