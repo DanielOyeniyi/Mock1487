@@ -96,6 +96,9 @@ def sensor_move(data):
     up_left = [sensor(data, snakes, head, "up_left"), 7]
     
     vals = [up, up_right, right, down_right, down, down_left, left, up_left]
+    tight = []
+    for val in vals:
+        tight.append(val[0])
     
     if (is_enemy_head(data, enemy_heads, head, "up")):
         vals.remove(up_left)
@@ -171,12 +174,13 @@ def sensor_move(data):
             vals.remove(down_left)
         if (up_right in vals):
             vals.remove(up_right)
-    
     new_vals = []
     for val in vals:
         new_vals.append(val[0])
         
     max_val = max(new_vals)
+    if (max_val == 0):
+        max_val = max(tight)
     
     if (max_val == up[0] and up in vals):
         return "up"
@@ -219,6 +223,52 @@ def sensor_move(data):
         
     if (max_val == left[0] and left in vals):
         return "left"
+    
+    
+    # if max_val was 0  
+    
+    if (max_val == up[0]):
+        return "up"  
+    
+    if (max_val == up_right[0]):
+        if (right[0] != 0 and up[0] != 0):
+            return random.choice(["up", "right"])
+        
+    if (max_val == right[0]):
+        return "right"
+        
+    if (max_val == down_right[0]):
+        if (down[0] != 0 and right[0] != 0):
+            return random.choice(["down", "right"])
+        
+    if (max_val == down[0]):
+        return "down"
+    
+    if (max_val == down_left[0]):
+        if (down[0] != 0 and left[0] != 0):
+            return random.choice(["down", "left"])
+        
+    if (max_val == left[0]):
+        return "left"
+        
+    if (max_val == up_left[0]):
+        if (up[0] != 0 and left[0] != 0):
+            return random.choice(["up", "left"])
+            
+    max_val = max(up[0], right[0], down[0], left[0])
+    
+    if (max_val == up[0]):
+        return "up"
+        
+    if (max_val == right[0]):
+        return "right"
+        
+    if (max_val == down[0]):
+        return "down"
+        
+    if (max_val == left[0]):
+        return "left"
+    
     
 def sensor(data, snakes, pos, direction):
     return sensor_helper(data, snakes, pos, direction)
@@ -356,6 +406,7 @@ def destroy(data, snakes, pos):
     head_moves = free_moves(data, snakes, head)
     enemy_heads = make_enemy_heads(data)
     
+
     # top_wall
     if (pos["y"] == 0):
         y_distance = head["y"] - pos["y"]
