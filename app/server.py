@@ -368,6 +368,9 @@ def make_snakes(data):
     for snake in data["board"]["snakes"]:
         for part in snake["body"]:
             snakes.append(part)
+        if (len(snake) >= 2):
+            if (snake["body"][-1] != snake["body"][-2]):
+                snakes.remove(snake["body"][-1])
     return snakes
     
 
