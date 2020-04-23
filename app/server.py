@@ -66,23 +66,14 @@ def move():
 # a string representing the next move of the snake   
 def next_move(data):
     food = closest_food(data)
-    moves = []
-    block = data["you"]["body"][0]
     snakes = make_snakes(data)
+    moves = free_moves(data, snakes, data["you"]["body"][0])
+    along_wall = is_along_wall(data, make_enemy_heads(data))
     
-    right_block = {"x": block["x"] + 1, "y": block["y"]}
-    left_block = {"x": block["x"] - 1, "y": block["y"]}
-    down_block = {"x": block["x"], "y": block["y"] + 1}
-    up_block = {"x": block["x"], "y": block["y"] - 1}    
-
-    if (is_free(data, snakes, right_block)):
-        moves.append("right")
-    if (is_free(data, snakes, left_block)):
-        moves.append("left")
-    if (is_free(data, snakes, down_block)):
-        moves.append("down")
-    if (is_free(data, snakes, up_block)):
-        moves.append("up")
+    for head in along_wall:
+        move = destroy(data, snakes, head)
+        if (move != "no"):
+            return move 
     
     if (data["you"]["health"] < 50):
         return to_target(data, moves, food)
@@ -119,7 +110,6 @@ def sensor_move(data):
         vals.remove(up_left)
         vals.remove(right)
         vals.remove(down_right)
-        print("here")
         
     if (is_enemy_head(data, enemy_heads, head, "right")):
         if (up_right in vals):
@@ -199,8 +189,6 @@ def sensor_move(data):
         return "right"
         
     if (max_val == down_right[0] and down_right in vals):
-        print("here")
-        print(right)
         if (down[0] != 0 and right[0] != 0):
             return random.choice(["down", "right"])
         
@@ -231,7 +219,6 @@ def sensor_move(data):
         
     if (max_val == left[0] and left in vals):
         return "left"
-    
     
 def sensor(data, snakes, pos, direction):
     return sensor_helper(data, snakes, pos, direction)
@@ -344,6 +331,125 @@ def is_enemy_head(data, enemy_heads, pos, direction):
         new_pos["x"] -= 1
         return new_pos in enemy_heads
     
+    
+def free_moves(data, snakes, pos):
+    moves = []
+    right_block = {"x": pos["x"] + 1, "y": pos["y"]}
+    left_block = {"x": pos["x"] - 1, "y": pos["y"]}
+    down_block = {"x": pos["x"], "y": pos["y"] + 1}
+    up_block = {"x": pos["x"], "y": pos["y"] - 1}    
+
+    if (is_free(data, snakes, right_block)):
+        moves.append("right")
+    if (is_free(data, snakes, left_block)):
+        moves.append("left")
+    if (is_free(data, snakes, down_block)):
+        moves.append("down")
+    if (is_free(data, snakes, up_block)):
+        moves.append("up")
+        
+    return moves
+    
+def destroy(data, snakes, pos):
+    head = data["you"]["body"][0]
+    target_moves = free_moves(data, snakes, pos)
+    head_moves = free_moves(data, snakes, head)
+    
+    # top_wall
+    if (pos["y"] == 0):
+        y_distance = head["y"] - pos["y"]
+        if ("right" in target_moves and "left" not in target_moves):
+            x_distance = head["x"] - pos["x"]
+            # if head is close enough and to the right the enemy head
+            if (y_distance <= 2 and x_distance >= 0):
+                if (y_distance < x_distance and "up" in head_moves):
+                    return "up"
+                else: 
+                    if ("right" in head_moves and head["y"] != 0):
+                        return "right"
+        
+        if ("left" in target_moves and "right" not in target_moves):
+            x_distance = pos["x"] - head["x"]
+            # if head is close enough and to the left the enemy head
+            if (y_distance <= 2 and x_distance >= 0):
+                if (y_distance < x_distance and "up" in head_moves):
+                    return "up"
+                else: 
+                    if ("left" in head_moves and head["y"] != 0):
+                        return "left"
+    
+    # right_wall
+    if (pos["x"] == data["board"]["width"] - 1):
+        x_distance = pos["x"] - head["x"]
+        if ("up" in target_moves and "down" not in target_moves):
+            y_distance = pos["y"] - head["y"]
+            # if head is close enough and above the enemy head
+            if (x_distance <= 2 and y_distance >= 0):
+                if (x_distance < y_distance and "right" in head_moves):
+                    return "right"
+                else: 
+                    if ("up" in head_moves and head["x"] != data["board"]["width"] - 1):
+                        return "up"
+        
+        if ("down" in target_moves and "up" not in target_moves):
+            y_distance = head["y"] - pos["y"]
+            # if head is close enough and below the enemy head
+            if (x_distance <= 2 and y_distance >= 0):
+                if (x_distance < y_distance and "right" in head_moves):
+                    return "right"
+                else: 
+                    if ("down" in head_moves and head["x"] != data["board"]["width"] - 1):
+                        return "down"
+                
+            
+    # bottom_wall
+    if (pos["y"] == data["board"]["height"] - 1):
+        y_distance = pos["y"] - head["y"]
+        if ("right" in target_moves and "left" not in target_moves):
+            x_distance = head["x"] - pos["x"]
+            # if head is close enough and to the right the enemy head
+            if (y_distance <= 2 and x_distance >= 0):
+                if (y_distance < x_distance and "down" in head_moves):
+                    return "down"
+                else: 
+                    if ("right" in head_moves and head["y"] != data["board"]["height"] - 1):
+                        return "right"
+        
+        if ("left" in target_moves and "right" not in target_moves):
+            x_distance = pos["x"] - head["x"]
+            # if head is close enough and to the left the enemy head
+            if (y_distance <= 2 and x_distance >= 0):
+                if (y_distance < x_distance and "down" in head_moves):
+                    return "down"
+                else: 
+                    if ("left" in head_moves and head["y"] != data["board"]["height"] - 1):
+                        return "left"
+        
+    # left_wall
+    if (pos["x"] == 0):
+        x_distance = head["x"] - pos["x"]
+        if ("up" in target_moves and "down" not in target_moves):
+            y_distance = pos["y"] - head["y"]
+            # if head is close enough and above the enemy head
+            if (x_distance <= 2 and y_distance >= 0):
+                if (x_distance < y_distance and "left" in head_moves):
+                    return "left"
+                else: 
+                    if ("up" in head_moves and head["x"] != 0):
+                        return "up"
+        
+        if ("down" in target_moves and "up" not in target_moves):
+            y_distance = head["y"] - pos["y"]
+            # if head is close enough and below the enemy head
+            if (x_distance <= 2 and y_distance >= 0):
+                if (x_distance < y_distance and "left" in head_moves):
+                    return "left"
+                else: 
+                    if ("down" in head_moves and head["x"] != 0):
+                        return "down"
+        
+    return "no"     
+    
 
 # dict, list, dict -> bool
 # return true if the block is not in any snake body parts and 
@@ -361,6 +467,16 @@ def make_enemy_heads(data):
             len(data["you"]["body"]) <= len(snake["body"])):
             enemies.append(snake["body"][0])
     return enemies
+    
+    
+def is_along_wall(data, enemies):
+    along_wall = []
+    for head in enemies:
+        if (head["x"] == data["board"]["width"] - 1 or 
+            head["y"] == data["board"]["height"] -1 or 
+            head["x"] == 0 or head["y"] == 0):
+            along_wall.append(head)
+    return along_wall
 
 #dict -> list
 # returns a list of dicts representing snake locations
