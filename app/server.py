@@ -178,7 +178,11 @@ def sensor_move(data):
     for val in vals:
         new_vals.append(val[0])
         
-    max_val = max(new_vals)
+    if (len(new_vals) != 0):
+        max_val = max(new_vals)
+    else: 
+        max_val = 0
+        
     if (max_val == 0):
         max_val = max(tight)
     
