@@ -119,6 +119,7 @@ def sensor_move(data):
         vals.remove(up_left)
         vals.remove(right)
         vals.remove(down_right)
+        print("here")
         
     if (is_enemy_head(data, enemy_heads, head, "right")):
         if (up_right in vals):
@@ -281,36 +282,64 @@ def is_enemy_head(data, enemy_heads, pos, direction):
     new_pos = {"x": pos["x"], "y": pos["y"]}
     if (direction == "up"):
         new_pos["y"] -= 1
+        if (new_pos in enemy_heads):
+            return True
+        new_pos["y"] -= 1
         return new_pos in enemy_heads
             
     if (direction == "up_right"):
+        new_pos["y"] -= 1
+        new_pos["x"] += 1
+        if (new_pos in enemy_heads):
+            return True
         new_pos["y"] -= 1
         new_pos["x"] += 1
         return new_pos in enemy_heads
             
     if (direction == "right"):
         new_pos["x"] += 1
+        if (new_pos in enemy_heads):
+            return True
+        new_pos["x"] += 1
         return new_pos in enemy_heads
             
     if (direction == "down_right"):
+        new_pos["y"] += 1
+        new_pos["x"] += 1
+        if (new_pos in enemy_heads):
+            return True
         new_pos["y"] += 1
         new_pos["x"] += 1
         return new_pos in enemy_heads
             
     if (direction == "down"):
         new_pos["y"] += 1
+        if (new_pos in enemy_heads):
+            return True
+        new_pos["y"] += 1
         return new_pos in enemy_heads
             
     if (direction == "down_left"):
+        new_pos["y"] += 1
+        new_pos["x"] -= 1
+        if (new_pos in enemy_heads):
+            return True
         new_pos["y"] += 1
         new_pos["x"] -= 1
         return new_pos in enemy_heads
             
     if (direction == "left"):
         new_pos["x"] -= 1
+        if (new_pos in enemy_heads):
+            return True
+        new_pos["x"] -= 1
         return new_pos in enemy_heads
             
     if (direction == "up_left"):
+        new_pos["y"] -= 1
+        new_pos["x"] -= 1
+        if (new_pos in enemy_heads):
+            return True
         new_pos["y"] -= 1
         new_pos["x"] -= 1
         return new_pos in enemy_heads
