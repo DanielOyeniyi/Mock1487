@@ -77,32 +77,35 @@ def next_move(data):
     
     max_val = max(up, up_right, right, down_right, down, down_left, left, up_left)
     
+    print(up, right, down, left)
+    print (up_right, down_right, down_left, up_left)
+    
     if (max_val == up):
         return "up"
         
     if (max_val == up_right):
-        if (right != -1 and up != -1):
+        if (right != 0 and up != 0):
             return random.choice(["up", "right"])
         
     if (max_val == right):
         return "right"
         
     if (max_val == down_right):
-        if (down != -1 and right != -1):
+        if (down != 0 and right != 0):
             return random.choice(["down", "right"])
         
     if (max_val == down):
         return "down"
     
     if (max_val == down_left):
-        if (down != -1 and left != -1):
+        if (down != 0 and left != 0):
             return random.choice(["down", "left"])
         
     if (max_val == left):
         return "left"
         
     if (max_val == up_left):
-        if (up != -1 and left != -1):
+        if (up != 0 and left != 0):
             return random.choice(["up", "left"])
             
     max_val = max(up, right, down, left)
