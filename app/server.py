@@ -57,14 +57,23 @@ def move():
         headers={"Content-Type": "application/json"},
         body=json.dumps(response),
     )
+    
+    
+    
 
 # dict -> string 
 # takes a dict representing the game board and returns 
 # a string representing the next move of the snake   
 def next_move(data):
+    return sensor_move(data)
+    #if (data["you"]["health"] > 50):
+
+
+def sensor_move(data):
     moves = []
     head = data["you"]["body"][0]
     snakes = make_snakes(data)
+    enemy_heads = make_enemy_heads(data)
     
     up = sensor(data, snakes, head, "up")
     up_right = sensor(data, snakes, head, "up_right")
@@ -75,10 +84,66 @@ def next_move(data):
     left = sensor(data, snakes, head, "left")
     up_left = sensor(data, snakes, head, "up_left")
     
-    max_val = max(up, up_right, right, down_right, down, down_left, left, up_left)
+    vals = [up, up_right, right, down_right, down, down_left, left, up_left]
     
-    print(up, right, down, left)
-    print (up_right, down_right, down_left, up_left)
+    if (is_enemy_head(data, enemy_heads, head, "up")):
+        vals.remove(up_left)
+        vals.remove(up)
+        vals.remove(up_right)
+        
+    if (is_enemy_head(data, enemy_heads, head, "up_right")):
+        if (up in vals):
+            vals.remove(up)
+        if (up_right in vals):
+            vals.remove(up_right)
+        vals.remove(right)
+        
+    if (is_enemy_head(data, enemy_heads, head, "right")):
+        if (up_right in vals):
+            vals.remove(up_right)
+        if (right in vals):
+            vals.remove(right)
+        vals.remove(down_right)
+        
+    if (is_enemy_head(data, enemy_heads, head, "down_right")):
+        if (right in vals):
+            vals.remove(right)
+        if (down_right in vals):   
+            vals.remove(down_right)
+        vals.remove(down)
+        
+    if (is_enemy_head(data, enemy_heads, head, "down")):
+        if (down_right in vals):
+            vals.remove(down_right)
+        if (down in vals):
+            vals.remove(down)
+        vals.remove(down_left)
+        
+    if (is_enemy_head(data, enemy_heads, head, "down_left")):
+        if (down in vals):
+            vals.remove (down)
+        if (down_left in vals):
+            vals.remove(down_left)
+        vals.remove(left)
+        
+    if (is_enemy_head(data, enemy_heads, head, "left")):
+        if (down_left in vals):
+            vals.remove(down_left)
+        if (left in vals):
+            vals.remove(left)
+        if (up_left in vals):
+            vals.remove(up_left)
+    
+    if (is_enemy_head(data, enemy_heads, head, "up_left")):
+        if (left in vals):
+            vals.remove(left)
+        if (up_left in vals):
+            vals.remove(up_left)
+        if (up in vals):
+            vals.remove(up)
+    
+    
+    max_val = max(vals)
     
     if (max_val == up):
         return "up"
@@ -136,8 +201,8 @@ def sensor_helper(data, snakes, pos, direction):
             return sensor_helper(data, snakes, new_pos, direction) + 1
             
         if (direction == "up_right"):
-            new_pos["x"] += 1
             new_pos["y"] -= 1
+            new_pos["x"] += 1
             return sensor_helper(data, snakes, new_pos, direction) + 1
             
         if (direction == "right"):
@@ -145,8 +210,8 @@ def sensor_helper(data, snakes, pos, direction):
             return sensor_helper(data, snakes, new_pos, direction) + 1
             
         if (direction == "down_right"):
-            new_pos["x"] += 1
             new_pos["y"] += 1
+            new_pos["x"] += 1
             return sensor_helper(data, snakes, new_pos, direction) + 1
             
         if (direction == "down"):
@@ -154,8 +219,8 @@ def sensor_helper(data, snakes, pos, direction):
             return sensor_helper(data, snakes, new_pos, direction) + 1
             
         if (direction == "down_left"):
-            new_pos["x"] -= 1
             new_pos["y"] += 1
+            new_pos["x"] -= 1
             return sensor_helper(data, snakes, new_pos, direction) + 1
             
         if (direction == "left"):
@@ -163,9 +228,49 @@ def sensor_helper(data, snakes, pos, direction):
             return sensor_helper(data, snakes, new_pos, direction) + 1
             
         if (direction == "up_left"):
-            new_pos["x"] -= 1
             new_pos["y"] -= 1
+            new_pos["x"] -= 1
             return sensor_helper(data, snakes, new_pos, direction) + 1
+
+
+def is_enemy_head(data, enemy_heads, pos, direction):
+    new_pos = {"x": pos["x"], "y": pos["y"]}
+    if (direction == "up"):
+        new_pos["y"] -= 1
+        return new_pos in enemy_heads
+            
+    if (direction == "up_right"):
+        new_pos["y"] -= 1
+        new_pos["x"] += 1
+        return new_pos in enemy_heads
+            
+    if (direction == "right"):
+        new_pos["x"] += 1
+        return new_pos in enemy_heads
+            
+    if (direction == "down_right"):
+        new_pos["y"] += 1
+        new_pos["x"] += 1
+        return new_pos in enemy_heads
+            
+    if (direction == "down"):
+        new_pos["y"] += 1
+        return new_pos in enemy_heads
+            
+    if (direction == "down_left"):
+        new_pos["y"] += 1
+        new_pos["x"] -= 1
+        return new_pos in enemy_heads
+            
+    if (direction == "left"):
+        new_pos["x"] -= 1
+        return new_pos in enemy_heads
+            
+    if (direction == "up_left"):
+        new_pos["y"] -= 1
+        new_pos["x"] -= 1
+        return new_pos in enemy_heads
+    
 
 # dict, list, dict -> bool
 # return true if the block is not in any snake body parts and 
@@ -175,6 +280,13 @@ def is_free(data, snakes, pos):
                 pos["x"] == data["board"]["height"] or 
                 pos["y"] == data["board"]["width"] or 
                 pos["x"] == -1 or pos["y"] == -1)
+
+def make_enemy_heads(data):
+    enemies = []
+    for snake in data["board"]["snakes"]:
+        if (data["you"]["body"][0] != snake["body"][0]):
+            enemies.append(snake["body"][0])
+    return enemies
 
 #dict -> list
 # returns a list of dicts representing snake locations
