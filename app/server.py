@@ -68,7 +68,7 @@ def next_move(data):
     food = closest_food(data)
     snakes = make_snakes(data)
     moves = free_moves(data, snakes, data["you"]["body"][0])
-    along_wall = is_along_wall(data, make_enemy_heads(data))
+    along_wall = is_along_wall(data, make_heads(data))
     
     for head in along_wall:
         move = destroy(data, snakes, head)
@@ -584,7 +584,12 @@ def to_target(data, directions, target):
     else: 
         return sensor_move(data)
     
-
+def make_heads(data):
+    heads = []
+    for snake in data["board"]["snakes"]:
+        if (snake != data["you"]):
+            heads.append(snake["body"][0])
+    return heads
     
 # dict -> dict
 # returns the closest food item to head
