@@ -76,32 +76,48 @@ def next_move(data):
     up_left = sensor(data, snakes, head, "up_left")
     
     max_val = max(up, up_right, right, down_right, down, down_left, left, up_left)
-    print(max_val)
     
     if (max_val == up):
         return "up"
         
     if (max_val == up_right):
-        return random.choice(["up", "right"])
+        if (right != -1 and up != -1):
+            return random.choice(["up", "right"])
         
     if (max_val == right):
-        print("here")
         return "right"
         
     if (max_val == down_right):
-        return random.choice(["down", "right"])
+        if (down != -1 and right != -1):
+            return random.choice(["down", "right"])
         
     if (max_val == down):
         return "down"
     
     if (max_val == down_left):
-        return random.choice(["down", "left"])
+        if (down != -1 and left != -1):
+            return random.choice(["down", "left"])
         
     if (max_val == left):
         return "left"
         
     if (max_val == up_left):
-        return random.choice(["up", "left"])
+        if (up != -1 and left != -1):
+            return random.choice(["up", "left"])
+            
+    max_val = max(up, right, down, left)
+    
+    if (max_val == up):
+        return "up"
+        
+    if (max_val == right):
+        return "right"
+        
+    if (max_val == down):
+        return "down"
+        
+    if (max_val == left):
+        return "left"
     
     
 def sensor(data, snakes, pos, direction):
