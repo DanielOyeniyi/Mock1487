@@ -75,14 +75,14 @@ def sensor_move(data):
     snakes = make_snakes(data)
     enemy_heads = make_enemy_heads(data)
     
-    up = sensor(data, snakes, head, "up")
-    up_right = sensor(data, snakes, head, "up_right")
-    right = sensor(data, snakes, head, "right")
-    down_right = sensor(data, snakes, head, "down_right")
-    down = sensor(data, snakes, head, "down")
-    down_left = sensor(data, snakes, head, "down_left")
-    left = sensor(data, snakes, head, "left")
-    up_left = sensor(data, snakes, head, "up_left")
+    up = [sensor(data, snakes, head, "up"), 0]
+    up_right = [sensor(data, snakes, head, "up_right"), 1]
+    right = [sensor(data, snakes, head, "right"), 2]
+    down_right = [sensor(data, snakes, head, "down_right"), 3]
+    down = [sensor(data, snakes, head, "down"), 4]
+    down_left = [sensor(data, snakes, head, "down_left"), 5]
+    left = [sensor(data, snakes, head, "left"), 6]
+    up_left = [sensor(data, snakes, head, "up_left"), 7]
     
     vals = [up, up_right, right, down_right, down, down_left, left, up_left]
     
@@ -96,35 +96,50 @@ def sensor_move(data):
             vals.remove(up)
         if (up_right in vals):
             vals.remove(up_right)
+        vals.remove(up_left)
         vals.remove(right)
+        vals.remove(down_right)
         
     if (is_enemy_head(data, enemy_heads, head, "right")):
         if (up_right in vals):
             vals.remove(up_right)
         if (right in vals):
             vals.remove(right)
-        vals.remove(down_right)
+        if (down_right in vals):
+            vals.remove(down_right)
         
     if (is_enemy_head(data, enemy_heads, head, "down_right")):
         if (right in vals):
             vals.remove(right)
         if (down_right in vals):   
             vals.remove(down_right)
-        vals.remove(down)
+        if (down in vals):
+            vals.remove(down)
+        if (down_left in vals):
+            vals.remove(down_left)
+        if (up_right in vals):
+            vals.remove(up_right)
+        
         
     if (is_enemy_head(data, enemy_heads, head, "down")):
         if (down_right in vals):
             vals.remove(down_right)
         if (down in vals):
             vals.remove(down)
-        vals.remove(down_left)
+        if (down_left in vals):
+            vals.remove(down_left)
         
     if (is_enemy_head(data, enemy_heads, head, "down_left")):
         if (down in vals):
-            vals.remove (down)
+            vals.remove(down)
         if (down_left in vals):
             vals.remove(down_left)
-        vals.remove(left)
+        if (left in vals):
+            vals.remove(left)
+        if (up_left in vals):
+            vals.remove(up_left)
+        if (down_right in vals):
+            vals.remove(down_right)
         
     if (is_enemy_head(data, enemy_heads, head, "left")):
         if (down_left in vals):
@@ -141,50 +156,57 @@ def sensor_move(data):
             vals.remove(up_left)
         if (up in vals):
             vals.remove(up)
+        if (down_left in vals):
+            vals.remove(down_left)
+        if (up_right in vals):
+            vals.remove(up_right)
     
+    new_vals = []
+    for val in vals:
+        new_vals.append(val[0])
+        
+    max_val = max(new_vals)
     
-    max_val = max(vals)
-    
-    if (max_val == up):
+    if (max_val == up[0] and up in vals):
         return "up"
         
-    if (max_val == up_right):
+    if (max_val == up_right[0] and up_right in vals):
         if (right != 0 and up != 0):
             return random.choice(["up", "right"])
         
-    if (max_val == right):
+    if (max_val == right[0] and right in vals):
         return "right"
         
-    if (max_val == down_right):
+    if (max_val == down_right[0] and down_right in vals):
         if (down != 0 and right != 0):
             return random.choice(["down", "right"])
         
-    if (max_val == down):
+    if (max_val == down[0] and down in vals):
         return "down"
     
-    if (max_val == down_left):
+    if (max_val == down_left[0] and down_left in vals):
         if (down != 0 and left != 0):
             return random.choice(["down", "left"])
         
-    if (max_val == left):
+    if (max_val == left[0] and left in vals):
         return "left"
         
-    if (max_val == up_left):
+    if (max_val == up_left[0] and up_left in vals):
         if (up != 0 and left != 0):
             return random.choice(["up", "left"])
             
-    max_val = max(up, right, down, left)
+    max_val = max(up[0], right[0], down[0], left[0])
     
-    if (max_val == up):
+    if (max_val == up[0] and up in vals):
         return "up"
         
-    if (max_val == right):
+    if (max_val == right[0] and right in vals):
         return "right"
         
-    if (max_val == down):
+    if (max_val == down[0] and down in vals):
         return "down"
         
-    if (max_val == left):
+    if (max_val == left[0] and left in vals):
         return "left"
     
     
