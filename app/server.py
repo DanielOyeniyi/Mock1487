@@ -171,28 +171,30 @@ def sensor_move(data):
         return "up"
         
     if (max_val == up_right[0] and up_right in vals):
-        if (right != 0 and up != 0):
+        if (right[0] != 0 and up[0] != 0):
             return random.choice(["up", "right"])
         
     if (max_val == right[0] and right in vals):
         return "right"
         
     if (max_val == down_right[0] and down_right in vals):
-        if (down != 0 and right != 0):
+        print("here")
+        print(right)
+        if (down[0] != 0 and right[0] != 0):
             return random.choice(["down", "right"])
         
     if (max_val == down[0] and down in vals):
         return "down"
     
     if (max_val == down_left[0] and down_left in vals):
-        if (down != 0 and left != 0):
+        if (down[0] != 0 and left[0] != 0):
             return random.choice(["down", "left"])
         
     if (max_val == left[0] and left in vals):
         return "left"
         
     if (max_val == up_left[0] and up_left in vals):
-        if (up != 0 and left != 0):
+        if (up[0] != 0 and left[0] != 0):
             return random.choice(["up", "left"])
             
     max_val = max(up[0], right[0], down[0], left[0])
