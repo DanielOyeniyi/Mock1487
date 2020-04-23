@@ -357,7 +357,8 @@ def is_free(data, snakes, pos):
 def make_enemy_heads(data):
     enemies = []
     for snake in data["board"]["snakes"]:
-        if (data["you"]["body"][0] != snake["body"][0]):
+        if (data["you"]["body"][0] != snake["body"][0] and 
+            len(data["you"]["body"]) <= len(snake["body"])):
             enemies.append(snake["body"][0])
     return enemies
 
