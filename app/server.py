@@ -65,8 +65,28 @@ def move():
 # takes a dict representing the game board and returns 
 # a string representing the next move of the snake   
 def next_move(data):
+    food = closest_food(data)
+    moves = []
+    block = data["you"]["body"][0]
+    snakes = make_snakes(data)
+    
+    right_block = {"x": block["x"] + 1, "y": block["y"]}
+    left_block = {"x": block["x"] - 1, "y": block["y"]}
+    down_block = {"x": block["x"], "y": block["y"] + 1}
+    up_block = {"x": block["x"], "y": block["y"] - 1}    
+
+    if (is_free(data, snakes, right_block)):
+        moves.append("right")
+    if (is_free(data, snakes, left_block)):
+        moves.append("left")
+    if (is_free(data, snakes, down_block)):
+        moves.append("down")
+    if (is_free(data, snakes, up_block)):
+        moves.append("up")
+    
+    if (data["you"]["health"] < 50):
+        return to_target(data, moves, food)
     return sensor_move(data)
-    #if (data["you"]["health"] > 50):
 
 
 def sensor_move(data):
@@ -320,6 +340,47 @@ def make_snakes(data):
         for part in snake["body"]:
             snakes.append(part)
     return snakes
+    
+
+# dict, list, dict -> directions
+# given a list of available directions and a target
+# it returns a direction that will bring the snake
+# closer to the target
+def to_target(data, directions, target):
+    if (len(directions) == 0):
+        return "up"
+        
+    head = data["you"]["body"][0]
+    new_directions = []
+    
+    if (target["x"] > head["x"] and "right" in directions):
+        new_directions.append("right")
+    if (target["x"] < head["x"] and "left" in directions):
+        new_directions.append("left")
+    if (target["y"] > head["y"] and "down" in directions):
+        new_directions.append("down")
+    if (target["y"] < head["y"] and "up" in directions):
+        new_directions.append("up")
+    
+    if (len(new_directions) != 0):
+        return random.choice(new_directions)
+    else: 
+        return random.choice(directions)
+    
+    
+# dict -> dict
+# returns the closest food item to head
+def closest_food(data):
+    closest = {}
+    max = 100
+    for food in data["board"]["food"]:
+        x = abs(data["you"]["body"][0]["x"] - food["x"])
+        y = abs(data["you"]["body"][0]["y"] - food["y"])
+        distance = x + y
+        if (distance <= max):
+            max = distance
+            closest = food
+    return closest
     
 @bottle.post("/end")
 def end():
