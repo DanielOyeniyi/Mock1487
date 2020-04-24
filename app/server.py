@@ -198,8 +198,19 @@ def sensor_move(data):
             items.remove(down_left)
         if (up_right in items):
             items.remove(up_right)
+            
+    if (tmp_up == 0):
+        items.remove(up)
+        
+    if (tmp_right == 0):
+        items.remove(right)
+        
+    if (tmp_down == 0):
+        items.remove(down)
+        
+    if (tmp_left == 0):
+        items.remove(left)
 
-    print(items)
     if (len(items) != 0):
         vals = []
         for item in items:
@@ -281,22 +292,29 @@ def sensor_move(data):
                 return "left"
     
     items = [up, right, down, left]
-    vals = [up[0], right[0], down[0], left[0]]
     
     if (tmp_up == 0):
-        vals.remove(up[0])
-    if (tmp_right == 0):
-        vals.remove(right[0])
-    if (tmp_down == 0):
-        vals.remove(down[0])
-    if (tmp_left == 0):
-        vals.remove(left[0])
+        items.remove(up)
         
+    if (tmp_right == 0):
+        items.remove(right)
+        
+    if (tmp_down == 0):
+        items.remove(down)
+        
+    if (tmp_left == 0):
+        items.remove(left)
+        
+    vals = []
+    max_items = []
+    for item in items:
+        vals.append(item[0])
+
     if (len(vals) == 0):
         return "up"
-    
+        
     max_val = max(vals)
-    max_items = []
+
     for item in items: 
         if (item[0] == max_val):
             max_items.append(item)
