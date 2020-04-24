@@ -540,6 +540,8 @@ def sensor_move(data):
     if (is_dead_end(data, head, "up") or is_dead_end(data, head, "right") or 
         is_dead_end(data, head, "down") or is_dead_end(data, head, "left")):
         
+        print("here")
+        
         best_paths = []
         
         up_path = num_free(data, up_block)
