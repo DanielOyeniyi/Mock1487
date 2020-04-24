@@ -88,6 +88,8 @@ def next_move(data):
         return to_target(data, moves1, food)
     return sensor_move(data)
 
+# dict -> string
+# deterimins the next move of the snake by using 8 directional sensors
 def sensor_move(data):
     head = data["you"]["body"][0]
     enemy_heads = make_enemy_heads(data)
@@ -205,7 +207,6 @@ def sensor_move(data):
     for item in items:
         if (item[0] == max_val):
             max_items.append(item)
-    print(max_items)
     max_item = random.choice(max_items)
     
     if (max_item == up):
@@ -276,12 +277,16 @@ def sensor_move(data):
     if (max_item == left):
         return "left"
  
- 
+# dict, dict, string -> int
+# returns a count of all the available moves and soon to be available
+# moves in a given direction
 def sensor(data, pos, direction):
     tmp_snakes = make_tmp_snakes(data)
     return sensor_helper(data, tmp_snakes, pos, direction)
     
-    
+# dict, list, dict, int -> int
+# returns a count of all the available moves and soon to be available
+# moves in a given direction 
 def sensor_helper(data, tmp_snakes, pos, direction):
     new_pos = {"x": pos["x"], "y": pos["y"]}
     if (not is_free_tmp(data, tmp_snakes, pos) and pos != data["you"]["body"][0]):
@@ -324,7 +329,9 @@ def sensor_helper(data, tmp_snakes, pos, direction):
             new_pos["x"] -= 1
             return sensor_helper(data, tmp_snakes, new_pos, direction) + 1
 
-
+# dict, list, list, dict, string -> bool 
+# determins if there is an enemy head in the next 2 moves in the 
+# given direction and returns a bool corresponding to that result
 def is_enemy_head(data, enemy_heads, bodies, pos, direction):
     new_pos = {"x": pos["x"], "y": pos["y"]}
     if (direction == "up"):
@@ -407,7 +414,9 @@ def is_enemy_head(data, enemy_heads, bodies, pos, direction):
         new_pos["x"] -= 1
         return new_pos in enemy_heads
     
-    
+# dict, list, list, dict, string -> bool 
+# determins if there is an enemy head in the next move in the
+# given direction  and returns a bool corresponding to that result
 def is_enemy_head2(data, enemy_heads, pos, direction):
     new_pos = {"x": pos["x"], "y": pos["y"]}
     if (direction == "up"):
@@ -446,7 +455,9 @@ def is_enemy_head2(data, enemy_heads, pos, direction):
         new_pos["x"] -= 1
         return new_pos in enemy_heads    
  
- 
+# dict, list, list, dict -> list
+# returns a list of moves that aren't affected by the threat of 
+# an enemy snakes head
 def free_moves(data, enemy_heads, bodies, pos):
     moves = ["right", "left", "down", "up"]
     
@@ -486,7 +497,9 @@ def free_moves(data, enemy_heads, bodies, pos):
         
     return moves
  
- 
+# dict, list, dict -> list
+# returns a list of moves that are available for a snake 
+# head to make 
 def safe_moves(data, snakes, pos):
     moves = []
     
@@ -506,7 +519,8 @@ def safe_moves(data, snakes, pos):
         
     return moves
  
- 
+# dict, list, list, dict -> string
+# attempts to cut off an enemy snake if it along a wall 
 def destroy(data, snakes, snakes_static, pos):
     head = data["you"]["body"][0]
     target_moves = safe_moves(data, snakes_static, pos)
@@ -644,7 +658,9 @@ def is_free(data, snakes, pos):
                 pos["y"] == data["board"]["width"] or 
                 pos["x"] == -1 or pos["y"] == -1)
 
-
+# dict -> list
+# returns a list of dicts corresponding to the x,y coordinates of
+# enemy snake heads
 def make_enemy_heads(data):
     enemies = []
     for snake in data["board"]["snakes"]:
@@ -653,7 +669,8 @@ def make_enemy_heads(data):
             enemies.append(snake["body"][0])
     return enemies
     
-    
+# dict, list -> list
+# returns a list of enemy snake head that are along the wall of the game
 def is_along_wall(data, enemies):
     along_wall = []
     for head in enemies:
@@ -663,8 +680,9 @@ def is_along_wall(data, enemies):
             along_wall.append(head)
     return along_wall
 
-#dict -> list
-# returns a list of dicts representing snake locations
+# dict -> list
+# returns a list of dicts representing snake locations without tails
+# if they just ate food
 def make_snakes(data):
     snakes = []
     for snake in data["board"]["snakes"]:
@@ -675,7 +693,9 @@ def make_snakes(data):
                 snakes.remove(snake["body"][-1])
     return snakes
     
-    
+# dict -> list 
+# makes a list of  dicts representing snake x,y coordinates
+
 def make_tmp_snakes(data):
     tmp_snakes = []
     for snake in data["board"]["snakes"]:
@@ -686,13 +706,16 @@ def make_tmp_snakes(data):
         tmp_snakes.append(tmp_snake)
     return tmp_snakes
     
-    
+# list -> none
+# removes the tails of all the snakes in the given list
 def remove_tails(tmp_snakes):
     for tmp_snake in tmp_snakes:
         if (len(tmp_snake) != 0):
             tmp_snake.pop()
           
-          
+# dict, list, dict -> bool 
+# determins if the given position is in the given list of snake locations
+# or if it is outside of the game boarder
 def is_free_tmp(data, tmp_snakes, pos):
     for tmp_snake in tmp_snakes:
         if (pos in tmp_snake):
@@ -726,7 +749,9 @@ def to_target(data, directions, target):
     else: 
         return sensor_move(data)
    
-   
+# dict -> list 
+# makes a list of  dicts representing snake x,y coordinates
+# with tails included
 def make_static_snakes(data):
     snakes = []
     for snake in data["board"]["snakes"]:
@@ -734,7 +759,8 @@ def make_static_snakes(data):
             snakes.append(part)
     return snakes
    
-   
+# dict -> list 
+# makes a list of all snake heads in the game
 def make_heads(data):
     heads = []
     for snake in data["board"]["snakes"]:
@@ -742,7 +768,9 @@ def make_heads(data):
             heads.append(snake["body"][0])
     return heads
     
-    
+# dict -> list 
+# makes a list of all the snake body parts in the game 
+# tailsexcluded
 def make_bodies(data):
     bodies = []
     for snake in data["board"]["snakes"]:
