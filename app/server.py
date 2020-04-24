@@ -94,6 +94,7 @@ def sensor_move(data):
     down_left = [sensor(data, head, "down_left"), 5]
     left = [sensor(data, head, "left"), 6]
     up_left = [sensor(data, head, "up_left"), 7]
+   
     
     vals = [up, up_right, right, down_right, down, down_left, left, up_left]
     tight = []
@@ -280,10 +281,10 @@ def sensor(data, pos, direction):
     
 def sensor_helper(data, tmp_snakes, pos, direction):
     new_pos = {"x": pos["x"], "y": pos["y"]}
-    remove_tails(tmp_snakes)
     if (not is_free_tmp(data, tmp_snakes, pos) and pos != data["you"]["body"][0]):
         return -1
     else: 
+        remove_tails(tmp_snakes)
         if (direction == "up"):
             new_pos["y"] -= 1
             return sensor_helper(data, tmp_snakes, new_pos, direction) + 1
