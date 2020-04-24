@@ -104,9 +104,7 @@ def sensor_move(data):
     
     vals = [up, up_right, right, down_right, down, down_left, left, up_left]
     vals2 = [up, up_right, right, down_right, down, down_left, left, up_left]
-    tight = []
-    for val in vals:
-        tight.append(val[0])
+    vals3 = [up, up_right, right, down_right, down, down_left, left, up_left]
     
     if (is_enemy_head(data, enemy_heads, head, "up")):
         vals.remove(up_left)
@@ -191,38 +189,35 @@ def sensor_move(data):
     else: 
         max_val = 0
         
-        
-    if (max_val == 0):
-        max_val = max(tight)
-    
-    if (max_val == up[0] and up in vals):
-        return "up"
-        
-    if (max_val == up_right[0] and up_right in vals):
-        if (right[0] != 0 and up[0] != 0):
-            return random.choice(["up", "right"])
-        
-    if (max_val == right[0] and right in vals):
-        return "right"
-        
-    if (max_val == down_right[0] and down_right in vals):
-        if (down[0] != 0 and right[0] != 0):
-            return random.choice(["down", "right"])
-        
-    if (max_val == down[0] and down in vals):
-        return "down"
-    
-    if (max_val == down_left[0] and down_left in vals):
-        if (down[0] != 0 and left[0] != 0):
-            return random.choice(["down", "left"])
-        
-    if (max_val == left[0] and left in vals):
-        return "left"
-        
-    if (max_val == up_left[0] and up_left in vals):
-        if (up[0] != 0 and left[0] != 0):
-            return random.choice(["up", "left"])
+    if (max_val != 0):
+        if (max_val == up[0] and up in vals):
+            return "up"
             
+        if (max_val == up_right[0] and up_right in vals):
+            if (right[0] != 0 and up[0] != 0):
+                return random.choice(["up", "right"])
+            
+        if (max_val == right[0] and right in vals):
+            return "right"
+            
+        if (max_val == down_right[0] and down_right in vals):
+            if (down[0] != 0 and right[0] != 0):
+                return random.choice(["down", "right"])
+            
+        if (max_val == down[0] and down in vals):
+            return "down"
+        
+        if (max_val == down_left[0] and down_left in vals):
+            if (down[0] != 0 and left[0] != 0):
+                return random.choice(["down", "left"])
+            
+        if (max_val == left[0] and left in vals):
+            return "left"
+            
+        if (max_val == up_left[0] and up_left in vals):
+            if (up[0] != 0 and left[0] != 0):
+                return random.choice(["up", "left"])
+                
     tmp = []
         
     if (up in vals):
@@ -234,21 +229,24 @@ def sensor_move(data):
     if (left in vals):
         tmp.append(left[0])
     
-    max_val = max(tmp)
+    if (len(tmp) != 0):
+        max_val = max(tmp)
+    else: 
+        max_val = 0
     
-    
-    if (max_val == up[0] and up in vals):
-        return "up"
+    if (max_val != 0):
+        if (max_val == up[0] and up in vals):
+            return "up"
+            
+        if (max_val == right[0] and right in vals):
+            return "right"
+            
+        if (max_val == down[0] and down in vals):
+            return "down"
+            
+        if (max_val == left[0] and left in vals):
+            return "left"
         
-    if (max_val == right[0] and right in vals):
-        return "right"
-        
-    if (max_val == down[0] and down in vals):
-        return "down"
-        
-    if (max_val == left[0] and left in vals):
-        return "left"
-    
     
 
     
@@ -339,41 +337,36 @@ def sensor_move(data):
         max_val = max(new_vals2)
     else: 
         max_val = 0
-        
-    if (max_val == 0):
-        max_val = max(tight)
 
-        
-        
-    
-    if (max_val == up[0] and up in vals2):
-        return "up"
-        
-    if (max_val == up_right[0] and up_right in vals2):
-        if (right[0] != 0 and up[0] != 0):
-            return random.choice(["up", "right"])
-        
-    if (max_val == right[0] and right in vals2):
-        return "right"
-        
-    if (max_val == down_right[0] and down_right in vals2):
-        if (down[0] != 0 and right[0] != 0):
-            return random.choice(["down", "right"])
-        
-    if (max_val == down[0] and down in vals2):
-        return "down"
-    
-    if (max_val == down_left[0] and down_left in vals2):
-        if (down[0] != 0 and left[0] != 0):
-            return random.choice(["down", "left"])
-        
-    if (max_val == left[0] and left in vals2):
-        return "left"
-        
-    if (max_val == up_left[0] and up_left in vals2):
-        if (up[0] != 0 and left[0] != 0):
-            return random.choice(["up", "left"])
+    if (max_val != 0):
+        if (max_val == up[0] and up in vals2):
+            return "up"
             
+        if (max_val == up_right[0] and up_right in vals2):
+            if (right[0] != 0 and up[0] != 0):
+                return random.choice(["up", "right"])
+            
+        if (max_val == right[0] and right in vals2):
+            return "right"
+            
+        if (max_val == down_right[0] and down_right in vals2):
+            if (down[0] != 0 and right[0] != 0):
+                return random.choice(["down", "right"])
+            
+        if (max_val == down[0] and down in vals2):
+            return "down"
+        
+        if (max_val == down_left[0] and down_left in vals2):
+            if (down[0] != 0 and left[0] != 0):
+                return random.choice(["down", "left"])
+            
+        if (max_val == left[0] and left in vals2):
+            return "left"
+            
+        if (max_val == up_left[0] and up_left in vals2):
+            if (up[0] != 0 and left[0] != 0):
+                return random.choice(["up", "left"])
+                
     tmp2 = []
         
     if (up in vals2):
@@ -385,24 +378,31 @@ def sensor_move(data):
     if (left in vals2):
         tmp2.append(left[0])
     
-    max_val = max(tmp2)
-    
-    if (max_val == up[0] and up in vals2):
-        return "up"
-        
-    if (max_val == right[0] and right in vals2):
-        return "right"
-        
-    if (max_val == down[0] and down in vals2):
-        return "down"
-        
-    if (max_val == left[0] and left in vals2):
-        return "left"
-        
+    if (len(tmp2) != 0):
+        max_val = max(tmp2)
+    else: 
+        max_val = 0
+    if (max_val != 0):
+        if (max_val == up[0] and up in vals2):
+            return "up"
+            
+        if (max_val == right[0] and right in vals2):
+            return "right"
+            
+        if (max_val == down[0] and down in vals2):
+            return "down"
+            
+        if (max_val == left[0] and left in vals2):
+            return "left"
+            
         
         
         
     # last options
+    new_vals3 = []
+    for val in vals3:
+        new_vals3.append(val[0])
+    max_val = max(new_vals3)
     
     if (max_val == up[0]):
         return "up"  
