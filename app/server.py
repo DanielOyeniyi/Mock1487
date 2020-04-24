@@ -86,14 +86,14 @@ def sensor_move(data):
     snakes = make_snakes(data)
     enemy_heads = make_enemy_heads(data)
     
-    up = [sensor(data, snakes, head, "up"), 0]
-    up_right = [sensor(data, snakes, head, "up_right"), 1]
-    right = [sensor(data, snakes, head, "right"), 2]
-    down_right = [sensor(data, snakes, head, "down_right"), 3]
-    down = [sensor(data, snakes, head, "down"), 4]
-    down_left = [sensor(data, snakes, head, "down_left"), 5]
-    left = [sensor(data, snakes, head, "left"), 6]
-    up_left = [sensor(data, snakes, head, "up_left"), 7]
+    up = [sensor(data, head, "up"), 0]
+    up_right = [sensor(data, head, "up_right"), 1]
+    right = [sensor(data, head, "right"), 2]
+    down_right = [sensor(data, head, "down_right"), 3]
+    down = [sensor(data, head, "down"), 4]
+    down_left = [sensor(data, head, "down_left"), 5]
+    left = [sensor(data, head, "left"), 6]
+    up_left = [sensor(data, head, "up_left"), 7]
     
     vals = [up, up_right, right, down_right, down, down_left, left, up_left]
     tight = []
@@ -274,49 +274,51 @@ def sensor_move(data):
         return "left"
     
     
-def sensor(data, snakes, pos, direction):
-    return sensor_helper(data, snakes, pos, direction)
+def sensor(data, pos, direction):
+    tmp_snakes = make_tmp_snakes(data)
+    return sensor_helper(data, tmp_snakes, pos, direction)
     
-def sensor_helper(data, snakes, pos, direction):
+def sensor_helper(data, tmp_snakes, pos, direction):
     new_pos = {"x": pos["x"], "y": pos["y"]}
-    if (not is_free(data, snakes, pos) and pos != data["you"]["body"][0]):
+    remove_tails(tmp_snakes)
+    if (not is_free_tmp(data, tmp_snakes, pos) and pos != data["you"]["body"][0]):
         return -1
     else: 
         if (direction == "up"):
             new_pos["y"] -= 1
-            return sensor_helper(data, snakes, new_pos, direction) + 1
+            return sensor_helper(data, tmp_snakes, new_pos, direction) + 1
             
         if (direction == "up_right"):
             new_pos["y"] -= 1
             new_pos["x"] += 1
-            return sensor_helper(data, snakes, new_pos, direction) + 1
+            return sensor_helper(data, tmp_snakes, new_pos, direction) + 1
             
         if (direction == "right"):
             new_pos["x"] += 1
-            return sensor_helper(data, snakes, new_pos, direction) + 1
+            return sensor_helper(data, tmp_snakes, new_pos, direction) + 1
             
         if (direction == "down_right"):
             new_pos["y"] += 1
             new_pos["x"] += 1
-            return sensor_helper(data, snakes, new_pos, direction) + 1
+            return sensor_helper(data, tmp_snakes, new_pos, direction) + 1
             
         if (direction == "down"):
             new_pos["y"] += 1
-            return sensor_helper(data, snakes, new_pos, direction) + 1
+            return sensor_helper(data, tmp_snakes, new_pos, direction) + 1
             
         if (direction == "down_left"):
             new_pos["y"] += 1
             new_pos["x"] -= 1
-            return sensor_helper(data, snakes, new_pos, direction) + 1
+            return sensor_helper(data, tmp_snakes, new_pos, direction) + 1
             
         if (direction == "left"):
             new_pos["x"] -= 1
-            return sensor_helper(data, snakes, new_pos, direction) + 1
+            return sensor_helper(data, tmp_snakes, new_pos, direction) + 1
             
         if (direction == "up_left"):
             new_pos["y"] -= 1
             new_pos["x"] -= 1
-            return sensor_helper(data, snakes, new_pos, direction) + 1
+            return sensor_helper(data, tmp_snakes, new_pos, direction) + 1
 
 
 def is_enemy_head(data, enemy_heads, pos, direction):
@@ -562,6 +564,28 @@ def make_snakes(data):
                 snakes.remove(snake["body"][-1])
     return snakes
     
+def make_tmp_snakes(data):
+    tmp_snakes = []
+    for snake in data["board"]["snakes"]:
+        tmp_snake = []
+        for part in snake["body"]:
+            tmp_part = {"x": part["x"], "y": part["y"]}
+            tmp_snake.append(tmp_part)
+        tmp_snakes.append(tmp_snake)
+    return tmp_snakes
+    
+def remove_tails(tmp_snakes):
+    for tmp_snake in tmp_snakes:
+        if (len(tmp_snake) != 0):
+            tmp_snake.pop()
+            
+def is_free_tmp(data, tmp_snakes, pos):
+    for tmp_snake in tmp_snakes:
+        if (pos in tmp_snake):
+            return False
+    return not(pos["x"] == data["board"]["height"] or 
+               pos["y"] == data["board"]["width"] or 
+               pos["x"] == -1 or pos["y"] == -1)
 
 # dict, list, dict -> directions
 # given a list of available directions and a target
