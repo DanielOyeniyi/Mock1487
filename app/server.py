@@ -66,7 +66,7 @@ def move():
 # a string representing the next move of the snake   
 def next_move(data):
     food = closest_food(data)
-    snakes = make_snakes(data)
+    snakes = make_static_snakes(data)
     moves = free_moves(data, make_enemy_heads(data), data["you"]["body"][0])
     along_wall = is_along_wall(data, make_heads(data))
     
@@ -608,18 +608,38 @@ def free_moves(data, enemy_heads, pos):
             moves.remove("left")
         
     return moves
+ 
+def safe_moves(data, snakes, pos):
+    moves = []
     
+    right = {"x": pos["x"] + 1, "y": pos["y"]}
+    left = {"x": pos["x"] - 1, "y": pos["y"]}
+    down = {"x": pos["x"], "y": pos["y"] + 1}
+    up = {"x": pos["x"], "y": pos["y"] - 1}
+    
+    if (is_free(data, snakes, right)):
+        moves.append("right")
+    if (is_free(data, snakes, left)):
+        moves.append("left")
+    if (is_free(data, snakes, up)):
+        moves.append("up")
+    if (is_free(data, snakes, down)):
+        moves.append("down")
+        
+    return moves
+ 
 def destroy(data, snakes, pos):
     head = data["you"]["body"][0]
-    target_moves = free_moves(data, snakes, pos)
-    head_moves = free_moves(data, snakes, head)
+    target_moves = safe_moves(data, snakes, pos)
     enemy_heads = make_enemy_heads(data)
+    head_moves = free_moves(data, enemy_heads, head)
     
 
     # top_wall
     if (pos["y"] == 0):
         y_distance = head["y"] - pos["y"]
         if ("right" in target_moves and "left" not in target_moves):
+            print("here")
             x_distance = head["x"] - pos["x"]
             # if head is close enough and to the right the enemy head
             if (y_distance <= 2 and x_distance >= 0):
@@ -814,7 +834,14 @@ def to_target(data, directions, target):
         return random.choice(new_directions)
     else: 
         return sensor_move(data)
-    
+   
+def make_static_snakes(data):
+    snakes = []
+    for snake in data["board"]["snakes"]:
+        for part in snake["body"]:
+            snakes.append(part)
+    return snakes
+   
 def make_heads(data):
     heads = []
     for snake in data["board"]["snakes"]:
