@@ -764,7 +764,7 @@ def sensor_helper(data, tmp_snakes, pos, direction):
 def is_dead_end(data, pos, direction):
     tmp_snakes = make_tmp_snakes(data)
     state = is_dead_end_helper(data, pos, tmp_snakes, direction)
-    if (state == 0):
+    if (state == 0 and is_free_tmp(data, tmp_snakes, pos)):
         return True
     return False
 
