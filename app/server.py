@@ -986,7 +986,7 @@ def destroy(data, snakes, snakes_static, pos):
                 elif (y_distance == x_distance and "up" in head_moves and pos not in enemy_heads):
                     return "up"
                 else: 
-                    if ("right" in head_moves and head["y"] != 0):
+                    if ("right" in head_moves):
                         return "right"
         
         if ("left" in target_moves and "right" not in target_moves):
@@ -998,7 +998,7 @@ def destroy(data, snakes, snakes_static, pos):
                 elif (y_distance == x_distance and "up" in head_moves and pos not in enemy_heads):
                     return "up"
                 else: 
-                    if ("left" in head_moves and head["y"] != 0):
+                    if ("left" in head_moves):
                         return "left"
     
     # right_wall
@@ -1013,7 +1013,7 @@ def destroy(data, snakes, snakes_static, pos):
                 elif (x_distance == y_distance and "right" in head_moves and pos not in enemy_heads):
                     return "right"
                 else: 
-                    if ("up" in head_moves and head["x"] != data["board"]["width"] - 1):
+                    if ("up" in head_moves):
                         return "up"
         
         if ("down" in target_moves and "up" not in target_moves):
@@ -1025,7 +1025,7 @@ def destroy(data, snakes, snakes_static, pos):
                 elif (x_distance == y_distance and "right" in head_moves and pos not in enemy_heads):
                     return "right"
                 else: 
-                    if ("down" in head_moves and head["x"] != data["board"]["width"] - 1):
+                    if ("down" in head_moves):
                         return "down"
                 
             
@@ -1041,7 +1041,7 @@ def destroy(data, snakes, snakes_static, pos):
                 elif (y_distance == x_distance and "down" in head_moves and pos not in enemy_heads):
                     return "down"
                 else: 
-                    if ("right" in head_moves and head["y"] != data["board"]["height"] - 1):
+                    if ("right" in head_moves):
                         return "right"
         
         if ("left" in target_moves and "right" not in target_moves):
@@ -1053,7 +1053,7 @@ def destroy(data, snakes, snakes_static, pos):
                 elif (y_distance == x_distance and "down" in head_moves and pos not in enemy_heads):
                     return "down"
                 else: 
-                    if ("left" in head_moves and head["y"] != data["board"]["height"] - 1):
+                    if ("left" in head_moves):
                         return "left"
         
     # left_wall
@@ -1068,7 +1068,7 @@ def destroy(data, snakes, snakes_static, pos):
                 elif (x_distance == y_distance and "left" in head_moves and pos not in enemy_heads):
                     return "left"
                 else: 
-                    if ("up" in head_moves and head["x"] != 0):
+                    if ("up" in head_moves):
                         return "up"
         
         if ("down" in target_moves and "up" not in target_moves):
@@ -1080,7 +1080,7 @@ def destroy(data, snakes, snakes_static, pos):
                 elif (x_distance == y_distance and "left" in head_moves and pos not in enemy_heads):
                     return "left"
                 else: 
-                    if ("down" in head_moves and head["x"] != 0):
+                    if ("down" in head_moves):
                         return "down"
         
     return "no"     
