@@ -87,10 +87,10 @@ def next_move(data):
         if (move != "no"):
             return move 
     
-    for head in near_the_wall:
-        move = destroy2(data, snakes, head)
-        if (move != "no"):
-            return move
+    # for head in near_the_wall:
+        # move = destroy2(data, snakes, head)
+        # if (move != "no"):
+            # return move
          
     return sensor_move(data)
 
