@@ -661,9 +661,10 @@ def safe_moves(data, snakes, pos):
 def destroy(data, snakes, snakes_static, pos):
     head = data["you"]["body"][0]
     target_moves = safe_moves(data, snakes_static, pos)
+    enemy_heads = make_enemy_heads(data)
 
     moves1 = safe_moves(data, snakes, data["you"]["body"][0])
-    moves2 = free_moves(data, make_enemy_heads(data), data["you"]["body"][0])
+    moves2 = free_moves(data, enemy_heads, data["you"]["body"][0])
     
     for move in moves1:
         if (move not in moves2):
