@@ -73,7 +73,6 @@ def next_move(data):
     along_the_wall = along_wall(data, make_heads(data))
     near_the_wall = near_wall(data, make_heads(data))
     
-    
     for move in moves1:
         if (move not in moves2):
             moves1.remove(move)
@@ -534,6 +533,57 @@ def sensor_move(data):
         
         
         
+    right_block = {"x": head["x"] + 1, "y": head["y"]}
+    left_block = {"x": head["x"] - 1, "y": head["y"]}
+    down_block = {"x": head["x"], "y": head["y"] + 1}
+    up_block = {"x": head["x"], "y": head["y"] - 1}
+    if (is_dead_end(data, head, "up") or is_dead_end(data, head, "right") or 
+        is_dead_end(data, head, "down") or is_dead_end(data, head, "left")):
+        
+        best_paths = []
+        
+        up_path = num_free(data, up_block)
+        right_path = num_free(data, right_block)
+        down_path = num_free(data, down_block)
+        left_path = num_free(data, left_block)
+        
+        up1 = [up_path, 0]
+        right1 = [right_path, 1]
+        down1 = [down_path, 2]
+        left1 = [left_path, 3]
+        
+        max_path = max(up_path, right_path, down_path, left_path)
+        
+        if (max_path == up1[0]):
+            best_paths.append(up1)
+        if (max_path == right1[0]):
+            best_paths.append(right1)
+        if (max_path == down1[0]):
+            best_paths.append(down1)
+        if (max_path == left1[0]):
+            best_paths.append(left1)
+            
+        best_path = random.choice(best_paths)
+        
+        
+        if (best_path == up1):
+            best_paths.append(up1)
+            return "up"
+            
+        if (best_path == right1):
+            best_paths.append(right1)
+            return "right"
+            
+        if (best_path == down1):
+            best_paths.append(down1)
+            return "down"
+            
+        if (best_path == left1):
+            best_paths.append(left1)
+            return "left"
+            
+
+        
         
         
         
@@ -710,6 +760,94 @@ def sensor_helper(data, tmp_snakes, pos, direction):
             new_pos["y"] -= 1
             new_pos["x"] -= 1
             return sensor_helper(data, tmp_snakes, new_pos, direction) + 1
+
+def is_dead_end(data, pos, direction):
+    tmp_snakes = make_tmp_snakes(data)
+    state = is_dead_end_helper(data, pos, tmp_snakes, direction)
+    if (state == 0):
+        return True
+    return False
+
+def is_dead_end_helper(data, pos, tmp_snakes, direction):
+    new_pos = {"x": pos["x"], "y": pos["y"]}
+    if (not is_free_tmp(data, tmp_snakes, pos) and pos != data["you"]["body"][0]):
+        return 0
+    else:
+        remove_tails(tmp_snakes)
+        if (direction == "up"):
+            new_pos["y"] -= 1
+            right = {"x": new_pos["x"] + 1, "y": new_pos["y"]}
+            left = {"x": new_pos["x"] - 1, "y": new_pos["y"]}
+            if (is_free_tmp(data, tmp_snakes, right)):
+                return 1
+            if (is_free_tmp(data, tmp_snakes, left)):
+                return 1
+            return is_dead_end_helper(data, new_pos, tmp_snakes, direction)
+            
+            
+            
+        if (direction == "right"):
+            new_pos["x"] += 1
+            up = {"x": new_pos["x"], "y": new_pos["y"] - 1}
+            down = {"x": new_pos["x"], "y": new_pos["y"] + 1}
+            if (is_free_tmp(data, tmp_snakes, up)):
+                return 1
+            if (is_free_tmp(data, tmp_snakes, down)):
+                return 1
+            return is_dead_end_helper(data, new_pos, tmp_snakes, direction)
+            
+        if (direction == "down"):
+            new_pos["y"] += 1
+            right = {"x": new_pos["x"] + 1, "y": new_pos["y"]}
+            left = {"x": new_pos["x"] - 1, "y": new_pos["y"]}
+            if (is_free_tmp(data, tmp_snakes, right)):  
+                return 1
+            if (is_free_tmp(data, tmp_snakes, left)):
+                return 1
+            return is_dead_end_helper(data, new_pos, tmp_snakes, direction)
+
+        
+        if (direction == "left"):
+            new_pos["x"] -= 1
+            up = {"x": new_pos["x"], "y": new_pos["y"] - 1}
+            down = {"x": new_pos["x"], "y": new_pos["y"] + 1}
+            if (is_free_tmp(data, tmp_snakes, up)):
+                return 1
+            if (is_free_tmp(data, tmp_snakes, down)):
+                return 1
+            return is_dead_end_helper(data, new_pos, tmp_snakes, direction)
+        
+# dict, dict -> int
+# checks all the free blocks conected to the input block
+# and return that number
+def num_free(data, block):
+    checked = []
+    snakes = make_snakes(data)
+    return num_free_helper(data, snakes, checked, block)
+    
+def num_free_helper(data, snakes, checked, block):
+    if (not is_free(data, snakes, block) or block in checked):
+        return 0
+    else: 
+        checked.append(block)
+        right_block = {"x": block["x"] + 1, "y": block["y"]}
+        left_block = {"x": block["x"] - 1, "y": block["y"]}
+        down_block = {"x": block["x"], "y": block["y"] + 1}
+        up_block = {"x": block["x"], "y": block["y"] - 1}
+        
+        return (num_free_helper(data, snakes, checked, right_block) +
+                num_free_helper(data, snakes, checked, left_block) +
+                num_free_helper(data, snakes, checked, down_block) +
+                num_free_helper(data, snakes, checked, up_block) + 1)
+         
+# dict, list, dict -> bool
+# return true if the block is not in any snake body parts and 
+# outside of the game board
+def is_free(data, snakes, pos):
+    return not (pos in snakes or
+                pos["x"] == data["board"]["height"] or 
+                pos["y"] == data["board"]["width"] or 
+                pos["x"] == -1 or pos["y"] == -1)
 
 # dict, list, list, dict, string -> bool 
 # determins if there is an enemy head in the next 2 moves in the 
@@ -916,8 +1054,7 @@ def to_avoid(data, enemy, snakes, direction):
             return ["right"]
         
     return []
-
- 
+    
 def closest_head(data, enemy_heads):
     own_head = data["you"]["body"][0]
     distance = 2
@@ -930,8 +1067,7 @@ def closest_head(data, enemy_heads):
             closest = head
             distance = path
     return closest
-    
-    
+     
 # dict, list, list, dict, string -> bool 
 # determins if there is an enemy head in the next move in the
 # given direction  and returns a bool corresponding to that result
@@ -1289,15 +1425,6 @@ def destroy2(data, snakes, pos):
         
     return "no"    
     
-# dict, list, dict -> bool
-# return true if the block is not in any snake body parts and 
-# outside of the game board
-def is_free(data, snakes, pos):
-    return not (pos in snakes or
-                pos["x"] == data["board"]["height"] or 
-                pos["y"] == data["board"]["width"] or 
-                pos["x"] == -1 or pos["y"] == -1)
-
 # dict -> list
 # returns a list of dicts corresponding to the x,y coordinates of
 # enemy snake heads
@@ -1346,7 +1473,6 @@ def make_snakes(data):
     
 # dict -> list 
 # makes a list of  dicts representing snake x,y coordinates
-
 def make_tmp_snakes(data):
     tmp_snakes = []
     for snake in data["board"]["snakes"]:
