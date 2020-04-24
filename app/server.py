@@ -80,6 +80,9 @@ def next_move(data):
     if (len(moves1) == 0):
         moves1 = safe_moves(data, snakes, data["you"]["body"][0])
     
+    if (data["you"]["health"] < 20):
+        return to_target(data, moves1, food)
+    
     for head in along_the_wall:
         move = destroy(data, snakes, head)
         if (move != "no"):
@@ -89,9 +92,7 @@ def next_move(data):
         move = destroy2(data, snakes, head)
         if (move != "no"):
             return move
-            
-    if (data["you"]["health"] < 20):
-        return to_target(data, moves1, food)
+         
     return sensor_move(data)
 
 # dict -> string
