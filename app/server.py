@@ -89,7 +89,7 @@ def next_move(data):
     return sensor_move(data)
 
 
-def sensor_move(data):
+def sensor_move2(data):
     moves = []
     head = data["you"]["body"][0]
     snakes = make_snakes(data)
@@ -730,7 +730,123 @@ def sensor_move(data):
     if (max_val == left[0]):
         return "left"
     
+  
+def sensor_move(data):
+    head = data["you"]["body"][0]
     
+    tmp_up = sensor(data, head, "up")
+    tmp_up_right = sensor(data, head, "up_right")
+    tmp_right = sensor(data, head, "right")
+    tmp_down_right = sensor(data, head, "down_right")
+    tmp_down = sensor(data, head, "down")
+    tmp_down_left = sensor(data, head, "down_left")
+    tmp_left = sensor(data, head, "left")
+    tmp_up_left = sensor(data, head, "up_left")
+    
+    up_val = tmp_up + tmp_up_left + tmp_up_right
+    up_right_val = tmp_up_right + tmp_up + tmp_right
+    right_val = tmp_right + tmp_up_right + tmp_down_right
+    down_right_val = tmp_down_right + tmp_right + tmp_down
+    down_val = tmp_down + tmp_down_right + tmp_down_left
+    down_left_val = tmp_down_left + tmp_down + tmp_left 
+    left_val = tmp_left + tmp_down_left + tmp_up_left
+    up_left_val = tmp_up_left + tmp_left + tmp_up
+    
+    vals = [up_val, up_right_val, right_val, down_right_val, down_val, down_left_val, left_val, up_left_val]
+    max_val = max(vals)
+    
+    up = [up_val, 0]
+    up_right = [up_right_val, 1]
+    right = [right_val, 2]
+    down_right = [down_right_val, 3]
+    down = [down_val, 4]
+    down_left = [down_left_val, 5]
+    left = [left_val, 6]
+    up_left = [up_left_val, 7]
+    
+    items = [up, up_right, right, down_right, down, down_left, left, up_left]
+    max_items = []
+    
+    for item in items:
+        if (item[0] == max_val):
+            max_items.append(item)
+    
+    max_item = random.choice(max_items)
+    
+    if (max_item == up):
+        return "up"
+        
+    if (max_item == up_right):
+        if (right[0] != 0 and up[0] != 0):
+            return random.choice(["up", "right"])
+        if (right[0] != 0):
+            return "right"
+        if (up[0] != 0):
+            return "up"
+        
+        
+    if (max_item == right):
+        return "right"
+        
+    if (max_item == down_right):
+        if (down[0] != 0 and right[0] != 0):
+            return random.choice(["down", "right"])
+        if (down[0] != 0):
+            return "down"
+        if (right[0] != 0):
+            return "right"
+        
+    if (max_item == down):
+        return "down"
+    
+    if (max_item == down_left):
+        if (down[0] != 0 and left[0] != 0):
+            return random.choice(["down", "left"])
+        if (down[0] != 0):
+            return "down"
+        if (left[0] != 0):
+            return "left"
+        
+    if (max_item == left):
+        return "left"
+        
+    if (max_item == up_left):
+        if (up[0] != 0 and left[0] != 0):
+            return random.choice(["up", "left"])
+        if (up[0] != 0):
+            return "up"
+        if (left[0] != 0):
+            return "left"
+            
+    vals2 = [up_val, right_val, down_val, left_val]
+    items2 = [up, right, down, left]
+    max_val2 = max(vals2)
+    max_items2 = []
+    
+    for item in items2:
+        if (max_val2 == item[0]):
+            max_items2.append(item)
+            
+    max_item2 = random.choice(max_items2)
+    
+    if (max_item == up):
+        return "up"
+        
+    if (max_item == right):
+        return "right"
+        
+    if (max_item == down):
+        return "down"
+        
+    if (max_item == left):
+        return "left"
+
+    
+
+    
+    
+  
+  
 def sensor(data, pos, direction):
     tmp_snakes = make_tmp_snakes(data)
     return sensor_helper(data, tmp_snakes, pos, direction)
