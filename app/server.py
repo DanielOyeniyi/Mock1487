@@ -222,7 +222,7 @@ def sensor_move(data):
         max_val = max(vals)
     else:
         max_val = 0
-        
+    
         
     if (max_val != 0):
         max_items = []
@@ -604,7 +604,7 @@ def destroy(data, snakes, snakes_static, pos):
             print("here")
             x_distance = head["x"] - pos["x"]
             # if head is close enough and to the right the enemy head
-            if (y_distance <= 3 and x_distance >= 0):
+            if (y_distance <= 2 and x_distance >= 0):
                 if (y_distance < x_distance and "up" in head_moves):
                     return "up"
                 elif (y_distance == x_distance and "up" in head_moves and pos not in enemy_heads):
@@ -616,7 +616,7 @@ def destroy(data, snakes, snakes_static, pos):
         if ("left" in target_moves and "right" not in target_moves):
             x_distance = pos["x"] - head["x"]
             # if head is close enough and to the left the enemy head
-            if (y_distance <= 3 and x_distance >= 0):
+            if (y_distance <= 2 and x_distance >= 0):
                 if (y_distance < x_distance and "up" in head_moves):
                     return "up"
                 elif (y_distance == x_distance and "up" in head_moves and pos not in enemy_heads):
@@ -631,7 +631,7 @@ def destroy(data, snakes, snakes_static, pos):
         if ("up" in target_moves and "down" not in target_moves):
             y_distance = pos["y"] - head["y"]
             # if head is close enough and above the enemy head
-            if (x_distance <= 3 and y_distance >= 0):
+            if (x_distance <= 2 and y_distance >= 0):
                 if (x_distance < y_distance and "right" in head_moves):
                     return "right"
                 elif (x_distance == y_distance and "right" in head_moves and pos not in enemy_heads):
@@ -643,7 +643,7 @@ def destroy(data, snakes, snakes_static, pos):
         if ("down" in target_moves and "up" not in target_moves):
             y_distance = head["y"] - pos["y"]
             # if head is close enough and below the enemy head
-            if (x_distance <= 3 and y_distance >= 0):
+            if (x_distance <= 2 and y_distance >= 0):
                 if (x_distance < y_distance and "right" in head_moves):
                     return "right"
                 elif (x_distance == y_distance and "right" in head_moves and pos not in enemy_heads):
@@ -659,7 +659,7 @@ def destroy(data, snakes, snakes_static, pos):
         if ("right" in target_moves and "left" not in target_moves):
             x_distance = head["x"] - pos["x"]
             # if head is close enough and to the right the enemy head
-            if (y_distance <= 3 and x_distance >= 0):
+            if (y_distance <= 2 and x_distance >= 0):
                 if (y_distance < x_distance and "down" in head_moves):
                     return "down"
                 elif (y_distance == x_distance and "down" in head_moves and pos not in enemy_heads):
@@ -671,7 +671,7 @@ def destroy(data, snakes, snakes_static, pos):
         if ("left" in target_moves and "right" not in target_moves):
             x_distance = pos["x"] - head["x"]
             # if head is close enough and to the left the enemy head
-            if (y_distance <= 3 and x_distance >= 0):
+            if (y_distance <= 2 and x_distance >= 0):
                 if (y_distance < x_distance and "down" in head_moves):
                     return "down"
                 elif (y_distance == x_distance and "down" in head_moves and pos not in enemy_heads):
@@ -686,7 +686,7 @@ def destroy(data, snakes, snakes_static, pos):
         if ("up" in target_moves and "down" not in target_moves):
             y_distance = pos["y"] - head["y"]
             # if head is close enough and above the enemy head
-            if (x_distance <= 3 and y_distance >= 0):
+            if (x_distance <= 2 and y_distance >= 0):
                 if (x_distance < y_distance and "left" in head_moves):
                     return "left"
                 elif (x_distance == y_distance and "left" in head_moves and pos not in enemy_heads):
@@ -698,7 +698,7 @@ def destroy(data, snakes, snakes_static, pos):
         if ("down" in target_moves and "up" not in target_moves):
             y_distance = head["y"] - pos["y"]
             # if head is close enough and below the enemy head
-            if (x_distance <= 3 and y_distance >= 0):
+            if (x_distance <= 2 and y_distance >= 0):
                 if (x_distance < y_distance and "left" in head_moves):
                     return "left"
                 elif (x_distance == y_distance and "left" in head_moves and pos not in enemy_heads):
