@@ -705,7 +705,6 @@ def sensor_move(data):
         
     if (max_item == left):
         return "left"
-        
  
 # dict, dict, string -> int
 # returns a count of all the available moves and soon to be available
@@ -763,6 +762,9 @@ def sensor_helper(data, tmp_snakes, pos, direction):
             new_pos["x"] -= 1
             return sensor_helper(data, tmp_snakes, new_pos, direction) + 1
 
+# dict, dict, string -> int
+# checkes if the given direction is a straight dead end with no turns
+# and returns a number representing the current state
 def is_dead_end(data, pos, direction):
     tmp_snakes = make_tmp_snakes(data)
     state = is_dead_end_helper(data, pos, tmp_snakes, direction)
@@ -770,6 +772,9 @@ def is_dead_end(data, pos, direction):
         return True
     return False
 
+# dict, dict, list, string -> int
+# checkes if the given direction is a straight dead end with no turns
+# and returns a number representing the current state
 def is_dead_end_helper(data, pos, tmp_snakes, direction):
     new_pos = {"x": pos["x"], "y": pos["y"]}
     if (not is_free_tmp(data, tmp_snakes, pos) and pos != data["you"]["body"][0]):
@@ -827,6 +832,9 @@ def num_free(data, block):
     snakes = make_snakes(data)
     return num_free_helper(data, snakes, checked, block)
     
+# dict, dict, list, dict -> int
+# checks all the free blocks conected to the input block
+# and return that number
 def num_free_helper(data, snakes, checked, block):
     if (not is_free(data, snakes, block) or block in checked):
         return 0
@@ -1004,7 +1012,9 @@ def threat(data, enemy_heads, pos, direction):
         new_pos["y"] -= 1
         new_pos["x"] -= 1
         return new_pos
-    
+ 
+# dict, dict, list, string -> list
+# returns a list of moves that the enemy can make towards you
 def to_avoid(data, enemy, snakes, direction):
     enemy_moves = safe_moves(data, snakes, enemy)
     if (direction == "up"):
@@ -1057,6 +1067,8 @@ def to_avoid(data, enemy, snakes, direction):
         
     return []
     
+# dict, list -> dict
+# returns the closest enemy head to our snakes head
 def closest_head(data, enemy_heads):
     own_head = data["you"]["body"][0]
     distance = 2
