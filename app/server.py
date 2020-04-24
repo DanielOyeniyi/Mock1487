@@ -200,16 +200,20 @@ def sensor_move(data):
             items.remove(up_right)
             
     if (tmp_up == 0):
-        items.remove(up)
+        if (up in items):
+            items.remove(up)
         
     if (tmp_right == 0):
-        items.remove(right)
+        if (right in items):
+            items.remove(right)
         
     if (tmp_down == 0):
-        items.remove(down)
+        if (down in items):
+            items.remove(down)
         
     if (tmp_left == 0):
-        items.remove(left)
+        if (left in items):
+            items.remove(left)
 
     if (len(items) != 0):
         vals = []
