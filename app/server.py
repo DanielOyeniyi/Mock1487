@@ -97,6 +97,7 @@ def sensor_move(data):
    
     
     vals = [up, up_right, right, down_right, down, down_left, left, up_left]
+    vals2 = [up, up_right, right, down_right, down, down_left, left, up_left]
     tight = []
     for val in vals:
         tight.append(val[0])
@@ -134,8 +135,7 @@ def sensor_move(data):
             vals.remove(down_left)
         if (up_right in vals):
             vals.remove(up_right)
-        
-        
+                
     if (is_enemy_head(data, enemy_heads, head, "down")):
         if (down_right in vals):
             vals.remove(down_right)
@@ -175,6 +175,7 @@ def sensor_move(data):
             vals.remove(down_left)
         if (up_right in vals):
             vals.remove(up_right)
+    
     new_vals = []
     for val in vals:
         new_vals.append(val[0])
@@ -230,7 +231,148 @@ def sensor_move(data):
         return "left"
     
     
-    # if max_val was 0  
+    
+    
+    
+    # checking for snakes 1 move away
+    
+    if (is_enemy_head2(data, enemy_heads, head, "up")):
+        vals2.remove(up_left)
+        vals2.remove(up)
+        vals2.remove(up_right)
+        
+    if (is_enemy_head2(data, enemy_heads, head, "up_right")):
+        if (up in vals2):
+            vals2.remove(up)
+        if (up_right in vals2):
+            vals2.remove(up_right)
+        vals2.remove(up_left)
+        vals2.remove(right)
+        vals2.remove(down_right)
+        
+    if (is_enemy_head2(data, enemy_heads, head, "right")):
+        if (up_right in vals2):
+            vals2.remove(up_right)
+        if (right in vals2):
+            vals2.remove(right)
+        if (down_right in vals2):
+            vals2.remove(down_right)
+        
+    if (is_enemy_head2(data, enemy_heads, head, "down_right")):
+        if (right in vals2):
+            vals2.remove(right)
+        if (down_right in vals2):   
+            vals2.remove(down_right)
+        if (down in vals2):
+            vals2.remove(down)
+        if (down_left in vals2):
+            vals2.remove(down_left)
+        if (up_right in vals2):
+            vals2.remove(up_right)
+            
+    if (is_enemy_head2(data, enemy_heads, head, "down")):
+        if (down_right in vals2):
+            vals2.remove(down_right)
+        if (down in vals2):
+            vals2.remove(down)
+        if (down_left in vals2):
+            vals2.remove(down_left)
+        
+    if (is_enemy_head2(data, enemy_heads, head, "down_left")):
+        if (down in vals2):
+            vals2.remove(down)
+        if (down_left in vals2):
+            vals2.remove(down_left)
+        if (left in vals2):
+            vals2.remove(left)
+        if (up_left in vals2):
+            vals2.remove(up_left)
+        if (down_right in vals2):
+            vals2.remove(down_right)
+        
+    if (is_enemy_head2(data, enemy_heads, head, "left")):
+        if (down_left in vals2):
+            vals2.remove(down_left)
+        if (left in vals2):
+            vals2.remove(left)
+        if (up_left in vals2):
+            vals2.remove(up_left)
+    
+    if (is_enemy_head2(data, enemy_heads, head, "up_left")):
+        if (left in vals2):
+            vals2.remove(left)
+        if (up_left in vals2):
+            vals2.remove(up_left)
+        if (up in vals2):
+            vals2.remove(up)
+        if (down_left in vals2):
+            vals2.remove(down_left)
+        if (up_right in vals2):
+            vals2.remove(up_right)
+    
+    
+    
+    new_vals2 = []
+    for val in vals2:
+        new_vals2.append(val[0])
+        
+    if (len(new_vals2) != 0):
+        max_val = max(new_vals2)
+    else: 
+        max_val = 0
+        
+    if (max_val == 0):
+        max_val = max(tight)
+
+        
+        
+    
+    if (max_val == up[0] and up in vals2):
+        return "up"
+        
+    if (max_val == up_right[0] and up_right in vals2):
+        if (right[0] != 0 and up[0] != 0):
+            return random.choice(["up", "right"])
+        
+    if (max_val == right[0] and right in vals2):
+        return "right"
+        
+    if (max_val == down_right[0] and down_right in vals2):
+        if (down[0] != 0 and right[0] != 0):
+            return random.choice(["down", "right"])
+        
+    if (max_val == down[0] and down in vals2):
+        return "down"
+    
+    if (max_val == down_left[0] and down_left in vals2):
+        if (down[0] != 0 and left[0] != 0):
+            return random.choice(["down", "left"])
+        
+    if (max_val == left[0] and left in vals2):
+        return "left"
+        
+    if (max_val == up_left[0] and up_left in vals2):
+        if (up[0] != 0 and left[0] != 0):
+            return random.choice(["up", "left"])
+            
+    max_val = max(up[0], right[0], down[0], left[0])
+    
+    if (max_val == up[0] and up in vals2):
+        return "up"
+        
+    if (max_val == right[0] and right in vals2):
+        return "right"
+        
+    if (max_val == down[0] and down in vals2):
+        return "down"
+        
+    if (max_val == left[0] and left in vals2):
+        return "left"
+        
+        
+        
+        
+    # last options
     
     if (max_val == up[0]):
         return "up"  
@@ -388,6 +530,45 @@ def is_enemy_head(data, enemy_heads, pos, direction):
         new_pos["x"] -= 1
         return new_pos in enemy_heads
     
+
+def is_enemy_head2(data, enemy_heads, pos, direction):
+    new_pos = {"x": pos["x"], "y": pos["y"]}
+    if (direction == "up"):
+        new_pos["y"] -= 1
+        return new_pos in enemy_heads
+            
+    if (direction == "up_right"):
+        new_pos["y"] -= 1
+        new_pos["x"] += 1
+        return new_pos in enemy_heads
+            
+    if (direction == "right"):
+        new_pos["x"] += 1
+        return new_pos in enemy_heads
+            
+    if (direction == "down_right"):
+        new_pos["y"] += 1
+        new_pos["x"] += 1
+        return new_pos in enemy_heads
+            
+    if (direction == "down"):
+        new_pos["y"] += 1
+        return new_pos in enemy_heads
+            
+    if (direction == "down_left"):
+        new_pos["y"] += 1
+        new_pos["x"] -= 1
+        return new_pos in enemy_heads
+            
+    if (direction == "left"):
+        new_pos["x"] -= 1
+        return new_pos in enemy_heads
+            
+    if (direction == "up_left"):
+        new_pos["y"] -= 1
+        new_pos["x"] -= 1
+        return new_pos in enemy_heads    
+
     
 def free_moves(data, enemy_heads, pos):
     moves = ["right", "left", "down", "up"]
