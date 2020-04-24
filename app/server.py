@@ -132,100 +132,180 @@ def sensor_move(data):
  
  
     if (is_enemy_head(data, enemy_heads, snakes, head, "up")):
-        enemy = threat(data, enemy_heads, head, "up")
-        enemy_moves = to_avoid(data, enemy, snakes, "up")
-        if (up_left in items and ("down" in enemy_moves or "right" in enemy_moves)):
-            items.remove(up_left)
-        if (up in items and "down" in enemy_moves):
-            items.remove(up)
-        if (up_right in items and ("down" in enemy_moves or "left" in enemy_moves)):
-            items.remove(up_right)
+        if (not is_enemy_head2(data, enemy_heads, head, "up")):
+            enemy = threat(data, enemy_heads, head, "up")
+            enemy_moves = to_avoid(data, enemy, snakes, "up")
+            if (up_left in items and ("down" in enemy_moves or "right" in enemy_moves)):
+                items.remove(up_left)
+            if (up in items and "down" in enemy_moves):
+                items.remove(up)
+            if (up_right in items and ("down" in enemy_moves or "left" in enemy_moves)):
+                items.remove(up_right)
+        else:
+            if (up_left in items):
+                items.remove(up_left)
+            if (up in items):
+                items.remove(up)
+            if (up_right in items):
+                items.remove(up_right)
         
     if (is_enemy_head(data, enemy_heads, snakes,  head, "up_right")):
-        enemy = threat(data, enemy_heads, head, "up_right")
-        enemy_moves = to_avoid(data, enemy, snakes, "up_rigth")
-        if (up in items and "down" in enemy_moves):
-            items.remove(up)
-        if (up_right in items and ("down" in enemy_moves or "left" in enemy_moves)):
-            items.remove(up_right)
-        if (up_left in items and ("down" in enemy_moves or "right" in enemy_moves)):
-            items.remove(up_left)
-        if (right in items and "left" in enemy_moves):
-            items.remove(right)
-        if (down_right in items and ("up" in enemy_moves or "left" in enemy_moves)):
-            items.remove(down_right)
+        if (not is_enemy_head2(data, enemy_heads, head, "up_right")):
+            enemy = threat(data, enemy_heads, head, "up_right")
+            enemy_moves = to_avoid(data, enemy, snakes, "up_rigth")
+            if (up in items and "down" in enemy_moves):
+                items.remove(up)
+            if (up_right in items and ("down" in enemy_moves or "left" in enemy_moves)):
+                items.remove(up_right)
+            if (up_left in items and ("down" in enemy_moves or "right" in enemy_moves)):
+                items.remove(up_left)
+            if (right in items and "left" in enemy_moves):
+                items.remove(right)
+            if (down_right in items and ("up" in enemy_moves or "left" in enemy_moves)):
+                items.remove(down_right)
+        else:
+            if (up in items):
+                items.remove(up)
+            if (up_right in items):
+                items.remove(up_right)
+            if (up_left in items):
+                items.remove(up_left)
+            if (right in items):
+                items.remove(right)
+            if (down_right in items):
+                items.remove(down_right)
         
     if (is_enemy_head(data, enemy_heads, snakes, head, "right")):
-        enemy = threat(data, enemy_heads, head, "right")
-        enemy_moves = to_avoid(data, enemy, snakes, "right")
-        if (up_right in items and ("down" in enemy_moves or "left" in enemy_moves)):
-            items.remove(up_right)
-        if (right in items and "left" in enemy_moves):
-            items.remove(right)
-        if (down_right in items and ("up" in enemy_moves or "left" in enemy_moves)):
-            items.remove(down_right)
+        if (not is_enemy_head2(data, enemy_heads, head, "right")):
+            enemy = threat(data, enemy_heads, head, "right")
+            enemy_moves = to_avoid(data, enemy, snakes, "right")
+            if (up_right in items and ("down" in enemy_moves or "left" in enemy_moves)):
+                items.remove(up_right)
+            if (right in items and "left" in enemy_moves):
+                items.remove(right)
+            if (down_right in items and ("up" in enemy_moves or "left" in enemy_moves)):
+                items.remove(down_right)
+        else:
+            if (up_right in items):
+                items.remove(up_right)
+            if (right in items):
+                items.remove(right)
+            if (down_right in items):
+                items.remove(down_right)
         
     if (is_enemy_head(data, enemy_heads, snakes, head, "down_right")):
-        enemy = threat(data, enemy_heads, head, "down_right")
-        enemy_moves = to_avoid(data, enemy, snakes, "down_right")
-        if (right in items and "left" in enemy_moves):
-            items.remove(right)
-        if (down_right in items and ("up" in enemy_moves or "left" in enemy_moves)):   
-            items.remove(down_right)
-        if (down in items and "up" in enemy_moves):
-            items.remove(down)
-        if (down_left in items and ("up" in enemy_moves or "right" in enemy_moves)):
-            items.remove(down_left)
-        if (up_right in items and ("down" in enemy_moves or "left" in enemy_moves)):
-            items.remove(up_right)
+        if (not is_enemy_head2(data, enemy_heads, head, "down_right")):
+            enemy = threat(data, enemy_heads, head, "down_right")
+            enemy_moves = to_avoid(data, enemy, snakes, "down_right")
+            if (right in items and "left" in enemy_moves):
+                items.remove(right)
+            if (down_right in items and ("up" in enemy_moves or "left" in enemy_moves)):   
+                items.remove(down_right)
+            if (down in items and "up" in enemy_moves):
+                items.remove(down)
+            if (down_left in items and ("up" in enemy_moves or "right" in enemy_moves)):
+                items.remove(down_left)
+            if (up_right in items and ("down" in enemy_moves or "left" in enemy_moves)):
+                items.remove(up_right)
+        else:
+            if (right in items):
+                items.remove(right)
+            if (down_right in items):   
+                items.remove(down_right)
+            if (down in items):
+                items.remove(down)
+            if (down_left in items):
+                items.remove(down_left)
+            if (up_right in items):
+                items.remove(up_right)
                 
     if (is_enemy_head(data, enemy_heads, snakes, head, "down")):
-        enemy = threat(data, enemy_heads, head, "down")
-        enemy_moves = to_avoid(data, enemy, snakes, "down")
-        if (down_right in items and ("up" in enemy_moves or "left" in enemy_moves)):
-            items.remove(down_right)
-        if (down in items and "up" in enemy_moves):
-            items.remove(down)
-        if (down_left in items and ("up" in enemy_moves or "right" in enemy_moves)):
-            items.remove(down_left)
+        if (not is_enemy_head2(data, enemy_heads, head, "down")):
+            enemy = threat(data, enemy_heads, head, "down")
+            enemy_moves = to_avoid(data, enemy, snakes, "down")
+            if (down_right in items and ("up" in enemy_moves or "left" in enemy_moves)):
+                items.remove(down_right)
+            if (down in items and "up" in enemy_moves):
+                items.remove(down)
+            if (down_left in items and ("up" in enemy_moves or "right" in enemy_moves)):
+                items.remove(down_left)
+        else:
+            if (down_right in items):
+                items.remove(down_right)
+            if (down in items):
+                items.remove(down)
+            if (down_left in items):
+                items.remove(down_left)
         
     if (is_enemy_head(data, enemy_heads, snakes, head, "down_left")):
-        enemy = threat(data, enemy_heads, head, "down_left")
-        enemy_moves = to_avoid(data, enemy, snakes, "down_left")
-        if (down in items and "up" in enemy_moves):
-            items.remove(down)
-        if (down_left in items and ("up" in enemy_moves or "right" in enemy_moves)):
-            items.remove(down_left)
-        if (left in items and "right" in enemy_moves):
-            items.remove(left)
-        if (up_left in items and ("down" in enemy_moves or "right" in enemy_moves)):
-            items.remove(up_left)
-        if (down_right in items and ("up" in enemy_moves or "left" in enemy_moves)):
-            items.remove(down_right)
+        if (not is_enemy_head2(data, enemy_heads, head, "down_left")):
+            enemy = threat(data, enemy_heads, head, "down_left")
+            enemy_moves = to_avoid(data, enemy, snakes, "down_left")
+            if (down in items and "up" in enemy_moves):
+                items.remove(down)
+            if (down_left in items and ("up" in enemy_moves or "right" in enemy_moves)):
+                items.remove(down_left)
+            if (left in items and "right" in enemy_moves):
+                items.remove(left)
+            if (up_left in items and ("down" in enemy_moves or "right" in enemy_moves)):
+                items.remove(up_left)
+            if (down_right in items and ("up" in enemy_moves or "left" in enemy_moves)):
+                items.remove(down_right)
+        else:
+            if (down in items):
+                items.remove(down)
+            if (down_left in items):
+                items.remove(down_left)
+            if (left in items):
+                items.remove(left)
+            if (up_left in items):
+                items.remove(up_left)
+            if (down_right in items):
+                items.remove(down_right)
         
     if (is_enemy_head(data, enemy_heads, snakes, head, "left")):
-        enemy = threat(data, enemy_heads, head, "left")
-        enemy_moves = to_avoid(data, enemy, snakes, "left")
-        if (down_left in items and ("up" in enemy_moves or "right" in enemy_moves)):
-            items.remove(down_left)
-        if (left in items and "right" in enemy_moves):
-            items.remove(left)
-        if (up_left in items and ("down" in enemy_moves or "right" in enemy_moves)):
-            items.remove(up_left)
+        if (not is_enemy_head2(data, enemy_heads, head, "left")):
+            enemy = threat(data, enemy_heads, head, "left")
+            enemy_moves = to_avoid(data, enemy, snakes, "left")
+            if (down_left in items and ("up" in enemy_moves or "right" in enemy_moves)):
+                items.remove(down_left)
+            if (left in items and "right" in enemy_moves):
+                items.remove(left)
+            if (up_left in items and ("down" in enemy_moves or "right" in enemy_moves)):
+                items.remove(up_left)
+        else:
+            if (down_left in items):
+                items.remove(down_left)
+            if (left in items):
+                items.remove(left)
+            if (up_left in items):
+                items.remove(up_left)
     
     if (is_enemy_head(data, enemy_heads, snakes, head, "up_left")):
-        enemy = threat(data, enemy_heads, head, "up_left")
-        enemy_moves = to_avoid(data, enemy, snakes, "up_left")
-        if (left in items and "left" in enemy_moves):
-            items.remove(left)
-        if (up_left in items and ("down" in enemy_moves or "right" in enemy_moves)):
-            items.remove(up_left)
-        if (up in items and "down" in enemy_moves):
-            items.remove(up)
-        if (down_left in items and ("up" in enemy_moves or "right" in enemy_moves)):
-            items.remove(down_left)
-        if (up_right in items and ("down" in enemy_moves or "left" in enemy_moves)):
-            items.remove(up_right)
+        if (not is_enemy_head2(data, enemy_heads, head, "up_left")):
+            enemy = threat(data, enemy_heads, head, "up_left")
+            enemy_moves = to_avoid(data, enemy, snakes, "up_left")
+            if (left in items and "left" in enemy_moves):
+                items.remove(left)
+            if (up_left in items and ("down" in enemy_moves or "right" in enemy_moves)):
+                items.remove(up_left)
+            if (up in items and "down" in enemy_moves):
+                items.remove(up)
+            if (down_left in items and ("up" in enemy_moves or "right" in enemy_moves)):
+                items.remove(down_left)
+            if (up_right in items and ("down" in enemy_moves or "left" in enemy_moves)):
+                items.remove(up_right)
+        else:
+            if (left in items):
+                items.remove(left)
+            if (up_left in items):
+                items.remove(up_left)
+            if (up in items):
+                items.remove(up)
+            if (down_left in items):
+                items.remove(down_left)
+            if (up_right in items):
+                items.remove(up_right)
             
     if (tmp_up == 0):
         if (up in items):
@@ -755,7 +835,6 @@ def destroy(data, snakes, pos):
     if (pos["y"] == 0):
         y_distance = head["y"] - pos["y"]
         if ("right" in target_moves and "left" not in target_moves):
-            print("here")
             x_distance = head["x"] - pos["x"]
             # if head is close enough and to the right the enemy head
             if (y_distance <= 2 and x_distance >= 0):
@@ -882,7 +961,6 @@ def destroy2(data, snakes, pos):
     if (pos["y"] == 1):
         y_distance = head["y"] - pos["y"]
         if ("right" in target_moves and "left" not in target_moves):
-            print("here")
             x_distance = head["x"] - pos["x"]
             # if head is close enough and to the right the enemy head
             if (y_distance <= 2 and x_distance >= 0):
