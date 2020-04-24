@@ -67,7 +67,7 @@ def move():
 def next_move(data):
     food = closest_food(data)
     snakes = make_snakes(data)
-    moves = free_moves(data, snakes, data["you"]["body"][0])
+    moves = free_moves(data, make_enemy_heads(data), data["you"]["body"][0])
     along_wall = is_along_wall(data, make_heads(data))
     
     for head in along_wall:
@@ -389,21 +389,42 @@ def is_enemy_head(data, enemy_heads, pos, direction):
         return new_pos in enemy_heads
     
     
-def free_moves(data, snakes, pos):
-    moves = []
-    right_block = {"x": pos["x"] + 1, "y": pos["y"]}
-    left_block = {"x": pos["x"] - 1, "y": pos["y"]}
-    down_block = {"x": pos["x"], "y": pos["y"] + 1}
-    up_block = {"x": pos["x"], "y": pos["y"] - 1}    
-
-    if (is_free(data, snakes, right_block)):
-        moves.append("right")
-    if (is_free(data, snakes, left_block)):
-        moves.append("left")
-    if (is_free(data, snakes, down_block)):
-        moves.append("down")
-    if (is_free(data, snakes, up_block)):
-        moves.append("up")
+def free_moves(data, enemy_heads, pos):
+    moves = ["right", "left", "down", "up"]
+    
+    
+    if (is_enemy_head(data, enemy_heads, pos, "right")):
+        moves.remove("right")
+    if (is_enemy_head(data, enemy_heads, pos, "left")):
+        moves.remove("left")
+    if (is_enemy_head(data, enemy_heads, pos, "down")):
+        moves.remove("down")
+    if (is_enemy_head(data, enemy_heads, pos, "up")):
+        moves.remove("up")
+        
+    if (is_enemy_head(data, enemy_heads, pos, "up_right")):
+        if ("up" in moves):
+            moves.remove("up")
+        if ("right" in moves):
+            moves.remove("right")
+            
+    if (is_enemy_head(data, enemy_heads, pos, "up_left")):
+        if ("up" in moves):
+            moves.remove("up")
+        if ("left" in moves):
+            moves.remove("left")
+        
+    if (is_enemy_head(data, enemy_heads, pos, "down_right")):
+        if ("down" in moves):
+            moves.remove("down")
+        if ("right" in moves):
+            moves.remove("right")
+    
+    if (is_enemy_head(data, enemy_heads, pos, "down_left")):
+        if ("down" in moves):
+            moves.remove("down")
+        if ("left" in moves):
+            moves.remove("left")
         
     return moves
     
