@@ -75,7 +75,7 @@ def next_move(data):
         if (move != "no"):
             return move 
     
-    if (data["you"]["health"] < 50):
+    if (data["you"]["health"] < 20):
         return to_target(data, moves, food)
     return sensor_move(data)
 
