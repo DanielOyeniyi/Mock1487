@@ -113,85 +113,6 @@ def sensor_move(data):
     left_val = tmp_left + tmp_down_left + tmp_up_left
     up_left_val = tmp_up_left + tmp_left + tmp_up
     
-    vals = [up_val, up_right_val, right_val, down_right_val, down_val, down_left_val, left_val, up_left_val]
-    
-    if (is_enemy_head(data, enemy_heads, bodies, head, "up")):
-        vals.remove(up_left_val)
-        vals.remove(up_val)
-        vals.remove(up_right_val)
-        
-    if (is_enemy_head(data, enemy_heads, bodies,  head, "up_right")):
-        if (up_val in vals):
-            vals.remove(up_val)
-        if (up_right_val in vals):
-            vals.remove(up_right_val)
-        vals.remove(up_left_val)
-        vals.remove(right_val)
-        vals.remove(down_right_val)
-        
-    if (is_enemy_head(data, enemy_heads, bodies, head, "right")):
-        if (up_right_val in vals):
-            vals.remove(up_right_val)
-        if (right_val in vals):
-            vals.remove(right_val)
-        if (down_right_val in vals):
-            vals.remove(down_right_val)
-        
-    if (is_enemy_head(data, enemy_heads, bodies, head, "down_right")):
-        if (right_val in vals):
-            vals.remove(right_val)
-        if (down_right_val in vals):   
-            vals.remove(down_right_val)
-        if (down_val in vals):
-            vals.remove(down_val)
-        if (down_left_val in vals):
-            vals.remove(down_left_val)
-        if (up_right_val in vals):
-            vals.remove(up_right_val)
-                
-    if (is_enemy_head(data, enemy_heads, bodies, head, "down")):
-        if (down_right_val in vals):
-            vals.remove(down_right_val)
-        if (down_val in vals):
-            vals.remove(down_val)
-        if (down_left_val in vals):
-            vals.remove(down_left_val)
-        
-    if (is_enemy_head(data, enemy_heads, bodies, head, "down_left")):
-        if (down_val in vals):
-            vals.remove(down_val)
-        if (down_left_val in vals):
-            vals.remove(down_left_val)
-        if (left_val in vals):
-            vals.remove(left_val)
-        if (up_left_val in vals):
-            vals.remove(up_left_val)
-        if (down_right_val in vals):
-            vals.remove(down_right_val)
-        
-    if (is_enemy_head(data, enemy_heads, bodies, head, "left")):
-        if (down_left_val in vals):
-            vals.remove(down_left_val)
-        if (left_val in vals):
-            vals.remove(left_val)
-        if (up_left_val in vals):
-            vals.remove(up_left_val)
-    
-    if (is_enemy_head(data, enemy_heads, bodies, head, "up_left")):
-        if (left_val in vals):
-            vals.remove(left_val)
-        if (up_left_val in vals):
-            vals.remove(up_left_val)
-        if (up_val in vals):
-            vals.remove(up_val)
-        if (down_left_val in vals):
-            vals.remove(down_left_val)
-        if (up_right_val in vals):
-            vals.remove(up_right_val)
-    
-    max_val = max(vals)
-
-    
     up = [up_val, 0]
     up_right = [up_right_val, 1]
     right = [right_val, 2]
@@ -202,9 +123,161 @@ def sensor_move(data):
     up_left = [up_left_val, 7]
     
     items = [up, up_right, right, down_right, down, down_left, left, up_left]
-    max_items = []
+ 
+ 
+    if (is_enemy_head(data, enemy_heads, bodies, head, "up")):
+        items.remove(up_left)
+        items.remove(up)
+        items.remove(up_right)
+        
+    if (is_enemy_head(data, enemy_heads, bodies,  head, "up_right")):
+        if (up in items):
+            items.remove(up)
+        if (up_right in items):
+            items.remove(up_right)
+        items.remove(up_left)
+        items.remove(right)
+        items.remove(down_right)
+        
+    if (is_enemy_head(data, enemy_heads, bodies, head, "right")):
+        if (up_right in items):
+            items.remove(up_right)
+        if (right in items):
+            items.remove(right)
+        if (down_right in items):
+            items.remove(down_right)
+        
+    if (is_enemy_head(data, enemy_heads, bodies, head, "down_right")):
+        if (right in items):
+            items.remove(right)
+        if (down_right in items):   
+            items.remove(down_right)
+        if (down in items):
+            items.remove(down)
+        if (down_left in items):
+            items.remove(down_left)
+        if (up_right in items):
+            items.remove(up_right)
+                
+    if (is_enemy_head(data, enemy_heads, bodies, head, "down")):
+        if (down_right in items):
+            items.remove(down_right)
+        if (down in items):
+            items.remove(down)
+        if (down_left in items):
+            items.remove(down_left)
+        
+    if (is_enemy_head(data, enemy_heads, bodies, head, "down_left")):
+        if (down in items):
+            items.remove(down)
+        if (down_left in items):
+            items.remove(down_left)
+        if (left in items):
+            items.remove(left)
+        if (up_left in items):
+            items.remove(up_left)
+        if (down_right in items):
+            items.remove(down_right)
+        
+    if (is_enemy_head(data, enemy_heads, bodies, head, "left")):
+        if (down_left in items):
+            items.remove(down_left)
+        if (left in items):
+            items.remove(left)
+        if (up_left in items):
+            items.remove(up_left)
     
-    for item in items:
+    if (is_enemy_head(data, enemy_heads, bodies, head, "up_left")):
+        if (left in items):
+            items.remove(left)
+        if (up_left in items):
+            items.remove(up_left)
+        if (up in items):
+            items.remove(up)
+        if (down_left in items):
+            items.remove(down_left)
+        if (up_right in items):
+            items.remove(up_right)
+
+    
+    if (len(items) != 0):
+        vals = []
+        for item in items:
+            vals.append(item[0])
+        max_val = max(vals)
+    else:
+        max_val = 0
+        
+        
+    if (max_val != 0):
+        max_items = []
+        for item in items: 
+            if (item[0] == max_val):
+                max_items.append(item)
+        max_item = random.choice(max_items)
+        
+        if (max_item == up and tmp_up != 0):
+            return "up"
+            
+        if (max_item == up_right):
+            if (tmp_right != 0 and tmp_up != 0):
+                return random.choice(["up", "right"])
+            if (tmp_right != 0):
+                return "right"
+            if (tmp_up != 0):
+                return "up"
+            
+        if (max_item == right and tmp_right != 0):
+            return "right"
+            
+        if (max_item == down_right):
+            if (tmp_down != 0 and tmp_right != 0):
+                return random.choice(["down", "right"])
+            if (tmp_down != 0):
+                return "down"
+            if (tmp_right != 0):
+                return "right"
+            
+        if (max_item == down and tmp_down != 0):
+            return "down"
+        
+        if (max_item == down_left):
+            if (tmp_down != 0 and tmp_left != 0):
+                return random.choice(["down", "left"])
+            if (tmp_down != 0):
+                return "down"
+            if (tmp_left != 0):
+                return "left"
+            
+        if (max_item == left and tmp_left != 0):
+            return "left"
+            
+        if (max_item == up_left):
+            if (tmp_up != 0 and tmp_left != 0):
+                return random.choice(["up", "left"])
+            if (tmp_up != 0):
+                return "up"
+            if (tmp_left != 0):
+                return "left"
+    
+    items = [up, right, down, left]
+    vals = [up[0], right[0], down[0], left[0]]
+    
+    if (tmp_up == 0):
+        vals.remove(up[0])
+    if (tmp_right == 0):
+        vals.remove(right[0])
+    if (tmp_down == 0):
+        vals.remove(down[0])
+    if (tmp_left == 0):
+        vals.remove(left[0])
+        
+    if (len(vals) == 0):
+        return "up"
+    
+    max_val = max(vals)
+    max_items = []
+    for item in items: 
         if (item[0] == max_val):
             max_items.append(item)
     max_item = random.choice(max_items)
@@ -212,62 +285,6 @@ def sensor_move(data):
     if (max_item == up):
         return "up"
         
-    if (max_item == up_right):
-        if (tmp_right != 0 and tmp_up != 0):
-            return random.choice(["up", "right"])
-        if (tmp_right != 0):
-            return "right"
-        if (tmp_up != 0):
-            return "up"
-        
-        
-    if (max_item == right):
-        return "right"
-        
-    if (max_item == down_right):
-        if (tmp_down != 0 and tmp_right != 0):
-            return random.choice(["down", "right"])
-        if (tmp_down != 0):
-            return "down"
-        if (tmp_right != 0):
-            return "right"
-        
-    if (max_item == down):
-        return "down"
-    
-    if (max_item == down_left):
-        if (tmp_down != 0 and tmp_left != 0):
-            return random.choice(["down", "left"])
-        if (tmp_down != 0):
-            return "down"
-        if (tmp_left != 0):
-            return "left"
-        
-    if (max_item == left):
-        return "left"
-        
-    if (max_item == up_left):
-        if (tmp_up != 0 and tmp_left != 0):
-            return random.choice(["up", "left"])
-        if (tmp_up != 0):
-            return "up"
-        if (tmp_left != 0):
-            return "left"
-            
-    vals2 = [up_val, right_val, down_val, left_val]
-    items2 = [up, right, down, left]
-    max_val2 = max(vals2)
-    max_items2 = []
-    
-    for item in items2:
-        if (max_val2 == item[0]):
-            max_items2.append(item)
-            
-    max_item2 = random.choice(max_items2)
-    
-    if (max_item == up):
-        return "up"
-        
     if (max_item == right):
         return "right"
         
@@ -276,6 +293,7 @@ def sensor_move(data):
         
     if (max_item == left):
         return "left"
+        
  
 # dict, dict, string -> int
 # returns a count of all the available moves and soon to be available
