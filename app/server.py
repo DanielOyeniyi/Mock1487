@@ -68,8 +68,10 @@ def next_move(data):
     food = closest_food(data)
     snakes = make_static_snakes(data)
     snakes2 = make_snakes(data)
+    bodies = make_bodies(data)
+    
     moves1 = safe_moves(data, snakes, data["you"]["body"][0])
-    moves2 = free_moves(data, make_enemy_heads(data), data["you"]["body"][0])
+    moves2 = free_moves(data, make_enemy_heads(data), bodies, data["you"]["body"][0])
     along_wall = is_along_wall(data, make_heads(data))
     
     for move in moves1:
@@ -91,6 +93,7 @@ def sensor_move(data):
     head = data["you"]["body"][0]
     snakes = make_snakes(data)
     enemy_heads = make_enemy_heads(data)
+    bodies = make_bodies(data)
     
     up = [sensor(data, head, "up"), 0]
     up_right = [sensor(data, head, "up_right"), 1]
@@ -106,12 +109,12 @@ def sensor_move(data):
     vals2 = [up, up_right, right, down_right, down, down_left, left, up_left]
     vals3 = [up, up_right, right, down_right, down, down_left, left, up_left]
     
-    if (is_enemy_head(data, enemy_heads, head, "up")):
+    if (is_enemy_head(data, enemy_heads, bodies, head, "up")):
         vals.remove(up_left)
         vals.remove(up)
         vals.remove(up_right)
         
-    if (is_enemy_head(data, enemy_heads, head, "up_right")):
+    if (is_enemy_head(data, enemy_heads, bodies,  head, "up_right")):
         if (up in vals):
             vals.remove(up)
         if (up_right in vals):
@@ -120,7 +123,7 @@ def sensor_move(data):
         vals.remove(right)
         vals.remove(down_right)
         
-    if (is_enemy_head(data, enemy_heads, head, "right")):
+    if (is_enemy_head(data, enemy_heads, bodies, head, "right")):
         if (up_right in vals):
             vals.remove(up_right)
         if (right in vals):
@@ -128,7 +131,7 @@ def sensor_move(data):
         if (down_right in vals):
             vals.remove(down_right)
         
-    if (is_enemy_head(data, enemy_heads, head, "down_right")):
+    if (is_enemy_head(data, enemy_heads, bodies, head, "down_right")):
         if (right in vals):
             vals.remove(right)
         if (down_right in vals):   
@@ -140,7 +143,7 @@ def sensor_move(data):
         if (up_right in vals):
             vals.remove(up_right)
                 
-    if (is_enemy_head(data, enemy_heads, head, "down")):
+    if (is_enemy_head(data, enemy_heads, bodies, head, "down")):
         if (down_right in vals):
             vals.remove(down_right)
         if (down in vals):
@@ -148,7 +151,7 @@ def sensor_move(data):
         if (down_left in vals):
             vals.remove(down_left)
         
-    if (is_enemy_head(data, enemy_heads, head, "down_left")):
+    if (is_enemy_head(data, enemy_heads, bodies, head, "down_left")):
         if (down in vals):
             vals.remove(down)
         if (down_left in vals):
@@ -160,7 +163,7 @@ def sensor_move(data):
         if (down_right in vals):
             vals.remove(down_right)
         
-    if (is_enemy_head(data, enemy_heads, head, "left")):
+    if (is_enemy_head(data, enemy_heads, bodies, head, "left")):
         if (down_left in vals):
             vals.remove(down_left)
         if (left in vals):
@@ -168,7 +171,7 @@ def sensor_move(data):
         if (up_left in vals):
             vals.remove(up_left)
     
-    if (is_enemy_head(data, enemy_heads, head, "up_left")):
+    if (is_enemy_head(data, enemy_heads, bodies, head, "up_left")):
         if (left in vals):
             vals.remove(left)
         if (up_left in vals):
@@ -494,12 +497,14 @@ def sensor_helper(data, tmp_snakes, pos, direction):
             return sensor_helper(data, tmp_snakes, new_pos, direction) + 1
 
 
-def is_enemy_head(data, enemy_heads, pos, direction):
+def is_enemy_head(data, enemy_heads, bodies, pos, direction):
     new_pos = {"x": pos["x"], "y": pos["y"]}
     if (direction == "up"):
         new_pos["y"] -= 1
         if (new_pos in enemy_heads):
             return True
+        if (new_pos in bodies):
+            return False
         new_pos["y"] -= 1
         return new_pos in enemy_heads
             
@@ -508,6 +513,8 @@ def is_enemy_head(data, enemy_heads, pos, direction):
         new_pos["x"] += 1
         if (new_pos in enemy_heads):
             return True
+        if (new_pos in bodies):
+            return False
         new_pos["y"] -= 1
         new_pos["x"] += 1
         return new_pos in enemy_heads
@@ -516,6 +523,8 @@ def is_enemy_head(data, enemy_heads, pos, direction):
         new_pos["x"] += 1
         if (new_pos in enemy_heads):
             return True
+        if (new_pos in bodies):
+            return False
         new_pos["x"] += 1
         return new_pos in enemy_heads
             
@@ -524,6 +533,8 @@ def is_enemy_head(data, enemy_heads, pos, direction):
         new_pos["x"] += 1
         if (new_pos in enemy_heads):
             return True
+        if (new_pos in bodies):
+            return False
         new_pos["y"] += 1
         new_pos["x"] += 1
         return new_pos in enemy_heads
@@ -532,6 +543,8 @@ def is_enemy_head(data, enemy_heads, pos, direction):
         new_pos["y"] += 1
         if (new_pos in enemy_heads):
             return True
+        if (new_pos in bodies):
+            return False
         new_pos["y"] += 1
         return new_pos in enemy_heads
             
@@ -540,6 +553,8 @@ def is_enemy_head(data, enemy_heads, pos, direction):
         new_pos["x"] -= 1
         if (new_pos in enemy_heads):
             return True
+        if (new_pos in bodies):
+            return False
         new_pos["y"] += 1
         new_pos["x"] -= 1
         return new_pos in enemy_heads
@@ -548,6 +563,8 @@ def is_enemy_head(data, enemy_heads, pos, direction):
         new_pos["x"] -= 1
         if (new_pos in enemy_heads):
             return True
+        if (new_pos in bodies):
+            return False
         new_pos["x"] -= 1
         return new_pos in enemy_heads
             
@@ -556,6 +573,8 @@ def is_enemy_head(data, enemy_heads, pos, direction):
         new_pos["x"] -= 1
         if (new_pos in enemy_heads):
             return True
+        if (new_pos in bodies):
+            return False
         new_pos["y"] -= 1
         new_pos["x"] -= 1
         return new_pos in enemy_heads
@@ -600,38 +619,38 @@ def is_enemy_head2(data, enemy_heads, pos, direction):
         return new_pos in enemy_heads    
 
     
-def free_moves(data, enemy_heads, pos):
+def free_moves(data, enemy_heads, bodies, pos):
     moves = ["right", "left", "down", "up"]
     
     
-    if (is_enemy_head(data, enemy_heads, pos, "right")):
+    if (is_enemy_head(data, enemy_heads, bodies, pos, "right")):
         moves.remove("right")
-    if (is_enemy_head(data, enemy_heads, pos, "left")):
+    if (is_enemy_head(data, enemy_heads, bodies, pos, "left")):
         moves.remove("left")
-    if (is_enemy_head(data, enemy_heads, pos, "down")):
+    if (is_enemy_head(data, enemy_heads, bodies, pos, "down")):
         moves.remove("down")
-    if (is_enemy_head(data, enemy_heads, pos, "up")):
+    if (is_enemy_head(data, enemy_heads, bodies, pos, "up")):
         moves.remove("up")
         
-    if (is_enemy_head(data, enemy_heads, pos, "up_right")):
+    if (is_enemy_head(data, enemy_heads, bodies, pos, "up_right")):
         if ("up" in moves):
             moves.remove("up")
         if ("right" in moves):
             moves.remove("right")
             
-    if (is_enemy_head(data, enemy_heads, pos, "up_left")):
+    if (is_enemy_head(data, enemy_heads, bodies, pos, "up_left")):
         if ("up" in moves):
             moves.remove("up")
         if ("left" in moves):
             moves.remove("left")
         
-    if (is_enemy_head(data, enemy_heads, pos, "down_right")):
+    if (is_enemy_head(data, enemy_heads, bodies, pos, "down_right")):
         if ("down" in moves):
             moves.remove("down")
         if ("right" in moves):
             moves.remove("right")
     
-    if (is_enemy_head(data, enemy_heads, pos, "down_left")):
+    if (is_enemy_head(data, enemy_heads, bodies, pos, "down_left")):
         if ("down" in moves):
             moves.remove("down")
         if ("left" in moves):
@@ -662,9 +681,10 @@ def destroy(data, snakes, snakes_static, pos):
     head = data["you"]["body"][0]
     target_moves = safe_moves(data, snakes_static, pos)
     enemy_heads = make_enemy_heads(data)
-
+    bodies = make_bodies(data)
+    
     moves1 = safe_moves(data, snakes, data["you"]["body"][0])
-    moves2 = free_moves(data, enemy_heads, data["you"]["body"][0])
+    moves2 = free_moves(data, enemy_heads, bodies, data["you"]["body"][0])
     
     for move in moves1:
         if (move not in moves2):
@@ -886,6 +906,14 @@ def make_heads(data):
         if (snake != data["you"]):
             heads.append(snake["body"][0])
     return heads
+    
+def make_bodies(data):
+    bodies = []
+    for snake in data["board"]["snakes"]:
+        for part in snake["body"]:
+            if (part != snake["body"][-1]):
+                bodies.append(part)
+    return bodies
     
 # dict -> dict
 # returns the closest food item to head
