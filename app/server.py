@@ -77,7 +77,8 @@ def next_move(data):
     for move in moves1:
         if (move not in moves2):
             moves1.remove(move)
-        
+    if (len(moves1) == 0):
+        moves1 = safe_moves(data, snakes, data["you"]["body"][0])
     
     for head in along_wall:
         move = destroy(data, snakes2, snakes, head)
