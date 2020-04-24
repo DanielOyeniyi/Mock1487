@@ -222,7 +222,7 @@ def sensor_move(data):
         max_val = max(vals)
     else:
         max_val = 0
-    
+    print(items)
         
     if (max_val != 0):
         max_items = []
@@ -590,12 +590,10 @@ def destroy(data, snakes, snakes_static, pos):
     moves1 = safe_moves(data, snakes, data["you"]["body"][0])
     moves2 = free_moves(data, enemy_heads, bodies, data["you"]["body"][0])
     
+    head_moves = []
     for move in moves1:
-        if (move not in moves2):
-            moves1.remove(move)
-    
-    head_moves = moves1
-    
+        if (move in moves2):
+            head_moves.append(move)
 
     # top_wall
     if (pos["y"] == 0):
