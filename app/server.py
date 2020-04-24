@@ -128,18 +128,17 @@ def sensor_move(data):
         if (item[0] == max_val):
             max_items.append(item)
     
-    print(max_items)
     max_item = random.choice(max_items)
     
     if (max_item == up):
         return "up"
         
     if (max_item == up_right):
-        if (right[0] != 0 and up[0] != 0):
+        if (tmp_right != 0 and tmp_up != 0):
             return random.choice(["up", "right"])
-        if (right[0] != 0):
+        if (tmp_right != 0):
             return "right"
-        if (up[0] != 0):
+        if (tmp_up != 0):
             return "up"
         
         
@@ -147,33 +146,33 @@ def sensor_move(data):
         return "right"
         
     if (max_item == down_right):
-        if (down[0] != 0 and right[0] != 0):
+        if (tmp_down != 0 and tmp_right != 0):
             return random.choice(["down", "right"])
-        if (down[0] != 0):
+        if (tmp_down != 0):
             return "down"
-        if (right[0] != 0):
+        if (tmp_right != 0):
             return "right"
         
     if (max_item == down):
         return "down"
     
     if (max_item == down_left):
-        if (down[0] != 0 and left[0] != 0):
+        if (tmp_down != 0 and tmp_left != 0):
             return random.choice(["down", "left"])
-        if (down[0] != 0):
+        if (tmp_down != 0):
             return "down"
-        if (left[0] != 0):
+        if (tmp_left != 0):
             return "left"
         
     if (max_item == left):
         return "left"
         
     if (max_item == up_left):
-        if (up[0] != 0 and left[0] != 0):
+        if (tmp_up != 0 and tmp_left != 0):
             return random.choice(["up", "left"])
-        if (up[0] != 0):
+        if (tmp_up != 0):
             return "up"
-        if (left[0] != 0):
+        if (tmp_left != 0):
             return "left"
             
     vals2 = [up_val, right_val, down_val, left_val]
@@ -199,9 +198,11 @@ def sensor_move(data):
     if (max_item == left):
         return "left"
  
+ 
 def sensor(data, pos, direction):
     tmp_snakes = make_tmp_snakes(data)
     return sensor_helper(data, tmp_snakes, pos, direction)
+    
     
 def sensor_helper(data, tmp_snakes, pos, direction):
     new_pos = {"x": pos["x"], "y": pos["y"]}
@@ -328,7 +329,7 @@ def is_enemy_head(data, enemy_heads, bodies, pos, direction):
         new_pos["x"] -= 1
         return new_pos in enemy_heads
     
-
+    
 def is_enemy_head2(data, enemy_heads, pos, direction):
     new_pos = {"x": pos["x"], "y": pos["y"]}
     if (direction == "up"):
@@ -366,8 +367,8 @@ def is_enemy_head2(data, enemy_heads, pos, direction):
         new_pos["y"] -= 1
         new_pos["x"] -= 1
         return new_pos in enemy_heads    
-
-    
+ 
+ 
 def free_moves(data, enemy_heads, bodies, pos):
     moves = ["right", "left", "down", "up"]
     
@@ -407,6 +408,7 @@ def free_moves(data, enemy_heads, bodies, pos):
         
     return moves
  
+ 
 def safe_moves(data, snakes, pos):
     moves = []
     
@@ -425,6 +427,7 @@ def safe_moves(data, snakes, pos):
         moves.append("down")
         
     return moves
+ 
  
 def destroy(data, snakes, snakes_static, pos):
     head = data["you"]["body"][0]
@@ -554,7 +557,6 @@ def destroy(data, snakes, snakes_static, pos):
         
     return "no"     
     
-
 # dict, list, dict -> bool
 # return true if the block is not in any snake body parts and 
 # outside of the game board
@@ -563,6 +565,7 @@ def is_free(data, snakes, pos):
                 pos["x"] == data["board"]["height"] or 
                 pos["y"] == data["board"]["width"] or 
                 pos["x"] == -1 or pos["y"] == -1)
+
 
 def make_enemy_heads(data):
     enemies = []
@@ -594,6 +597,7 @@ def make_snakes(data):
                 snakes.remove(snake["body"][-1])
     return snakes
     
+    
 def make_tmp_snakes(data):
     tmp_snakes = []
     for snake in data["board"]["snakes"]:
@@ -604,11 +608,13 @@ def make_tmp_snakes(data):
         tmp_snakes.append(tmp_snake)
     return tmp_snakes
     
+    
 def remove_tails(tmp_snakes):
     for tmp_snake in tmp_snakes:
         if (len(tmp_snake) != 0):
             tmp_snake.pop()
-            
+          
+          
 def is_free_tmp(data, tmp_snakes, pos):
     for tmp_snake in tmp_snakes:
         if (pos in tmp_snake):
@@ -642,6 +648,7 @@ def to_target(data, directions, target):
     else: 
         return sensor_move(data)
    
+   
 def make_static_snakes(data):
     snakes = []
     for snake in data["board"]["snakes"]:
@@ -649,12 +656,14 @@ def make_static_snakes(data):
             snakes.append(part)
     return snakes
    
+   
 def make_heads(data):
     heads = []
     for snake in data["board"]["snakes"]:
         if (snake != data["you"]):
             heads.append(snake["body"][0])
     return heads
+    
     
 def make_bodies(data):
     bodies = []
