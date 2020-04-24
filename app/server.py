@@ -67,16 +67,22 @@ def move():
 def next_move(data):
     food = closest_food(data)
     snakes = make_static_snakes(data)
-    moves = free_moves(data, make_enemy_heads(data), data["you"]["body"][0])
+    snakes2 = make_snakes(data)
+    moves1 = safe_moves(data, snakes, data["you"]["body"][0])
+    moves2 = free_moves(data, make_enemy_heads(data), data["you"]["body"][0])
     along_wall = is_along_wall(data, make_heads(data))
     
+    for move in moves1:
+        if (move not in moves2):
+            moves1.remove(move)
+        
+    
     for head in along_wall:
-        move = destroy(data, snakes, head)
+        move = destroy(data, snakes2, snakes, head)
         if (move != "no"):
             return move 
-    
     if (data["you"]["health"] < 20):
-        return to_target(data, moves, food)
+        return to_target(data, moves1, food)
     return sensor_move(data)
 
 
@@ -628,11 +634,18 @@ def safe_moves(data, snakes, pos):
         
     return moves
  
-def destroy(data, snakes, pos):
+def destroy(data, snakes, snakes_static, pos):
     head = data["you"]["body"][0]
-    target_moves = safe_moves(data, snakes, pos)
-    enemy_heads = make_enemy_heads(data)
-    head_moves = free_moves(data, enemy_heads, head)
+    target_moves = safe_moves(data, snakes_static, pos)
+
+    moves1 = safe_moves(data, snakes, data["you"]["body"][0])
+    moves2 = free_moves(data, make_enemy_heads(data), data["you"]["body"][0])
+    
+    for move in moves1:
+        if (move not in moves2):
+            moves1.remove(move)
+    
+    head_moves = moves1
     
 
     # top_wall
