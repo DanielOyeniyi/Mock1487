@@ -72,7 +72,9 @@ def next_move(data):
     
     moves1 = safe_moves(data, snakes, data["you"]["body"][0])
     moves2 = free_moves(data, make_enemy_heads(data), bodies, data["you"]["body"][0])
-    along_wall = is_along_wall(data, make_heads(data))
+    along_the_wall = along_wall(data, make_heads(data))
+    near_the_wall = near_wall(data, make_heads(data))
+    
     
     for move in moves1:
         if (move not in moves2):
@@ -80,10 +82,16 @@ def next_move(data):
     if (len(moves1) == 0):
         moves1 = safe_moves(data, snakes, data["you"]["body"][0])
     
-    for head in along_wall:
+    for head in along_the_wall:
         move = destroy(data, snakes2, snakes, head)
         if (move != "no"):
             return move 
+    
+    for head in near_the_wall:
+        move = destroy2(data, snakes2, snakes, head)
+        if (move != "no"):
+            return move
+            
     if (data["you"]["health"] < 20):
         return to_target(data, moves1, food)
     return sensor_move(data)
@@ -222,7 +230,6 @@ def sensor_move(data):
         max_val = max(vals)
     else:
         max_val = 0
-    print(items)
         
     if (max_val != 0):
         max_items = []
@@ -707,6 +714,134 @@ def destroy(data, snakes, snakes_static, pos):
         
     return "no"     
     
+# dict, list, list, dict -> string
+# attempts to cut off an enemy snake if it along a wall 
+def destroy2(data, snakes, snakes_static, pos):
+    head = data["you"]["body"][0]
+    target_moves = safe_moves(data, snakes_static, pos)
+    enemy_heads = make_enemy_heads(data)
+    bodies = make_bodies(data)
+    
+    moves1 = safe_moves(data, snakes, data["you"]["body"][0])
+    moves2 = free_moves(data, enemy_heads, bodies, data["you"]["body"][0])
+    
+    head_moves = []
+    for move in moves1:
+        if (move in moves2):
+            head_moves.append(move)
+
+    # top_wall
+    if (pos["y"] == 1):
+        y_distance = head["y"] - pos["y"]
+        if ("right" in target_moves and "left" not in target_moves):
+            print("here")
+            x_distance = head["x"] - pos["x"]
+            # if head is close enough and to the right the enemy head
+            if (y_distance <= 2 and x_distance >= 0):
+                if (y_distance < x_distance and "up" in head_moves):
+                    return "up"
+                elif (y_distance == x_distance and "up" in head_moves and pos not in enemy_heads):
+                    return "up"
+                else: 
+                    if ("right" in head_moves):
+                        return "right"
+        
+        if ("left" in target_moves and "right" not in target_moves):
+            x_distance = pos["x"] - head["x"]
+            # if head is close enough and to the left the enemy head
+            if (y_distance <= 2 and x_distance >= 0):
+                if (y_distance < x_distance and "up" in head_moves):
+                    return "up"
+                elif (y_distance == x_distance and "up" in head_moves and pos not in enemy_heads):
+                    return "up"
+                else: 
+                    if ("left" in head_moves):
+                        return "left"
+    
+    # right_wall
+    if (pos["x"] == data["board"]["width"] - 2):
+        x_distance = pos["x"] - head["x"]
+        if ("up" in target_moves and "down" not in target_moves):
+            y_distance = pos["y"] - head["y"]
+            # if head is close enough and above the enemy head
+            if (x_distance <= 2 and y_distance >= 0):
+                if (x_distance < y_distance and "right" in head_moves):
+                    return "right"
+                elif (x_distance == y_distance and "right" in head_moves and pos not in enemy_heads):
+                    return "right"
+                else: 
+                    if ("up" in head_moves):
+                        return "up"
+        
+        if ("down" in target_moves and "up" not in target_moves):
+            y_distance = head["y"] - pos["y"]
+            # if head is close enough and below the enemy head
+            if (x_distance <= 2 and y_distance >= 0):
+                if (x_distance < y_distance and "right" in head_moves):
+                    return "right"
+                elif (x_distance == y_distance and "right" in head_moves and pos not in enemy_heads):
+                    return "right"
+                else: 
+                    if ("down" in head_moves):
+                        return "down"
+                
+            
+    # bottom_wall
+    if (pos["y"] == data["board"]["height"] - 2):
+        y_distance = pos["y"] - head["y"]
+        if ("right" in target_moves and "left" not in target_moves):
+            x_distance = head["x"] - pos["x"]
+            # if head is close enough and to the right the enemy head
+            if (y_distance <= 2 and x_distance >= 0):
+                if (y_distance < x_distance and "down" in head_moves):
+                    return "down"
+                elif (y_distance == x_distance and "down" in head_moves and pos not in enemy_heads):
+                    return "down"
+                else: 
+                    if ("right" in head_moves):
+                        return "right"
+        
+        if ("left" in target_moves and "right" not in target_moves):
+            x_distance = pos["x"] - head["x"]
+            # if head is close enough and to the left the enemy head
+            if (y_distance <= 2 and x_distance >= 0):
+                if (y_distance < x_distance and "down" in head_moves):
+                    return "down"
+                elif (y_distance == x_distance and "down" in head_moves and pos not in enemy_heads):
+                    return "down"
+                else: 
+                    if ("left" in head_moves):
+                        return "left"
+        
+    # left_wall
+    if (pos["x"] == 1):
+        x_distance = head["x"] - pos["x"]
+        if ("up" in target_moves and "down" not in target_moves):
+            y_distance = pos["y"] - head["y"]
+            # if head is close enough and above the enemy head
+            if (x_distance <= 2 and y_distance >= 0):
+                if (x_distance < y_distance and "left" in head_moves):
+                    return "left"
+                elif (x_distance == y_distance and "left" in head_moves and pos not in enemy_heads):
+                    return "left"
+                else: 
+                    if ("up" in head_moves):
+                        return "up"
+        
+        if ("down" in target_moves and "up" not in target_moves):
+            y_distance = head["y"] - pos["y"]
+            # if head is close enough and below the enemy head
+            if (x_distance <= 2 and y_distance >= 0):
+                if (x_distance < y_distance and "left" in head_moves):
+                    return "left"
+                elif (x_distance == y_distance and "left" in head_moves and pos not in enemy_heads):
+                    return "left"
+                else: 
+                    if ("down" in head_moves):
+                        return "down"
+        
+    return "no"    
+    
 # dict, list, dict -> bool
 # return true if the block is not in any snake body parts and 
 # outside of the game board
@@ -728,8 +863,8 @@ def make_enemy_heads(data):
     return enemies
     
 # dict, list -> list
-# returns a list of enemy snake head that are along the wall of the game
-def is_along_wall(data, enemies):
+# returns a list of enemy snake head that are along the boundary of the game
+def along_wall(data, enemies):
     along_wall = []
     for head in enemies:
         if (head["x"] == data["board"]["width"] - 1 or 
@@ -737,6 +872,17 @@ def is_along_wall(data, enemies):
             head["x"] == 0 or head["y"] == 0):
             along_wall.append(head)
     return along_wall
+
+# dict, list -> list
+# returns a list of enemy snake head that are 1 move away from a boundary
+def near_wall(data, enemies):
+    near_wall = []
+    for head in enemies:
+        if (head["x"] == data["board"]["width"] - 2 or 
+            head["y"] == data["board"]["height"] - 2 or 
+            head["x"] == 1 or head["y"] == 1):
+            near_wall.append(head)
+    return near_wall
 
 # dict -> list
 # returns a list of dicts representing snake locations without tails
