@@ -199,7 +199,7 @@ def sensor_move(data):
         if (up_right in items):
             items.remove(up_right)
 
-    
+    print(items)
     if (len(items) != 0):
         vals = []
         for item in items:
@@ -221,7 +221,12 @@ def sensor_move(data):
             
         if (max_item == up_right):
             if (tmp_right != 0 and tmp_up != 0):
-                return random.choice(["up", "right"])
+                if (up_val > right_val):
+                    return "up"
+                elif (up_val < right_val):
+                    return "rigth"
+                else:
+                    return random.choice(["up", "right"])
             if (tmp_right != 0):
                 return "right"
             if (tmp_up != 0):
@@ -232,7 +237,12 @@ def sensor_move(data):
             
         if (max_item == down_right):
             if (tmp_down != 0 and tmp_right != 0):
-                return random.choice(["down", "right"])
+                if (down_val > right_val):
+                    return "down"
+                elif (down_val < right_val):
+                    return "rigth"
+                else:
+                    return random.choice(["down", "right"])
             if (tmp_down != 0):
                 return "down"
             if (tmp_right != 0):
@@ -243,7 +253,12 @@ def sensor_move(data):
         
         if (max_item == down_left):
             if (tmp_down != 0 and tmp_left != 0):
-                return random.choice(["down", "left"])
+                if (down_val > left_val):
+                    return "down"
+                elif (down_val < left_val):
+                    return "left"
+                else:
+                    return random.choice(["down", "left"])
             if (tmp_down != 0):
                 return "down"
             if (tmp_left != 0):
@@ -254,7 +269,12 @@ def sensor_move(data):
             
         if (max_item == up_left):
             if (tmp_up != 0 and tmp_left != 0):
-                return random.choice(["up", "left"])
+                if (up_val > left_val):
+                    return "up"
+                elif (up_val < left_val):
+                    return "left"
+                else:
+                    return random.choice(["up", "left"])
             if (tmp_up != 0):
                 return "up"
             if (tmp_left != 0):
