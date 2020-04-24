@@ -191,6 +191,7 @@ def sensor_move(data):
     else: 
         max_val = 0
         
+        
     if (max_val == 0):
         max_val = max(tight)
     
@@ -222,7 +223,19 @@ def sensor_move(data):
         if (up[0] != 0 and left[0] != 0):
             return random.choice(["up", "left"])
             
-    max_val = max(up[0], right[0], down[0], left[0])
+    tmp = []
+        
+    if (up in vals):
+        tmp.append(up[0])
+    if (right in vals): 
+        tmp.append(right[0])
+    if (down in vals):
+        tmp.append(down[0])
+    if (left in vals):
+        tmp.append(left[0])
+    
+    max_val = max(tmp)
+    
     
     if (max_val == up[0] and up in vals):
         return "up"
@@ -237,7 +250,7 @@ def sensor_move(data):
         return "left"
     
     
-    
+
     
     
     # checking for snakes 1 move away
@@ -361,7 +374,18 @@ def sensor_move(data):
         if (up[0] != 0 and left[0] != 0):
             return random.choice(["up", "left"])
             
-    max_val = max(up[0], right[0], down[0], left[0])
+    tmp2 = []
+        
+    if (up in vals2):
+        tmp2.append(up[0])
+    if (right in vals2): 
+        tmp2.append(right[0])
+    if (down in vals2):
+        tmp2.append(down[0])
+    if (left in vals2):
+        tmp2.append(left[0])
+    
+    max_val = max(tmp2)
     
     if (max_val == up[0] and up in vals2):
         return "up"
