@@ -676,6 +676,7 @@ def sensor_helper(data, tmp_snakes, pos, direction):
             return sensor_helper(data, tmp_snakes, new_pos, direction) + 1
             
         if (direction == "up_right"):
+            remove_tails(tmp_snakes)
             new_pos["y"] -= 1
             new_pos["x"] += 1
             return sensor_helper(data, tmp_snakes, new_pos, direction) + 1
@@ -685,6 +686,7 @@ def sensor_helper(data, tmp_snakes, pos, direction):
             return sensor_helper(data, tmp_snakes, new_pos, direction) + 1
             
         if (direction == "down_right"):
+            remove_tails(tmp_snakes)
             new_pos["y"] += 1
             new_pos["x"] += 1
             return sensor_helper(data, tmp_snakes, new_pos, direction) + 1
@@ -694,6 +696,7 @@ def sensor_helper(data, tmp_snakes, pos, direction):
             return sensor_helper(data, tmp_snakes, new_pos, direction) + 1
             
         if (direction == "down_left"):
+            remove_tails(tmp_snakes)
             new_pos["y"] += 1
             new_pos["x"] -= 1
             return sensor_helper(data, tmp_snakes, new_pos, direction) + 1
@@ -703,6 +706,7 @@ def sensor_helper(data, tmp_snakes, pos, direction):
             return sensor_helper(data, tmp_snakes, new_pos, direction) + 1
             
         if (direction == "up_left"):
+            remove_tails(tmp_snakes)
             new_pos["y"] -= 1
             new_pos["x"] -= 1
             return sensor_helper(data, tmp_snakes, new_pos, direction) + 1
